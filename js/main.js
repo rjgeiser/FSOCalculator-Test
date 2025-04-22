@@ -323,9 +323,24 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
             isEligible = true;
             description = "Immediate retirement (25 years any age)";
         }
-    } else if (type === "tera" && teraEligible && currentAge >= teraAgeRequired && effectiveYearsService >= teraYearsRequired) {
-        isEligible = true;
-        description = `V/TERA retirement (age ${teraAgeRequired} with ${teraYearsRequired} years)`;
+    } else if (type === "tera" && teraEligible && effectiveYearsService >= teraYearsRequired) {
+            isEligible = true;
+            description = `TERA retirement (${teraYearsRequired}+ years of service)`;
+        
+            // Apply reduction factor for < 20 years of service
+            const monthsUnder20 = (20 - effectiveYearsService) * 12;
+            const reductionFactor = 1 - (monthsUnder20 * (1 / 12) * 0.01); // 1/12 of 1% per month
+            annuityReductionFactor = Math.max(0, reductionFactor); // Prevent negative annuity
+        
+            reductionNote = `Annuity reduced by ${Math.round((1 - annuityReductionFactor) * 100)}% for service under 20 years (TERA reduction)`;
+    } else if (type === "vera" && teraEligible) {
+            const veraAgeThreshold = parseInt(teraAgeRequired) || 43;
+            const veraYearsThreshold = parseInt(teraYearsRequired) || 15;
+        
+            if (currentAge >= veraAgeThreshold && effectiveYearsService >= veraYearsThreshold) {
+                isEligible = true;
+                description = `VERA retirement (age ${veraAgeThreshold}+ with ${veraYearsThreshold}+ years)`;
+            }
     } else if (type === "mra+10") {
         if (effectiveYearsService >= 10) {
             isEligible = true;
@@ -1652,6 +1667,7 @@ function calculateFSPSAnnuity(fsGrade, fsStep, yearsService, age, highThreeYears
     const scenarios = {
         immediate: calculateScenario(highThreeAverage, effectiveYearsService, age, "immediate", false, teraEligible, teraYearsRequired, teraAgeRequired, sickLeaveServiceDuration, serviceDuration),
         tera: calculateScenario(highThreeAverage, effectiveYearsService, age, "tera", false, teraEligible, teraYearsRequired, teraAgeRequired, sickLeaveServiceDuration, serviceDuration),
+        vera: calculateScenario(highThreeAverage, effectiveYearsService, age, "vera", false, teraEligible, teraYearsRequired, teraAgeRequired, sickLeaveServiceDuration, serviceDuration),
         mraPlusTen: calculateScenario(highThreeAverage, effectiveYearsService, age, "mra+10", false, teraEligible, teraYearsRequired, teraAgeRequired, sickLeaveServiceDuration, serviceDuration),
         deferred: calculateScenario(highThreeAverage, effectiveYearsService, age, "deferred", false, teraEligible, teraYearsRequired, teraAgeRequired, sickLeaveServiceDuration, serviceDuration)
     };
@@ -2294,6 +2310,8 @@ class Calculator {
 
     static calculateRetirement(formData) {
         console.log('Calculating Retirement with:', formData);
+
+        const teraEligible = formData['tera-eligible'] === 'yes';
         
         const result = calculateFSPSAnnuity(
             formData.fsGrade,
@@ -2562,6 +2580,9 @@ class Calculator {
 
         const totalServiceText = formatYearsAsDuration(formData.yearsService + (formData.sickLeaveYears || 0));
 
+        const minVeraAge = parseInt(formData["tera-age"]) || 43;
+        const minServiceYears = parseInt(formData["tera-years"]) || 15;
+
         container.innerHTML = `
         <div class="retirement-options">
             <div class="option-card">
@@ -2692,9 +2713,7 @@ class Calculator {
                             eligibilityRequirements = `
                                 <h6>Eligibility Requirements</h6>
                                 <ul>
-                                    <li>Special authority when offered</li>
-                                    <li>Minimum age ${formData.teraAge} with ${formData.teraYears} years of service</li>
-                                    <li>Uses same computation as regular retirement</li>
+                                    <li>Eligible with ${teraYearsRequired}+ years of service</li>
                                 </ul>`;
                             policyNotes = `
                                 <div class="alert alert-info" style="margin-top: 10px; padding: 10px; background-color: #e2e8f0; border-radius: 4px;">
@@ -2703,16 +2722,33 @@ class Calculator {
                                         <li>Eligible for FEHB and FEGLI coverage in retirement</li>
                                         <li>Special Retirement Supplement available until age 62</li>
                                         <li>Uses enhanced 1.7% multiplier for first 20 years</li>
-                                        <li>No age reduction in annuity</li>
+                                        <li>Includes a reduction of 1/12 of 1% for each month under 20 years of service</li>
                                     </ul>
                                 </div>`;
                             citation = '<p class="citation">Source: Foreign Service Act of 1980, as amended, 22 U.S.C. 4051-4052</p>';
                             break;
+                        case 'vera':
+                            eligibilityRequirements = `
+                                <h6>Eligibility Requirements</h6>
+                                <ul>
+                                    <li>Eligible if age ${teraAgeRequired}+ with ${teraYearsRequired}+ years of service</li>
+                                </ul>`;
+                            policyNotes = `
+                                <div class="alert alert-info" style="margin-top: 10px; padding: 10px; background-color: #e2e8f0; border-radius: 4px;">
+                                    <strong>Policy Notes:</strong>
+                                    <ul>
+                                        <li>Immediate annuity with no age-based reduction</li>
+                                        <li>Uses standard 1.7% × YOS formula</li>
+                                        <li>Eligible for FEHB if enrolled for at least 5 years</li>
+                                        <li>Eligible for SRS if under age 62 and meets 20-year threshold</li>
+                                    </ul>
+                                </div>`;
+                            citation = `<p class="citation">Source: AFSA Proposal 3/21/2025; 5 U.S.C. §8415(e); 22 U.S.C. §4051 (proposed amendment)</p>`;
+                            break;
                     }
-                    
                     return `
                         <div class="option-card">
-                            <h6>${type === 'mraPlusTen' ? 'MRA+10' : type === 'tera' ? 'V/TERA' : type.charAt(0).toUpperCase() + type.slice(1)} Retirement</h6>
+                            <h6>${labelMap[type] || (type.charAt(0).toUpperCase() + type.slice(1))} Retirement</h6>
                             <div class="option-details">
                                 ${eligibilityRequirements}
                                 <div class="calculation-details">
@@ -2742,6 +2778,11 @@ class Calculator {
                                                     <td style="text-align: right;"><strong>${Utils.formatCurrency(scenario.monthlyAnnuity - (scenario.monthlyAnnuity * 0.10) - (health?.fehb?.monthly || 0))}</strong></td>
                                                 </tr>
                                             </table>
+                                            if (scenario.isEligibleForSupplement) {
+                                                html += `<p style="margin-top: 0.5rem; font-style: italic; color: #555;">
+                                                    Includes Special Retirement Supplement (SRS) until age 62
+                                                </p>`;
+                                            }
                                         </div>
 
                                         <div style="margin: 1rem 0;">
@@ -2785,12 +2826,13 @@ class Calculator {
                 <li>Actual benefits may vary based on final service computation and other factors</li>
                 <li>Special Retirement Supplement (SRS) eligibility and calculation:
                     <ul>
-                        <li>Available for immediate retirement and V/TERA before age 62</li>
+                        <li>Available for immediate retirement and VERA and TERA before age 62</li>
                         <li>Must meet one of these criteria:
                             <ul>
                                 <li>Age 50+ with 20+ years of service</li>
                                 <li>Any age with 25+ years of service</li>
-                                <li>V/TERA retirement meeting minimum age (43) and service (10 years) requirements</li>
+                                <li>VERA retirement meeting minimum age (${minVeraAge}) and service (${minServiceYears} years) requirements</li>
+                                <li>TERA retirement meeting minimum service (${minServiceYears} years) requirement</li>
                             </ul>
                         </li>
                         <li>SRS estimate based on career average base pay earnings (excluding locality pay) for conservative estimation</li>
@@ -2803,7 +2845,7 @@ class Calculator {
                         <li>Immediate Retirement: Eligible if covered for 5 years before retirement</li>
                         <li>MRA+10: Only eligible if taking immediate annuity (not postponed)</li>
                         <li>Deferred: Not eligible to continue FEHB coverage</li>
-                        <li>V/TERA: Eligible if covered for 5 years before retirement</li>
+                        <li>VERA and TERA: Eligible if covered for 5 years before retirement</li>
                     </ul>
                 </li>
                 <li>Consider consulting with HR for official calculations and guidance</li>
@@ -3099,7 +3141,8 @@ function updateLifetimeReport(retirement, formData) {
 
   const labelMap = {
     immediate: "Immediate",
-    tera: "V/TERA",
+    tera: "TERA",
+    vera: "VERA",
     mraPlusTen: "MRA+10",
     deferred: "Deferred"
   };
