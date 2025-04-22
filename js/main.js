@@ -2171,6 +2171,9 @@ function clearSCD() {
     // const service = getValidatedServiceDuration(); 
 }
 
+// ✅ Expose to inline HTML
+window.getValidatedServiceDuration = getValidatedServiceDuration;
+
 // Form submission and results handling
 class Calculator {
     static initialize() {
