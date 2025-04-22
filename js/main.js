@@ -2797,9 +2797,9 @@ class Calculator {
                                                 </tr>
                                             </table>
                                             if (scenario.isEligibleForSupplement) {
-                                                html += `<p style="margin-top: 0.5rem; font-style: italic; color: #555;">
+                                                html += '<p style="margin-top: 0.5rem; font-style: italic; color: #555;">
                                                     Includes Special Retirement Supplement (SRS) until age 62
-                                                </p>`;
+                                                </p>';
                                             }
                                         </div>
 
