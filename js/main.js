@@ -2095,67 +2095,84 @@ try {
 }
 }
 
-    // Service Duration Validation Functions
-    function validateServiceDuration() {
-        try {
-            const scdInput = document.getElementById('service-computation-date');
-            const yearsServiceInput = document.getElementById('years-service');
-            const warningDiv = document.getElementById('service-duration-warning');
-            const warningMessage = document.getElementById('service-duration-message');
-
-            if (!scdInput || !yearsServiceInput || !warningDiv || !warningMessage) {
-                console.warn('Required elements not found for service duration validation');
-                return;
-            }
-
-            const scd = scdInput.value;
-            const manualYears = parseInt(yearsServiceInput.value) || 0;
-
-            // If no SCD, hide warning and return
-            if (!scd) {
-                warningDiv.style.display = 'none';
-                return;
-            }
-
-            // Calculate service duration from SCD
-            const serviceDuration = calculateServiceDuration(scd);
-            if (!serviceDuration) {
-                warningDiv.style.display = 'none';
-                return;
-            }
-
-            // Compare SCD-calculated duration with manual entry
-            const yearDiff = Math.abs(serviceDuration.totalYears - manualYears);
-            const monthThreshold = 1/12; // 1 month threshold
-
-            if (yearDiff > monthThreshold) {
-                // Format the SCD duration for display
-                const scdYears = Math.floor(serviceDuration.totalYears);
-                const scdMonths = Math.round((serviceDuration.totalYears - scdYears) * 12);
-                
-                warningMessage.innerHTML = `SCD calculates to ${scdYears} years, ${scdMonths} months vs. manual entry of ${manualYears} years. SCD will be used.`;
-                warningDiv.style.display = 'block';
-            } else {
-                warningDiv.style.display = 'none';
-            }
-        } catch (error) {
-            console.error('Error in validateServiceDuration:', error);
-        }
-    }
-
-    function clearSCD() {
+// Service Duration Validation Functions
+function getValidatedServiceDuration() {
+    try {
         const scdInput = document.getElementById('service-computation-date');
+        const yearsServiceInput = document.getElementById('years-service');
         const warningDiv = document.getElementById('service-duration-warning');
-        
-        if (scdInput) {
-            scdInput.value = '';
+        const warningMessage = document.getElementById('service-duration-message');
+
+        const scd = scdInput?.value?.trim() || null;
+        const manualYears = parseFloat(yearsServiceInput?.value) || 0;
+
+        if (!scd) {
+            if (warningDiv) warningDiv.style.display = 'none';
+            return {
+                totalYears: manualYears,
+                totalMonths: manualYears * 12
+            };
         }
-        if (warningDiv) {
-            warningDiv.style.display = 'none';
+
+        const calculated = calculateServiceDuration(scd);
+        if (!calculated || typeof calculated.totalYears !== "number") {
+            if (warningDiv) warningDiv.style.display = 'none';
+            return {
+                totalYears: manualYears,
+                totalMonths: manualYears * 12
+            };
         }
-        validateServiceDuration(); // Re-validate after clearing
+
+        // Check if difference exceeds threshold (1 month)
+        const yearDiff = Math.abs(calculated.totalYears - manualYears);
+        const monthThreshold = 1 / 12;
+
+        if (yearDiff > monthThreshold) {
+            const scdYears = Math.floor(calculated.totalYears);
+            const scdMonths = Math.round((calculated.totalYears - scdYears) * 12);
+
+            if (warningMessage) {
+                warningMessage.innerHTML = `SCD calculates to ${scdYears} years, ${scdMonths} months vs. manual entry of ${manualYears} years. SCD will be used.`;
+            }
+            if (warningDiv) {
+                warningDiv.style.display = 'block';
+            }
+        } else {
+            if (warningDiv) {
+                warningDiv.style.display = 'none';
+            }
+        }
+
+        return calculated;
+
+    } catch (error) {
+        console.error("Error in getValidatedServiceDuration:", error);
+        return {
+            totalYears: 0,
+            totalMonths: 0
+        };
     }
-// ... existing code ...
+}  
+
+function clearSCD() {
+    const scdInput = document.getElementById('service-computation-date');
+    const warningDiv = document.getElementById('service-duration-warning');
+    const warningMessage = document.getElementById('service-duration-message');
+
+    if (scdInput) {
+        scdInput.value = '';
+    }
+    if (warningMessage) {
+        warningMessage.innerHTML = '';
+    }
+    if (warningDiv) {
+        warningDiv.style.display = 'none';
+    }
+
+    // Optionally re-run duration logic or refresh outputs
+    // const service = getValidatedServiceDuration(); 
+}
+
 // Form submission and results handling
 class Calculator {
     static initialize() {
