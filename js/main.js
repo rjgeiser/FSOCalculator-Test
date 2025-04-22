@@ -2450,6 +2450,15 @@ class Calculator {
             return;
         }
 
+        // NEW LOGIC: Show fallback message if user skipped health insurance
+        if (health?.fehb?.monthly === 0 && health?.aca?.monthly === 0) {
+            const message = document.getElementById('health-skipped-message');
+            if (message) {
+                message.style.display = 'block';
+            }
+            return;
+        }
+
         container.innerHTML = `
             <div class="form-section">
                 <h3>Current Coverage</h3>
