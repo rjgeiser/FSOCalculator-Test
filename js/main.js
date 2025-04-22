@@ -1677,7 +1677,17 @@ function calculateHealthInsurance(currentPlanOption, coverageType, homeState) {
     try {
         // Validate inputs
         if (!currentPlanOption || !coverageType || !homeState) {
-            throw new Error('Missing required health insurance parameters');
+            console.warn("Health insurance section skipped — returning default values.");
+            return {
+                fehb: { monthly: 0, cobra: 0 },
+                cobra: { monthly: 0, duration: 18, totalCost: 0 },
+                aca: { monthly: 0, deductible: 0, outOfPocket: 0 },
+                planOption: '',
+                coverageType: '',
+                homeState: '',
+                recommendations: [],
+                skipped: true
+            };
         }
 
         // Get the plan data directly (no need to split since we store full plan names)
