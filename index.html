@@ -267,12 +267,12 @@
 
                         <!-- Health Insurance Section -->
                         <div class="form-section" data-step="health">
-                            <h3>Health Insurance Information</h3>
+                            <h3>Health Insurance Information (Optional)</h3>
                             <!-- Health Insurance Plan (full width) -->
                             <div class="form-row">
                                 <div class="form-group col-12">
                                     <label for="current-plan">Health Insurance Plan</label>
-                                    <select id="current-plan" class="form-control" required>
+                                    <select id="current-plan" class="form-control">
                                         <option value="">Select Plan</option>
                                         <option value="BCBS-basic">BCBS Basic</option>
                                         <option value="FSBP-standard">Foreign Service Benefit Plan</option>
@@ -297,7 +297,7 @@
                                 
                                 <div class="form-group col-md-6">
                                     <label for="state">Home State of Record</label>
-                                    <select id="state" class="form-control" required>
+                                    <select id="state" class="form-control">
                                         <option value="">Select a State</option>
                                         <option value="AL">Alabama</option>
                                         <option value="AK">Alaska</option>
@@ -509,7 +509,11 @@
                     </div>
                     <div id="health" class="tab-content">
                         <h3>Health Insurance Calculation</h3>
-                        <div id="health-results" class="results-container"></div>
+                        <div id="health-results" class="results-container">
+  <p id="health-skipped-message" style="display: none; color: #555;">
+    You skipped the Health Insurance section. No cost estimates are available. Complete this section to compare FEHB, COBRA, and ACA options.
+  </p>
+</div>
                     </div>
                     <div id="lifetime" class="tab-content">
                         <h3>Lifetime Benefits Report (to Age 85)</h3>
