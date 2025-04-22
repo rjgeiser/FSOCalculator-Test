@@ -254,6 +254,9 @@ function calculateEnhancedSupplemental(currentGrade, currentStep, yearsService, 
 
 // Calculate retirement scenario
 function calculateScenario(highThreeAverage, yearsService, currentAge, type, isInvoluntarySeparation = false, teraEligible = false, teraYearsRequired = 10, teraAgeRequired = 43, sickLeaveServiceDuration = null, serviceDuration = null) {
+    let annuityReductionFactor = 1;
+    let reductionNote = '';
+
     console.log('Starting scenario calculation:', {
         type,
         currentAge,
@@ -286,6 +289,8 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
     let isEligible = false;
     let mraReduction = 0;
     let age62Comparison = null;
+    let annuityReductionFactor = 1; // default to 100% unless reduced
+    let reductionNote = '';
 
     //Calculate MRA age with a years and months value and a maximum of 57
     function formatMRA(decimalAge) {
@@ -506,8 +511,6 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
 
     console.log('Final scenario result:', result);
     return result;
-    let eligible = true;
-    let ineligibilityReason = "";
 
     switch (type) {
         case 'FULL':
