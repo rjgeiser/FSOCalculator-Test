@@ -730,10 +730,8 @@ class FormValidator {
             fsGrade: { name: 'Grade Level', element: 'fs-grade' },
             fsStep: { name: 'Step', element: 'fs-step' },
             yearsService: { name: 'Years of Service', element: 'years-service' },
-            age: { name: 'Current Age', element: 'age' },
-            currentPlan: { name: 'Health Insurance Plan', element: 'current-plan' },
-            coverageType: { name: 'Enrollment Type', element: 'coverage-type' },
-            state: { name: 'Home State of Record', element: 'state' }
+            age: { name: 'Current Age', element: 'age' }
+            // Health insurance fields are now optional
         };
 
         Object.entries(requiredFields).forEach(([field, info]) => {
