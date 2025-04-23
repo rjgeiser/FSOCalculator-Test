@@ -2868,12 +2868,13 @@ static updateRetirementResults(container, retirement, formData, health) {
 
     // --- Begin function updateLifetimeReport ---
  static updateLifetimeReport(container, retirement, formData) {
-    console.log('Starting updateLifetimeReport with:', { retirement, formData });
-
-    if (!container || !retirement || !formData) {
-        console.warn('Missing required parameters for updateLifetimeReport');
-        return;
-    }
+    console.log('🔍 DEBUG - Lifetime Report Inputs:', {
+        containerExists: !!container,
+        container: container,
+        retirement: retirement,
+        formData: formData,
+        scenarios: retirement?.scenarios || 'No scenarios found'
+    });
 
     const maxAge = 85;
     const currentAge = parseInt(formData.age, 10) || 57;
