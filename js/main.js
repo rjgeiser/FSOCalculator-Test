@@ -2097,6 +2097,7 @@ static async handleFormSubmit(e) {
     UIManager.hideLoading();
   }
 }
+}
 
 // Service Duration Validation Functions
 function getValidatedServiceDuration() {
