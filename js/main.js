@@ -2876,9 +2876,6 @@ class Calculator {
         </div>`;
     }
 
-// Function to update plan prices based on selected enrollment type
-};
-
 function initializeAfterLoad() {
     try {
         // Initialize Calculator
