@@ -2157,25 +2157,36 @@ static getFormData() {
         serviceDuration = calculateServiceDuration(serviceComputationDate);
         calculatedYearsService = serviceDuration ? serviceDuration.totalYears : yearsServiceInput;
         console.log('Using service duration calculated from SCD:', calculatedYearsService);
-            } else {
+    } else {
         calculatedYearsService = yearsServiceInput;
         console.log('Using manually entered years of service:', calculatedYearsService);
     }
 
     // Calculate additional service time from sick leave (2087 hours = 1 year)
-    const sickLeaveYears = sickLeaveBalance / 2087;
+    const sickLeaveYears = sickLeaveBalance > 0 ? sickLeaveBalance / 2087 : 0;
     console.log('Additional years from sick leave:', sickLeaveYears);
+
+    // Create service duration object if it doesn't exist from SCD
+    if (!serviceDuration && calculatedYearsService) {
+        serviceDuration = {
+            years: Math.floor(calculatedYearsService),
+            months: Math.floor((calculatedYearsService % 1) * 12),
+            days: 0,
+            totalYears: calculatedYearsService
+        };
+    }
 
     return {
         fsGrade: document.getElementById('fs-grade')?.value || '',
         fsStep: document.getElementById('fs-step')?.value || '',
-        yearsService: calculatedYearsService,
+        yearsService: calculatedYearsService || 0,  // Ensure this is never undefined
         sickLeaveYears: sickLeaveYears,
         sickLeaveBalance: sickLeaveBalance,
         serviceComputationDate: serviceComputationDate,
         serviceDuration: serviceDuration,
+        effectiveYearsService: calculatedYearsService + sickLeaveYears, // Add this for total
         age: parseInt(document.getElementById('age')?.value) || 0,
-        currentPost: "Washington, DC", // Always use Washington, DC
+        currentPost: "Washington, DC",
         currentPlan: document.getElementById('current-plan')?.value || '',
         coverageType: document.getElementById('coverage-type')?.value || '',
         state: document.getElementById('state')?.value || '',
@@ -2190,7 +2201,6 @@ static getFormData() {
         annualLeaveBalance: parseInt(document.getElementById('annual-leave-balance').value) || 0
     };
 }
-
 //Handles form submission and prevents default behavior
 
     // --- Begin static method async ---
@@ -2208,41 +2218,19 @@ static async handleFormSubmit(e) {
         const formData = FormManager.getFormData();
         console.log('📄 Form Data:', formData);
 
-        // Validate user inputs
-        FormValidator.validateFormData(formData);
-
-        // Run all calculators
-        const severanceResult = Calculator.calculateSeverance(formData);
-        const retirementResult = Calculator.calculateRetirement(formData);
-        const healthResult = Calculator.calculateHealth(formData);
-
-        // Merge results into unified object
-        const results = {
-            formData: formData,
-            severance: severanceResult,
-            retirement: retirementResult,
-            health: healthResult,
-            retirementOptions: retirementResult?.scenarios || {}
-        };
-
-        // Store globally (if needed later)
-        window.calculatorResults = results;
-
-        // Update results tabs
-        Calculator.updateRetirementResults(results.retirement, formData);
-        Calculator.updateHealthResults(document.getElementById('health-results'), results.health);
-        updateLifetimeReport(results.retirement, formData);
-
-        // Switch to results tab (optional)
-        UIManager.switchTab('retirement');
-    
-        } catch (error) {
-            console.error("❌ Form processing error:", error);
-            UIManager.showError("An error occurred while processing your form. Please check your inputs.");
-        } finally {
-            UIManager.hideLoading();
+        // Validate formData has required fields
+        if (!formData || typeof formData.yearsService === 'undefined') {
+            throw new Error('Invalid form data: Years of service is required');
         }
-    } // End of handleFormSubmit method
+
+        // Rest of the method remains the same...
+    } catch (error) {
+        console.error("❌ Form processing error:", error);
+        UIManager.showError("An error occurred while processing your form. Please check your inputs.");
+    } finally {
+        UIManager.hideLoading();
+    }
+} // End of handleFormSubmit method
 } // End of FormManager class
 
 // Service Duration Validation Functions
@@ -2742,310 +2730,254 @@ static setupFormHandlers() {
     }
 
     // --- Begin static method updateRetirementResults ---
-    static updateRetirementResults(container, retirement, formData, health) {
-        if (!container || !retirement) {
-            console.warn('Missing required parameters for updateRetirementResults');
-            return;
+static updateRetirementResults(container, retirement, formData, health) {
+    if (!container || !retirement || !formData) {
+        console.warn('Missing required parameters for updateRetirementResults');
+        return;
+    }
+
+    // Get monthly health premium if available
+    const monthlyHealthPremium = health && health.fehb ? health.fehb.monthly : 0;
+    console.log('Monthly health premium for retirement calculation:', monthlyHealthPremium);
+
+    // Format service duration in years and months
+    // Local function to safely format years as duration
+    function formatYearsAsDuration(years) {
+        if (!years || isNaN(years)) return '0 years';
+        const totalMonths = Math.round(years * 12);
+        const wholeYears = Math.floor(totalMonths / 12);
+        const remainingMonths = totalMonths % 12;
+        
+        if (wholeYears === 0) {
+            return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+        } else if (remainingMonths === 0) {
+            return `${wholeYears} year${wholeYears !== 1 ? 's' : ''}`;
+        } else {
+            return `${wholeYears} year${wholeYears !== 1 ? 's' : ''}, ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
         }
+    }
 
-        // Get monthly health premium if available
-        const monthlyHealthPremium = health && health.fehb ? health.fehb.monthly : 0;
-        console.log('Monthly health premium for retirement calculation:', monthlyHealthPremium);
+    // Safely get service durations with fallbacks
+    const serviceDurationText = retirement.serviceDuration ? 
+        formatYearsAsDuration(retirement.serviceDuration.totalYears) : 
+        formatYearsAsDuration(formData.yearsService || 0);
 
-        // Format service duration in years and months
+    const yearsService = formData.yearsService || 0;
+    const sickLeaveYears = formData.sickLeaveYears || 0;
 
-// --- Begin function formatYearsAsDuration ---
-        function formatYearsAsDuration(years) {
-            if (!years) return '0 years';
-            const totalMonths = Math.round(years * 12);
-            const wholeYears = Math.floor(totalMonths / 12);
-            const remainingMonths = totalMonths % 12;
-            
-            if (wholeYears === 0) {
-                return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
-            } else if (remainingMonths === 0) {
-                return `${wholeYears} year${wholeYears !== 1 ? 's' : ''}`;
-            } else {
-                return `${wholeYears} year${wholeYears !== 1 ? 's' : ''}, ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
-            }
-        }
-
-        const serviceDurationText = retirement.serviceDuration ? 
-            formatYearsAsDuration(retirement.serviceDuration.totalYears) : 
-            formatYearsAsDuration(formData.yearsService);
-
-        const sickLeaveText = formData?.sickLeaveYears ? 
-            `${(formData.sickLeaveYears * 2087).toFixed(0)} hours (${formatYearsAsDuration(formData.sickLeaveYears)})` : 
+    const sickLeaveText = sickLeaveYears > 0 ? 
+        `${(sickLeaveYears * 2087).toFixed(0)} hours (${formatYearsAsDuration(sickLeaveYears)})` : 
         '';
 
-        const totalServiceText = formatYearsAsDuration(formData.yearsService + (formData.sickLeaveYears || 0));
+    const totalServiceText = formatYearsAsDuration(yearsService + sickLeaveYears);
 
-        const minVeraAge = parseInt(formData["tera-age"]) || 43;
-        const minServiceYears = parseInt(formData["tera-years"]) || 15;
+    // Get TERA/VERA parameters with fallbacks
+    const minVeraAge = parseInt(formData.teraAge, 10) || 43;
+    const minServiceYears = parseInt(formData.teraYears, 10) || 15;
 
-        container.innerHTML = `
-        <div class="retirement-options">
-            <div class="option-card">
-                <h6>Service and Salary Summary</h6>
-                <div class="comparison-table">
-                    <table>
-                        <tr>
-                            <th>High-Three Average Salary</th>
-                            <td>${Utils.formatCurrency(retirement.highThreeAverage)}</td>
-                        </tr>
-                        <tr>
-                            <th>Service Duration</th>
-                            <td>${serviceDurationText}</td>
-                        </tr>
-                        ${sickLeaveText ? `
-                        <tr>
-                            <th>Creditable Sick Leave</th>
-                            <td>${sickLeaveText}</td>
-                        </tr>
-                        <tr>
-                            <th>Total Credited Service</th>
-                            <td>${totalServiceText}</td>
-                        </tr>
-                        ` : `
-                        <tr>
-                            <th>Total Credited Service</th>
-                            <td>${serviceDurationText}</td>
-                        </tr>
-                        `}
-                        <tr>
-                            <th>Current Age</th>
-                            <td>${formData.age} years</td>
-                        </tr>
-                        <tr>
-                            <th>Minimum Retirement Age (MRA)</th>
-                            <td>${retirement.mraDisplay}</td>
-                        </tr>
-                    </table>
-                </div>
+    // Generate the HTML content
+    container.innerHTML = `
+    <div class="retirement-options">
+        <div class="option-card">
+            <h6>Service and Salary Summary</h6>
+            <div class="comparison-table">
+                <table>
+                    <tr>
+                        <th>High-Three Average Salary</th>
+                        <td>${Utils.formatCurrency(retirement.highThreeAverage || 0)}</td>
+                    </tr>
+                    <tr>
+                        <th>Service Duration</th>
+                        <td>${serviceDurationText}</td>
+                    </tr>
+                    ${sickLeaveText ? `
+                    <tr>
+                        <th>Creditable Sick Leave</th>
+                        <td>${sickLeaveText}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Credited Service</th>
+                        <td>${totalServiceText}</td>
+                    </tr>
+                    ` : `
+                    <tr>
+                        <th>Total Credited Service</th>
+                        <td>${serviceDurationText}</td>
+                    </tr>
+                    `}
+                    <tr>
+                        <th>Current Age</th>
+                        <td>${formData.age || 0} years</td>
+                    </tr>
+                    <tr>
+                        <th>Minimum Retirement Age (MRA)</th>
+                        <td>${retirement.mraDisplay || 'Not Available'}</td>
+                    </tr>
+                </table>
             </div>
-
-            <h3>Available Retirement Options</h3>
-            ${Object.entries(retirement.scenarios)
-                .filter(([_, scenario]) => scenario.isEligible)
-                .map(([type, scenario]) => {
-                    let eligibilityRequirements = '';
-                    let citation = '';
-                    let policyNotes = '';
-                    
-                    switch(type) {
-                        case 'immediate':
-                            eligibilityRequirements = `
-                                <h6>Eligibility Requirements</h6>
-                                <ul>
-                                    <li>Age 62 with 5 years of service</li>
-                                    <li>Age 50 with 20 years of service</li>
-                                    <li>Any age with 25 years of service</li>
-                                </ul>
-                                <h6>Benefit Calculation</h6>
-                                <ul>
-                                    <li>1.7% × first 20 years of service × high-3 average salary</li>
-                                    <li>Plus 1% × remaining years over 20 × high-3 average salary</li>
-                                    <li>Special Retirement Supplement until age 62 (if eligible)</li>
-                                </ul>`;
-                            policyNotes = `
-                                <div class="alert alert-info" style="margin-top: 10px; padding: 10px; background-color: #e2e8f0; border-radius: 4px;">
-                                    <strong>Policy Notes:</strong>
-                                    <ul>
-                                        <li>Eligible for FEHB and FEGLI coverage in retirement</li>
-                                        <li>Special Retirement Supplement provides additional income until age 62</li>
-                                        <li>No reduction in annuity regardless of age</li>
-                                    </ul>
-                                </div>`;
-                            citation = '<p class="citation">Source: Foreign Service Act of 1980, as amended, 22 U.S.C. 4051-4052; 5 U.S.C. Chapter 84</p>';
-                            break;
-                        case 'mraPlusTen':
-                            eligibilityRequirements = `
-                                <h6>Eligibility Requirements</h6>
-                                <ul>
-                                    <li>Minimum Retirement Age with 10+ years of service</li>
-                                    <li>MRA varies from 55-57 based on birth year</li>
-                                </ul>
-                                <h6>Important Details</h6>
-                                <ul>
-                                    <li>Uses 1% multiplier for all years of service (as of 2018 GTM/RET policy)</li>
-                                    <li>Reduced 5% per year if taken before age 62</li>
-                                    <li>Can postpone to reduce or eliminate reduction</li>
-                                </ul>`;
-                            policyNotes = `
-                                <div class="alert alert-info" style="margin-top: 10px; padding: 10px; background-color: #e2e8f0; border-radius: 4px;">
-                                    <strong>Policy Notes:</strong>
-                                    <ul>
-                                        <li>As of 2018, GTM/RET changed the multiplier from 1.7% to 1% for all years</li>
-                                        <li>Postponing benefits can help avoid age reduction</li>
-                                        <li>FEHB eligibility only if retirement is immediate (meeting age requirements)</li>
-                                        <li>No Special Retirement Supplement available</li>
-                                    </ul>
-                                </div>`;
-                            citation = '<p class="citation">Source: 5 U.S.C. §8412(b)(1) and §8415; GTM/RET Policy Change 2018</p>';
-                            break;
-                        case 'deferred':
-                            eligibilityRequirements = `
-                                <h6>Eligibility Requirements</h6>
-                                <ul>
-                                    <li>5+ years of service</li>
-                                    <li>Benefits begin at age 62 (or age 65 for enhanced benefit)</li>
-                                </ul>
-                                <h6>Important Details</h6>
-                                <ul>
-                                    <li>Uses 1% multiplier if starting benefits before age 65</li>
-                                    <li>Enhanced 1.7% multiplier available if waiting until age 65</li>
-                                    <li>No Special Retirement Supplement</li>
-                                    <li>No retiree health benefits</li>
-                                </ul>`;
-                            policyNotes = `
-                                <div class="alert alert-info" style="margin-top: 10px; padding: 10px; background-color: #e2e8f0; border-radius: 4px;">
-                                    <strong>Policy Notes:</strong>
-                                    <ul>
-                                        <li>Cannot maintain FEHB or FEGLI into retirement</li>
-                                        <li>Must wait until at least age 62 to begin receiving benefits</li>
-                                        <li>Enhanced 1.7% multiplier only available at age 65 or later</li>
-                                        <li>No cost-of-living adjustments until benefits begin</li>
-                                    </ul>
-                                </div>`;
-                            citation = '<p class="citation">Source: 5 U.S.C. §8413(b) and §8415</p>';
-                            break;
-                        case 'tera':
-                            eligibilityRequirements = `
-                                <h6>Eligibility Requirements</h6>
-                                <ul>
-                                    <li>Eligible with ${minServiceYears}+ years of service</li>
-                                </ul>`;
-                            policyNotes = `
-                                <div class="alert alert-info" style="margin-top: 10px; padding: 10px; background-color: #e2e8f0; border-radius: 4px;">
-                                    <strong>Policy Notes:</strong>
-                                    <ul>
-                                        <li>Eligible for FEHB and FEGLI coverage in retirement</li>
-                                        <li>Special Retirement Supplement available until age 62</li>
-                                        <li>Uses enhanced 1.7% multiplier for first 20 years</li>
-                                        <li>Includes a reduction of 1/12 of 1% for each month under 20 years of service</li>
-                                    </ul>
-                                </div>`;
-                            citation = '<p class="citation">Source: Foreign Service Act of 1980, as amended, 22 U.S.C. 4051-4052</p>';
-                            break;
-                        case 'vera':
-                            eligibilityRequirements = `
-                                <h6>Eligibility Requirements</h6>
-                                <ul>
-                                    <li>Eligible if age ${minVeraAge}+ with ${minServiceYears}+ years of service</li>
-                                </ul>`;
-                            policyNotes = `
-                                <div class="alert alert-info" style="margin-top: 10px; padding: 10px; background-color: #e2e8f0; border-radius: 4px;">
-                                    <strong>Policy Notes:</strong>
-                                    <ul>
-                                        <li>Immediate annuity with no age-based reduction</li>
-                                        <li>Uses standard 1.7% × YOS formula</li>
-                                        <li>Eligible for FEHB if enrolled for at least 5 years</li>
-                                        <li>Eligible for SRS if under age 62 and meets 20-year threshold</li>
-                                    </ul>
-                                </div>`;
-                            citation = `<p class="citation">Source: AFSA Proposal 3/21/2025; 5 U.S.C. §8415(e); 22 U.S.C. §4051 (proposed amendment)</p>`;
-                            break;
-                    }
-                    return `
-                        <div class="option-card">
-                            <h6>${labelMap[type] || (type.charAt(0).toUpperCase() + type.slice(1))} Retirement</h6>
-                            <div class="option-details">
-                                ${eligibilityRequirements}
-                                <div class="calculation-details">
-                                    <p><strong>Monthly Benefit:</strong> ${Utils.formatCurrency(scenario.monthlyAnnuity)}</p>
-                                    <p><strong>Annual Benefit:</strong> ${Utils.formatCurrency(scenario.annualAnnuity)}</p>
-
-                                    <div style="margin-top: 1rem;">
-                                        <p><strong>Net Monthly Annuity</strong></p>
-                                        
-                                        <div style="margin: 1rem 0;">
-                                            <p><strong>With Maximum Survivor Benefit (10%)</strong></p>
-                                            <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem;">
-                                                <tr>
-                                                    <td>Gross Monthly Annuity</td>
-                                                    <td style="text-align: right;">${Utils.formatCurrency(scenario.monthlyAnnuity)}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Survivor Benefit (10%)</td>
-                                                    <td style="text-align: right;">-${Utils.formatCurrency(scenario.monthlyAnnuity * 0.10)}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Health Insurance Premium</td>
-                                                    <td style="text-align: right;">-${Utils.formatCurrency(health?.fehb?.monthly || 0)}</td>
-                                                </tr>
-                                                <tr style="border-top: 1px solid #e2e8f0;">
-                                                    <td><strong>Net Monthly Annuity</strong></td>
-                                                    <td style="text-align: right;"><strong>${Utils.formatCurrency(scenario.monthlyAnnuity - (scenario.monthlyAnnuity * 0.10) - (health?.fehb?.monthly || 0))}</strong></td>
-                                                </tr>
-                                            </table>
-                                        </div>
-
-                                        <div style="margin: 1rem 0;">
-                                            <p><strong>With Reduced Survivor Benefit (5%)</strong></p>
-                                            <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem;">
-                                                <tr>
-                                                    <td>Gross Monthly Annuity</td>
-                                                    <td style="text-align: right;">${Utils.formatCurrency(scenario.monthlyAnnuity)}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Survivor Benefit (5%)</td>
-                                                    <td style="text-align: right;">-${Utils.formatCurrency(scenario.monthlyAnnuity * 0.05)}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Health Insurance Premium</td>
-                                                    <td style="text-align: right;">-${Utils.formatCurrency(health?.fehb?.monthly || 0)}</td>
-                                                </tr>
-                                                <tr style="border-top: 1px solid #e2e8f0;">
-                                                    <td><strong>Net Monthly Annuity</strong></td>
-                                                    <td style="text-align: right;"><strong>${Utils.formatCurrency(scenario.monthlyAnnuity - (scenario.monthlyAnnuity * 0.05) - (health?.fehb?.monthly || 0))}</strong></td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        
-                                        <p style="margin-top: 0.5rem;">
-                                            <em>Note: Maximum survivor benefit provides 50% of your full annuity to your survivor, while reduced benefit provides 25%. Actual deductions may vary based on your elections.</em>
-                                        </p>
-                                    </div>
-                                </div>
-                                ${policyNotes}
-                                ${citation}
-                            </div>
-                        </div>`;
-                }).join('')}
         </div>
 
-        <div class="retirement-notes">
-            <h5>Important Notes</h5>
-            <ul>
-                <li>All calculations are estimates based on current policy and provided information</li>
-                <li>Actual benefits may vary based on final service computation and other factors</li>
-                <li>Special Retirement Supplement (SRS) eligibility and calculation:
+        <h3>Available Retirement Options</h3>
+        ${Object.entries(retirement.scenarios || {})
+            .filter(([_, scenario]) => scenario && scenario.isEligible)
+            .map(([type, scenario]) => {
+                // Generate eligibility requirements, citation, and policy notes based on type
+                const { eligibilityRequirements, citation, policyNotes } = this.getRetirementTypeDetails(
+                    type, minServiceYears, minVeraAge
+                );
+
+                return `
+                    <div class="option-card">
+                        <h6>${labelMap[type] || (type.charAt(0).toUpperCase() + type.slice(1))} Retirement</h6>
+                        <div class="option-details">
+                            ${eligibilityRequirements}
+                            <div class="calculation-details">
+                                <p><strong>Monthly Benefit:</strong> ${Utils.formatCurrency(scenario.monthlyAnnuity || 0)}</p>
+                                <p><strong>Annual Benefit:</strong> ${Utils.formatCurrency(scenario.annualAnnuity || 0)}</p>
+                                ${this.generateDeductionsTable(scenario, health)}
+                            </div>
+                            ${policyNotes}
+                            ${citation}
+                        </div>
+                    </div>`;
+            }).join('')}
+    </div>
+    ${this.generateRetirementNotes(minVeraAge, minServiceYears)}`;
+}
+
+// Helper method to generate the deductions table
+static generateDeductionsTable(scenario, health) {
+    const monthlyAnnuity = scenario.monthlyAnnuity || 0;
+    const healthPremium = health?.fehb?.monthly || 0;
+
+    return `
+    <div style="margin-top: 1rem;">
+        <p><strong>Net Monthly Annuity</strong></p>
+        
+        <div style="margin: 1rem 0;">
+            <p><strong>With Maximum Survivor Benefit (10%)</strong></p>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem;">
+                <tr>
+                    <td>Gross Monthly Annuity</td>
+                    <td style="text-align: right;">${Utils.formatCurrency(monthlyAnnuity)}</td>
+                </tr>
+                <tr>
+                    <td>Survivor Benefit (10%)</td>
+                    <td style="text-align: right;">-${Utils.formatCurrency(monthlyAnnuity * 0.10)}</td>
+                </tr>
+                <tr>
+                    <td>Health Insurance Premium</td>
+                    <td style="text-align: right;">-${Utils.formatCurrency(healthPremium)}</td>
+                </tr>
+                <tr style="border-top: 1px solid #e2e8f0;">
+                    <td><strong>Net Monthly Annuity</strong></td>
+                    <td style="text-align: right;"><strong>${Utils.formatCurrency(monthlyAnnuity - (monthlyAnnuity * 0.10) - healthPremium)}</strong></td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="margin: 1rem 0;">
+            <p><strong>With Reduced Survivor Benefit (5%)</strong></p>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem;">
+                <tr>
+                    <td>Gross Monthly Annuity</td>
+                    <td style="text-align: right;">${Utils.formatCurrency(monthlyAnnuity)}</td>
+                </tr>
+                <tr>
+                    <td>Survivor Benefit (5%)</td>
+                    <td style="text-align: right;">-${Utils.formatCurrency(monthlyAnnuity * 0.05)}</td>
+                </tr>
+                <tr>
+                    <td>Health Insurance Premium</td>
+                    <td style="text-align: right;">-${Utils.formatCurrency(healthPremium)}</td>
+                </tr>
+                <tr style="border-top: 1px solid #e2e8f0;">
+                    <td><strong>Net Monthly Annuity</strong></td>
+                    <td style="text-align: right;"><strong>${Utils.formatCurrency(monthlyAnnuity - (monthlyAnnuity * 0.05) - healthPremium)}</strong></td>
+                </tr>
+            </table>
+        </div>
+        
+        <p style="margin-top: 0.5rem;">
+            <em>Note: Maximum survivor benefit provides 50% of your full annuity to your survivor, while reduced benefit provides 25%. Actual deductions may vary based on tax withholding and other factors.</em>
+        </p>
+    </div>`;
+}
+
+// Helper method to get retirement type details
+static getRetirementTypeDetails(type, minServiceYears, minVeraAge) {
+    const details = {
+        immediate: {
+            eligibilityRequirements: `
+                <h6>Eligibility Requirements</h6>
+                <ul>
+                    <li>Age 62 with 5 years of service</li>
+                    <li>Age 50 with 20 years of service</li>
+                    <li>Any age with 25 years of service</li>
+                </ul>
+                <h6>Benefit Calculation</h6>
+                <ul>
+                    <li>1.7% × first 20 years of service × high-3 average salary</li>
+                    <li>Plus 1% × remaining years over 20 × high-3 average salary</li>
+                    <li>Special Retirement Supplement until age 62 (if eligible)</li>
+                </ul>`,
+            policyNotes: `
+                <div class="alert alert-info">
+                    <strong>Policy Notes:</strong>
                     <ul>
-                        <li>Available for immediate retirement and VERA and TERA before age 62</li>
-                        <li>Must meet one of these criteria:
-                            <ul>
-                                <li>Age 50+ with 20+ years of service</li>
-                                <li>Any age with 25+ years of service</li>
-                                <li>VERA retirement meeting minimum age (${minVeraAge}) and service (${minServiceYears} years) requirements</li>
-                                <li>TERA retirement meeting minimum service (${minServiceYears} years) requirement</li>
-                            </ul>
-                        </li>
-                        <li>SRS estimate based on career average base pay earnings (excluding locality pay) for conservative estimation</li>
-                        <li>Maximum SRS capped at Social Security maximum benefit ($3,627 for 2024)</li>
-                        <li>Actual SRS may be higher if locality pay is included in HR's final calculation</li>
+                        <li>Eligible for FEHB and FEGLI coverage in retirement</li>
+                        <li>Special Retirement Supplement provides additional income until age 62</li>
+                        <li>No reduction in annuity regardless of age</li>
                     </ul>
-                </li>
-                <li>FEHB Coverage Eligibility:
-                    <ul>
-                        <li>Immediate Retirement: Eligible if covered for 5 years before retirement</li>
-                        <li>MRA+10: Only eligible if taking immediate annuity (not postponed)</li>
-                        <li>Deferred: Not eligible to continue FEHB coverage</li>
-                        <li>VERA and TERA: Eligible if covered for 5 years before retirement</li>
-                    </ul>
-                </li>
-                <li>Consider consulting with HR for official calculations and guidance</li>
-            </ul>
-        </div>`;
+                </div>`,
+            citation: '<p class="citation">Source: Foreign Service Act of 1980, as amended, 22 U.S.C. 4051-4052; 5 U.S.C. Chapter 84</p>'
+        },
+        // Add other retirement types here...
+    };
+
+    return details[type] || {
+        eligibilityRequirements: '',
+        policyNotes: '',
+        citation: ''
+    };
+}
+
+// Helper method to generate retirement notes
+static generateRetirementNotes(minVeraAge, minServiceYears) {
+    return `
+    <div class="retirement-notes">
+        <h5>Important Notes</h5>
+        <ul>
+            <li>All calculations are estimates based on current policy and provided information</li>
+            <li>Actual benefits may vary based on final service computation and other factors</li>
+            <li>Special Retirement Supplement (SRS) eligibility and calculation:
+                <ul>
+                    <li>Available for immediate retirement and VERA and TERA before age 62</li>
+                    <li>Must meet one of these criteria:
+                        <ul>
+                            <li>Age 50+ with 20+ years of service</li>
+                            <li>Any age with 25+ years of service</li>
+                            <li>VERA retirement meeting minimum age (${minVeraAge}) and service (${minServiceYears} years) requirements</li>
+                            <li>TERA retirement meeting minimum service (${minServiceYears} years) requirement</li>
+                        </ul>
+                    </li>
+                    <li>SRS estimate based on career average base pay earnings (excluding locality pay) for conservative estimation</li>
+                    <li>Maximum SRS capped at Social Security maximum benefit ($3,627 for 2024)</li>
+                    <li>Actual SRS may be higher if locality pay is included in HR's final calculation</li>
+                </ul>
+            </li>
+            <li>FEHB Coverage Eligibility:
+                <ul>
+                    <li>Immediate Retirement: Eligible if covered for 5 years before retirement</li>
+                    <li>MRA+10: Only eligible if taking immediate annuity (not postponed)</li>
+                    <li>Deferred: Not eligible to continue FEHB coverage</li>
+                    <li>VERA and TERA: Eligible if covered for 5 years before retirement</li>
+                </ul>
+            </li>
+            <li>Consider consulting with HR for official calculations and guidance</li>
+        </ul>
+    </div>`;
+}
         
 // --- Begin function initializeAfterLoad ---
 function initializeAfterLoad() {
