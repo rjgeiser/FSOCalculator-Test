@@ -2869,8 +2869,6 @@ static updateRetirementResults(container, retirement, formData, health) {
     // --- Begin function updateLifetimeReport ---
  static updateLifetimeReport(container, retirement, formData) {
     console.log('🔍 DEBUG - Lifetime Report Inputs:', {
-        containerExists: !!container,
-        container: container,
         retirement: retirement,
         formData: formData,
         scenarios: retirement?.scenarios || 'No scenarios found'
@@ -2878,10 +2876,6 @@ static updateRetirementResults(container, retirement, formData, health) {
 
     const maxAge = 85;
     const currentAge = parseInt(formData.age, 10) || 57;
-    const service = parseFloat(formData.yearsService || 0);
-    const grade = formData.fsGrade || '';
-    const teraMinAge = parseInt(formData.teraAge || 50, 10);
-    const teraMinYears = parseInt(formData.teraYears || 20, 10);
 
     const tbodyEligible = [];
     const tbodyIneligible = [];
@@ -2891,18 +2885,17 @@ static updateRetirementResults(container, retirement, formData, health) {
     // Process each retirement scenario
     if (retirement.scenarios) {
         console.log('Processing retirement scenarios:', retirement.scenarios);
-        
+
         Object.entries(retirement.scenarios).forEach(([type, scenario]) => {
             console.log(`Processing ${type} scenario:`, scenario);
 
             const label = labelMap[type] || type;
             const annual = scenario.annualAnnuity || 0;
-            
+
             // Calculate years receiving benefits
-            const startAge = type === 'deferred' ? 62 : 
-                           type === 'mraPlusTen' ? Math.max(57, currentAge) : 
-                           currentAge;
-            
+            const startAge = type === 'deferred' ? 62 :
+                             type === 'mraPlusTen' ? Math.max(57, currentAge) :
+                             currentAge;
             const years = Math.max(0, maxAge - startAge);
             const total = Math.round(annual * years);
 
@@ -2912,42 +2905,31 @@ static updateRetirementResults(container, retirement, formData, health) {
                 assumptions += ` (+ $${annualSupplemental.toLocaleString()} SRS until age 62)`;
             }
 
-            const row = `<tr>
-                <td>${label}</td>
-                <td>${Utils.formatCurrency(total)}</td>
-            </tr>`;
-
+            // If the scenario is eligible
             if (scenario.isEligible) {
+                const row = `<tr>
+                    <td>${label}</td>
+                    <td>${Utils.formatCurrency(total)}</td>
+                </tr>`;
                 tbodyEligible.push(row);
                 notesEligible.push(`<strong>${label}:</strong> ${assumptions}`);
             } else {
+                // If the scenario is ineligible, still calculate the hypothetical total benefit
+                const row = `<tr>
+                    <td>${label}</td>
+                    <td>${Utils.formatCurrency(total)}</td>
+                </tr>`;
                 tbodyIneligible.push(row);
-                const reasons = this.getIneligibilityReasons(type, currentAge, service, grade);
-                const reasonText = reasons.length ? 
-                    `Ineligible because ${reasons.join(", ")}` : 
-                    "Ineligible (missing requirements)";
+
+                // Add ineligibility reasons
+                const reasons = this.getIneligibilityReasons(type, currentAge, formData.yearsService, formData.fsGrade);
+                const reasonText = reasons.length
+                    ? `Ineligible because ${reasons.join(", ")}`
+                    : "Ineligible (missing requirements)";
                 notesIneligible.push(`<strong>${label}:</strong> ${reasonText} — but would be ${assumptions}`);
             }
         });
     }
-
-    // Add severance if available
-    if (retirement.severanceAmount) {
-        tbodyEligible.unshift(`
-            <tr>
-                <td>Severance</td>
-                <td>${Utils.formatCurrency(retirement.severanceAmount)}</td>
-            </tr>`
-        );
-        notesEligible.unshift(`<strong>Severance:</strong> One-time payment of ${Utils.formatCurrency(retirement.severanceAmount)}`);
-    }
-
-    console.log('Generated content:', {
-        eligibleRows: tbodyEligible.length,
-        ineligibleRows: tbodyIneligible.length,
-        eligibleNotes: notesEligible.length,
-        ineligibleNotes: notesIneligible.length
-    });
 
     // Update the container with results
     container.innerHTML = `
@@ -2976,13 +2958,13 @@ static updateRetirementResults(container, retirement, formData, health) {
                     </thead>
                     <tbody>${tbodyIneligible.join('')}</tbody>
                 </table>
+            </div>
 
-                <div class="form-text">
-                    <h3>Assumptions</h3>
-                    <ul>
-                        <li>${[...notesEligible, ...notesIneligible].join("</li><li>")}</li>
-                    </ul>
-                </div>
+            <div class="form-text">
+                <h3>Assumptions</h3>
+                <ul>
+                    <li>${[...notesEligible, ...notesIneligible].join("</li><li>")}</li>
+                </ul>
             </div>
         </div>`;
 }
