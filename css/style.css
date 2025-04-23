@@ -1573,65 +1573,6 @@ footer a:hover {
     }
 }
 
-/* Dark mode styles for larger screens only */
-/* @media (prefers-color-scheme: dark) and (min-width: 769px) {
-    body {
-        background-color: #1a202c;
-    }
-
-    .form-container, .tabs {
-    }
-
-    .form-control {
-    }
-
-    .form-control:focus {
-        border-color: #63b3ed;
-    }
-
-    .btn-primary {
-        background-color: #4299e1;
-        border-color: #4299e1;
-    }
-
-    .btn-primary:hover {
-        background-color: #3182ce;
-        border-color: #3182ce;
-    }
-
-    .btn-outline-secondary {
-    }
-
-    .btn-outline-secondary:hover {
-        background-color: #4a5568;
-    }
-
-    .nav-tabs .nav-link {
-    }
-
-    .nav-tabs .nav-link.active {
-        color: #4299e1;
-    }
-
-    .alert-info {
-        background-color: #2a4365;
-        border-color: #2b6cb0;
-    }
-
-    footer {
-    }
-
-    footer a {
-        color: #63b3ed;
-    }
-
-    footer a:hover {
-        color: #4299e1;
-    }
-} */
-
-/* ... existing code ... */
-
 /* Column width classes */
 .form-group.col-12,
 .form-group.col-md-12 {
