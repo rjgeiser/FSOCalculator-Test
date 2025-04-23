@@ -2320,56 +2320,56 @@ class Calculator {
 
 
     // --- Begin static method setupFormHandlers ---
-    static setupFormHandlers() {
-      const calculatorForm = document.getElementById('calculator-form');
-      if (!calculatorForm) return;
-    
-      calculatorForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        try {
-          FormValidator.clearAllErrors();
-          UIManager.showLoading();
-          UIManager.clearError();
-    
-          const formData = this.getFormData();
-          FormValidator.validateFormData(formData);
-    
-          const results = {
-            formData: formData,
-            severance: this.calculateSeverance(formData),
-            retirement: this.calculateRetirement(formData),
-            health: this.calculateHealth(formData)
-          };
-    
-          this.updateResults(results);
-          UIManager.showResults();
-        } catch (error) {
-          ErrorHandler.handleError(error, 'form submission');
-        } finally {
-          UIManager.hideLoading();
-        }
-      });
+// --- Begin static method setupFormHandlers ---
+static setupFormHandlers() {
+  const calculatorForm = document.getElementById('calculator-form');
+  if (!calculatorForm) return;
+
+  calculatorForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      FormValidator.clearAllErrors();
+      UIManager.showLoading();
+      UIManager.clearError();
+
+      const formData = this.getFormData();
+      FormValidator.validateFormData(formData);
+
+      const results = {
+        formData: formData,
+        severance: this.calculateSeverance(formData),
+        retirement: this.calculateRetirement(formData),
+        health: this.calculateHealth(formData)
+      };
+
+      this.updateResults(results);
+      UIManager.showResults();
+    } catch (error) {
+      ErrorHandler.handleError(error, 'form submission');
+    } finally {
+      UIManager.hideLoading();
     }
-        // Add reset handler
-        calculatorForm.addEventListener('reset', () => {
-            FormValidator.clearAllErrors();
-            UIManager.clearError();
-            document.querySelectorAll('.results-container').forEach(container => {
-                container.innerHTML = '';
-                container.style.display = 'none';
-            });
-        });
+  });
 
-    // Add mobile-specific touch handling for submit button
-        const submitButton = calculatorForm.querySelector('button[type="submit"]');
-        if (submitButton) {
-            submitButton.addEventListener('touchend', (e) => {
-        e.preventDefault();
-                submitButton.click(); // Trigger native click
-            });
-        }
+  // Add reset handler
+  calculatorForm.addEventListener('reset', () => {
+    FormValidator.clearAllErrors();
+    UIManager.clearError();
+    document.querySelectorAll('.results-container').forEach(container => {
+      container.innerHTML = '';
+      container.style.display = 'none';
+    });
+  });
 
-
+  // Add mobile-specific touch handling for submit button
+  const submitButton = calculatorForm.querySelector('button[type="submit"]');
+  if (submitButton) {
+    submitButton.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      submitButton.click(); // Trigger native click
+    });
+  }
+}
     // --- Begin static method getFormData ---
     static getFormData() {
         const serviceComputationDate = document.getElementById('service-computation-date')?.value;
