@@ -887,10 +887,9 @@ class FormValidator {
             this.clearFieldError(element);
         });
     }
-}
 
 // UI Manager for handling UI updates
-const UIManager = {
+}  // close class FormValidatorconst UIManager = {
     showLoading() {
         const loading = document.getElementById('loading');
         if (loading) {
