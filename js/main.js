@@ -39,6 +39,57 @@ const labelMap = {
   deferred: 'Deferred'
 };
 
+// Function to update step dropdown visibility based on grade
+
+// --- Begin function updateStepDropdown ---
+function updateStepDropdown(grade) {
+    const fsStep = document.getElementById('fs-step');
+    if (!fsStep) return;
+
+    // Clear existing options
+    fsStep.innerHTML = '';
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Select Step/Rank';
+    fsStep.appendChild(defaultOption);
+
+    if (grade === 'SFS') {
+        // Add Career Minister option
+        const cmOption = document.createElement('option');
+        cmOption.value = SFS_RANKS['Career Minister'].step;
+        cmOption.textContent = 'Career Minister';
+        fsStep.appendChild(cmOption);
+        
+        // Add Minister Counselor options
+        SFS_RANKS['Minister Counselor'].steps.forEach(step => {
+            const option = document.createElement('option');
+            option.value = step;
+            option.textContent = `Minister Counselor (Step ${step})`;
+            fsStep.appendChild(option);
+        });
+        
+        // Add Counselor options
+        SFS_RANKS['Counselor'].steps.forEach(step => {
+            const option = document.createElement('option');
+            option.value = step;
+            option.textContent = `Counselor (Step ${step})`;
+            fsStep.appendChild(option);
+        });
+    } else if (grade) {
+        // Regular FS grades steps
+        for (let i = 1; i <= 14; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = `Step ${i}`;
+            fsStep.appendChild(option);
+        }
+    }
+
+    // Force redraw for iOS
+    fsStep.style.display = 'none';
+    fsStep.offsetHeight;
+    fsStep.style.display = '';
+}
 
 // --- Begin function calculateSickLeaveServiceDuration ---
 function calculateSickLeaveServiceDuration(sickLeaveHours) {
@@ -3178,74 +3229,6 @@ function formatServiceDuration(serviceDuration) {
     
     return text || '0 months';
 }
-
-// Function to update step dropdown visibility based on grade
-
-// --- Begin function updateStepDropdown ---
-function updateStepDropdown(grade) {
-    const fsStep = document.getElementById('fs-step');
-    if (!fsStep) return;
-
-    // Clear existing options
-    fsStep.innerHTML = '';
-    const defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.textContent = 'Select Step/Rank';
-    fsStep.appendChild(defaultOption);
-
-    if (grade === 'SFS') {
-        // Add Career Minister option
-        const cmOption = document.createElement('option');
-        cmOption.value = SFS_RANKS['Career Minister'].step;
-        cmOption.textContent = 'Career Minister';
-        fsStep.appendChild(cmOption);
-        
-        // Add Minister Counselor options
-        SFS_RANKS['Minister Counselor'].steps.forEach(step => {
-            const option = document.createElement('option');
-            option.value = step;
-            option.textContent = `Minister Counselor (Step ${step})`;
-            fsStep.appendChild(option);
-        });
-        
-        // Add Counselor options
-        SFS_RANKS['Counselor'].steps.forEach(step => {
-            const option = document.createElement('option');
-            option.value = step;
-            option.textContent = `Counselor (Step ${step})`;
-            fsStep.appendChild(option);
-        });
-    } else if (grade) {
-        // Regular FS grades steps
-        for (let i = 1; i <= 14; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = `Step ${i}`;
-            fsStep.appendChild(option);
-        }
-    }
-
-    // Force redraw for iOS
-    fsStep.style.display = 'none';
-    fsStep.offsetHeight;
-    fsStep.style.display = '';
-}
-
-// Add event listeners after DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Set up grade change listener
-    const fsGrade = document.getElementById('fs-grade');
-    if (fsGrade) {
-        fsGrade.addEventListener('change', function() {
-            updateStepDropdown(this.value);
-        });
-        
-        // Initialize with current grade value
-        if (fsGrade.value) {
-            updateStepDropdown(fsGrade.value);
-        }
-    }
-});
 
 // --- Begin function updateLifetimeReport ---
 function updateLifetimeReport(retirement, formData) {
