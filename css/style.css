@@ -1775,6 +1775,7 @@ textarea {
 [data-theme="dark"] h3,
 [data-theme="dark"] h4,
 [data-theme="dark"] h5,
+[data-theme="dark"] p,
 [data-theme="dark"] .section-header {
   color: var(--text-color) !important;
 }
@@ -1793,8 +1794,8 @@ textarea {
 [data-theme="dark"] input,
 [data-theme="dark"] textarea {
   background-color: #2d3748 !important;
-  color: #e2e8f0 !important;
-  -webkit-text-fill-color: #e2e8f0 !important;
+  color: #f7fafc !important;
+  -webkit-text-fill-color: #f7fafc !important;
   border-color: #4a5568 !important;
   -webkit-appearance: none !important;
   appearance: none !important;
