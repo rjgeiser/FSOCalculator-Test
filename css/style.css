@@ -1825,3 +1825,24 @@ select option {
   color: var(--text-color) !important;
   border-color: var(--border-color) !important;
 }
+
+[data-theme="dark"] select,
+[data-theme="dark"] input,
+[data-theme="dark"] textarea {
+  background-color: #2d3748 !important;
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  border-color: #4a5568 !important;
+}
+
+select,
+select option,
+input,
+textarea {
+  background-color: var(--background-color, #ffffff) !important;
+  color: var(--text-color, #1a202c) !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  -webkit-text-fill-color: var(--text-color, #1a202c) !important;
+  border-color: var(--border-color, #cbd5e0) !important;
+}
