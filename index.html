@@ -32,6 +32,14 @@
             <!-- Left Column - Form -->
             <section class="form-column">
                 <form id="calculator-form">
+                    <div class="theme-toggle-wrapper">
+                      <label class="theme-switch" for="theme-toggle-checkbox">
+                        <input type="checkbox" id="theme-toggle-checkbox" />
+                        <span class="slider"></span>
+                      </label>
+                    </div>
+                    <div class="form-container">
+                      <!-- Form continues here -->
                     <div class="form-container">
                         <!-- Personal Information Section -->
                         <div class="form-section" data-step="personal">
@@ -535,13 +543,25 @@
     
     <div class="skip-link" tabindex="0">Skip to main content</div>
 
-    <!-- Light & Dark Mode Toggle -->
-<div class="theme-toggle-wrapper">
-  <label class="theme-switch" for="theme-toggle-checkbox">
-    <input type="checkbox" id="theme-toggle-checkbox" />
-    <span class="slider"></span>
-  </label>
-</div>
+<!-- Theme toggle script -->
+<script>
+  const themeToggle = document.getElementById("theme-toggle-checkbox");
+
+  // Load saved theme from localStorage on page load
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme) {
+    document.documentElement.setAttribute("data-theme", savedTheme);
+    themeToggle.checked = savedTheme === "dark";
+  }
+
+  // Listen for user toggle
+  themeToggle.addEventListener("change", () => {
+    const isDark = themeToggle.checked;
+    const theme = isDark ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  });
+</script>               
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>eruda.init();</script>
 </body>
