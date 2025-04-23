@@ -1758,7 +1758,11 @@ textarea {
 [data-theme="dark"] .form-actions,
 [data-theme="dark"] .results-container,
 [data-theme="dark"] .option-card,
+[data-theme="dark"] .tabs,
+[data-theme="dark"] .tab-buttons,
 [data-theme="dark"] .tab-content,
+[data-theme="dark"] .comparison-table,
+[data-theme="dark"] .calculation-details,
 [data-theme="dark"] .retirement-options,
 [data-theme="dark"] .retirement-notes,
 [data-theme="dark"] .disclaimer {
