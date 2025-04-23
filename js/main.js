@@ -826,37 +826,38 @@ class FormValidator {
     }
 
     static showFieldError(element, message) {
-        try {
-            // Check if element exists before trying to access its properties
-            if (!element) {
-                console.warn(`Attempted to show error on non-existent element: ${message}`);
-                return;
-            }
-            
-            // Ensure element has classList before trying to modify it
-            if (element.classList) {
-                element.classList.add('invalid');
-                element.classList.remove('valid');
-            }
-            
-            // Get parent element safely
-            const parent = element.parentElement;
-            if (!parent) {
-                console.warn(`Element has no parent: ${element.id}`);
-                return;
-            }
-            
-            let errorDiv = parent.querySelector('.validation-message');
-            if (!errorDiv) {
-                errorDiv = document.createElement('div');
-                errorDiv.className = 'validation-message';
-                parent.appendChild(errorDiv);
-            }
-            errorDiv.textContent = message;
-        } catch (error) {
-            console.error('Error showing field error:', error);
+      try {
+        // Check if element exists before trying to access its properties
+        if (!element) {
+          console.warn(`Attempted to show error on non-existent element: ${message}`);
+          return;
         }
-} catch (error) { console.error('Error caught in try block:', error); }
+    
+        // Ensure element has classList before trying to modify it
+        if (element.classList) {
+          element.classList.add('invalid');
+          element.classList.remove('valid');
+        }
+    
+        // Get parent element safely
+        const parent = element.parentElement;
+        if (!parent) {
+          console.warn(`Element has no parent: ${element.id}`);
+          return;
+        }
+    
+        let errorDiv = parent.querySelector('.validation-message');
+        if (!errorDiv) {
+          errorDiv = document.createElement('div');
+          errorDiv.className = 'validation-message';
+          parent.appendChild(errorDiv);
+        }
+    
+        errorDiv.textContent = message;
+    
+      } catch (error) {
+        console.error('Error showing field error:', error);
+      }
     }
 
     static clearFieldError(element) {
