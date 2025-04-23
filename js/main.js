@@ -1046,63 +1046,58 @@ const UIManager = {
 // === Begin class TabManager ===
 class TabManager {
 
-    // --- Begin static method activateTab ---
-    static activateTab(tabId) {
-        try {
-            // Hide all tab contents first
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.style.display = 'none';
-                content.classList.remove('active');
-                content.setAttribute('aria-hidden', 'true');
-            });
-    
-        // Remove active class from all buttons
-        document.querySelectorAll('.tab-button').forEach(button => {
-            button.classList.remove('active');
-            button.setAttribute('aria-selected', 'false');
-        });
+  // --- Begin static method activateTab ---
+  static activateTab(tabId) {
+    try {
+      // Hide all tab contents first
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.style.display = 'none';
+        content.classList.remove('active');
+        content.setAttribute('aria-hidden', 'true');
+      });
 
-        // Show selected tab content
-        const selectedContent = document.getElementById(tabId);
+      // Remove active class from all buttons
+      document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active');
+        button.setAttribute('aria-selected', 'false');
+      });
 
-// === Begin object selectedButton ===
-        const selectedButton = document.querySelector(`[data-tab="${tabId}"]`);
+      // Show selected tab content
+      const selectedContent = document.getElementById(tabId);
+      const selectedButton = document.querySelector(`[data-tab="${tabId}"]`);
 
-        if (selectedContent && selectedButton) {
-            selectedContent.style.display = 'block';
-            selectedContent.classList.add('active');
-            selectedContent.setAttribute('aria-hidden', 'false');
-        
-            selectedButton.classList.add('active');
-            selectedButton.setAttribute('aria-selected', 'true');
-        }
+      if (selectedContent && selectedButton) {
+        selectedContent.style.display = 'block';
+        selectedContent.classList.add('active');
+        selectedContent.setAttribute('aria-hidden', 'false');
+
+        selectedButton.classList.add('active');
+        selectedButton.setAttribute('aria-selected', 'true');
+      }
     } catch (error) {
-        console.error('Error in activateTab:', error);
+      console.error('Error in activateTab:', error);
     }
-    } catch (error) { console.error('Error caught in try block:', error); }
-}
+  }
 
-
-    // --- Begin static method setupTabNavigation ---
-    static setupTabNavigation() {
-        // Add click handlers to tab buttons
-        document.querySelectorAll('.tab-button').forEach(button => {
-            button.addEventListener('click', () => {
-                const tabId = button.getAttribute('data-tab');
-                this.activateTab(tabId);
-            });
-        });
+  // --- Begin static method setupTabNavigation ---
+  static setupTabNavigation() {
+    // Add click handlers to tab buttons
+    document.querySelectorAll('.tab-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const tabId = button.getAttribute('data-tab');
+        this.activateTab(tabId);
+      });
+    });
 
     // Show Severance tab by default
     this.showDefaultTab();
-    }
+  }
 
-
-    // --- Begin static method showDefaultTab ---
-    static showDefaultTab() {
-        this.activateTab('severance');
-    }
-
+  // --- Begin static method showDefaultTab ---
+  static showDefaultTab() {
+    this.activateTab('severance');
+  }
+}
 
 // === Begin class AccessibilityManager ===
 class AccessibilityManager {
