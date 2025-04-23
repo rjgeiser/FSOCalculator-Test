@@ -2548,6 +2548,12 @@ static setupFormHandlers() {
         if (healthResults && results.health) {
             this.updateHealthResults(healthResults, results.health);
         }
+
+        // Update lifetime results - Add this section
+        const lifetimeResults = document.getElementById('lifetime-results');
+            if (lifetimeResults && results.retirement) {
+            this.updateLifetimeReport(lifetimeResults, results.retirement, results.formData);
+        }
     }
 
     // --- Begin static method updateSeveranceResults ---
@@ -3083,6 +3089,7 @@ static getRetirementTypeDetails(type, minServiceYears, minVeraAge) {
                 </ul>`,
             policyNotes: `
                 <div class="alert alert-info">
+                
                     <strong>Policy Notes:</strong>
                     <ul>
                         <li>Eligible for FEHB and FEGLI coverage in retirement</li>
