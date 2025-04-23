@@ -288,8 +288,6 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
     });
 
     // Round years to nearest month
-
-// --- Begin function roundToMonths ---
     function roundToMonths(years) {
         if (!years) return 0;
         const totalMonths = Math.round(years * 12);
@@ -316,13 +314,11 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
     let age62Comparison = null;
 
     //Calculate MRA age with a years and months value and a maximum of 57
-
-// --- Begin function formatMRA ---
     function formatMRA(decimalAge) {
-      const capped = Math.min(decimalAge, 57); // FSPS max
-      const years = Math.floor(capped);
-      const months = Math.round((capped - years) * 12);
-      return `${years} years${months > 0 ? `, ${months} months` : ""}`;
+        const capped = Math.min(decimalAge, 57); // FSPS max
+        const years = Math.floor(capped);
+        const months = Math.round((capped - years) * 12);
+        return `${years} years${months > 0 ? `, ${months} months` : ""}`;
     }  
     
     // Get MRA for the employee's age
@@ -330,12 +326,11 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
     const mraAge = Math.min(mraAgeRaw, 57); // cap per FSPS
     const mraDisplay = formatMRA(mraAgeRaw); // use raw for display, but capped for logic
 
-
     // Get current grade
     const fsGrade = document.getElementById('fs-grade').value;
     const isSeniorGrade = fsGrade === 'FS-01' || fsGrade === 'SFS';
 
-    // Check eligibility without sick leave
+    // Check eligibility and set appropriate values based on retirement type
     if (type === "immediate") {
         if (isSeniorGrade && effectiveYearsService >= 5) {
             // FS-01 and SFS are always eligible for immediate retirement with 5 years service
@@ -352,7 +347,7 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
         } else if (effectiveYearsService >= 25) {
             isEligible = true;
             description = "Immediate retirement (25 years any age)";
-
+        }
     } else if (type === "tera" && teraEligible && effectiveYearsService >= teraYearsRequired) {
         isEligible = true;
         description = `TERA retirement (${teraYearsRequired}+ years of service)`;
@@ -368,15 +363,14 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
         annuityReductionFactor = Math.max(0, reductionFactor); // Prevent negative reduction
     
         reductionNote = `Annuity reduced by ${(100 - reductionFactor * 100).toFixed(1)}% for service under 20 years (TERA reduction)`;
-   
     } else if (type === "vera" && teraEligible) {
-            const veraAgeThreshold = parseInt(teraAgeRequired) || 43;
-            const veraYearsThreshold = parseInt(teraYearsRequired) || 15;
+        const veraAgeThreshold = parseInt(teraAgeRequired) || 43;
+        const veraYearsThreshold = parseInt(teraYearsRequired) || 15;
         
-            if (currentAge >= veraAgeThreshold && effectiveYearsService >= veraYearsThreshold) {
-                isEligible = true;
-                description = `VERA retirement (age ${veraAgeThreshold}+ with ${veraYearsThreshold}+ years)`;
-            }
+        if (currentAge >= veraAgeThreshold && effectiveYearsService >= veraYearsThreshold) {
+            isEligible = true;
+            description = `VERA retirement (age ${veraAgeThreshold}+ with ${veraYearsThreshold}+ years)`;
+        }
     } else if (type === "mra+10") {
         if (effectiveYearsService >= 10) {
             isEligible = true;
@@ -445,8 +439,8 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
     // Calculate annual and monthly amounts
     const baseAnnuity = highThreeAverage * annuityPercentage;
     const reductionMultiplier = (type === 'tera')
-      ? annuityReductionFactor
-      : (1 - mraReduction);
+        ? annuityReductionFactor
+        : (1 - mraReduction);
     
     const finalAnnuity = baseAnnuity * reductionMultiplier;
     const monthlyAnnuity = finalAnnuity / 12;
@@ -515,21 +509,8 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
             monthlySupplemental,
             supplementalAnnuity
         });
-    } else {
-        console.log('Not eligible for SRS. Reason:', {
-            isEligible,
-            type,
-            age: currentAge,
-            service: effectiveYearsService,
-            teraRequirements: {
-                ageRequired: teraAgeRequired,
-                yearsRequired: teraYearsRequired
-            }
-        });
     }
 
-
-// === Begin object result ===
     const result = {
         isEligible,
         annualAnnuity: finalAnnuity || 0,
@@ -548,40 +529,6 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
 
     console.log('Final scenario result:', result);
     return result;
-
-    switch (type) {
-        case 'FULL':
-            if (!(effectiveYearsService >= 20 && currentAge >= 50)) {
-                eligible = false;
-                ineligibilityReason = "Less than 20 years of service or under age 50";
-            }
-            break;
-        case 'VERA':
-            if (!(effectiveYearsService >= 20 && currentAge >= 45)) {
-                eligible = false;
-                ineligibilityReason = "Does not meet VERA age or service requirements";
-            }
-            break;
-        case 'MRA10':
-            if (!(currentAge >= 57 && effectiveYearsService >= 10)) {
-                eligible = false;
-                ineligibilityReason = "Under MRA or fewer than 10 years of service";
-            }
-            break;
-        case 'DEFERRED':
-            if (!(effectiveYearsService >= 5)) {
-                eligible = false;
-                ineligibilityReason = "Less than 5 years of creditable service";
-            }
-            break;
-        case 'TERA':
-            if (!(teraEligible && effectiveYearsService >= teraYearsRequired && currentAge >= teraAgeRequired)) {
-                eligible = false;
-                ineligibilityReason = "Does not meet TERA eligibility criteria";
-            }
-            break;
-    }
-    
 }
 
 // Core utility functions
@@ -1750,14 +1697,67 @@ function calculateFSPSAnnuity(fsGrade, fsStep, yearsService, age, highThreeYears
     }
     
     // Calculate scenarios including TERA
-
-// === Begin object scenarios ===
     const scenarios = {
-        immediate: calculateScenario(highThreeAverage, effectiveYearsService, age, "immediate", false, teraEligible, teraYearsRequired, teraAgeRequired, sickLeaveServiceDuration, serviceDuration),
-        tera: calculateScenario(highThreeAverage, effectiveYearsService, age, "tera", false, teraEligible, teraYearsRequired, teraAgeRequired, sickLeaveServiceDuration, serviceDuration),
-        vera: calculateScenario(highThreeAverage, effectiveYearsService, age, "vera", false, teraEligible, teraYearsRequired, teraAgeRequired, sickLeaveServiceDuration, serviceDuration),
-        mraPlusTen: calculateScenario(highThreeAverage, effectiveYearsService, age, "mra+10", false, teraEligible, teraYearsRequired, teraAgeRequired, sickLeaveServiceDuration, serviceDuration),
-        deferred: calculateScenario(highThreeAverage, effectiveYearsService, age, "deferred", false, teraEligible, teraYearsRequired, teraAgeRequired, sickLeaveServiceDuration, serviceDuration)
+        immediate: calculateScenario(
+            highThreeAverage, 
+            effectiveYearsService, 
+            age, 
+            "immediate", 
+            false, 
+            teraEligible, 
+            teraYearsRequired, 
+            teraAgeRequired, 
+            sickLeaveServiceDuration, 
+            serviceDuration
+        ),
+        tera: calculateScenario(
+            highThreeAverage, 
+            effectiveYearsService, 
+            age, 
+            "tera", 
+            false, 
+            teraEligible, 
+            teraYearsRequired, 
+            teraAgeRequired, 
+            sickLeaveServiceDuration, 
+            serviceDuration
+        ),
+        vera: calculateScenario(
+            highThreeAverage, 
+            effectiveYearsService, 
+            age, 
+            "vera", 
+            false, 
+            teraEligible, 
+            teraYearsRequired, 
+            teraAgeRequired, 
+            sickLeaveServiceDuration, 
+            serviceDuration
+        ),
+        mraPlusTen: calculateScenario(
+            highThreeAverage, 
+            effectiveYearsService, 
+            age, 
+            "mra+10", 
+            false, 
+            teraEligible, 
+            teraYearsRequired, 
+            teraAgeRequired, 
+            sickLeaveServiceDuration, 
+            serviceDuration
+        ),
+        deferred: calculateScenario(
+            highThreeAverage, 
+            effectiveYearsService, 
+            age, 
+            "deferred", 
+            false, 
+            teraEligible, 
+            teraYearsRequired, 
+            teraAgeRequired, 
+            sickLeaveServiceDuration, 
+            serviceDuration
+        )
     };
     
     // Return the best scenario as the main result along with all scenarios
@@ -2143,57 +2143,55 @@ static getFormData() {
 
     // --- Begin static method async ---
 static async handleFormSubmit(e) {
-  try {
-    e.preventDefault();
-    e.stopPropagation();
+    try {
+        e.preventDefault();
+        e.stopPropagation();
 
-    // Clear any previous errors or results
-    FormValidator.clearAllErrors();
-    UIManager.clearError();
-    UIManager.showLoading();
+        // Clear any previous errors or results
+        FormValidator.clearAllErrors();
+        UIManager.clearError();
+        UIManager.showLoading();
 
-    // Gather all form input
-    const formData = FormManager.getFormData();
-    console.log('📄 Form Data:', formData);
+        // Gather all form input
+        const formData = FormManager.getFormData();
+        console.log('📄 Form Data:', formData);
 
-    // Validate user inputs
-    FormValidator.validateFormData(formData);
+        // Validate user inputs
+        FormValidator.validateFormData(formData);
 
-    // Run all calculators
-    const severanceResult = Calculator.calculateSeverance(formData);
-    const retirementResult = Calculator.calculateRetirement(formData);
-    const healthResult = Calculator.calculateHealth(formData);
+        // Run all calculators
+        const severanceResult = Calculator.calculateSeverance(formData);
+        const retirementResult = Calculator.calculateRetirement(formData);
+        const healthResult = Calculator.calculateHealth(formData);
 
-    // Merge results into unified object
+        // Merge results into unified object
+        const results = {
+            formData: formData,
+            severance: severanceResult,
+            retirement: retirementResult,
+            health: healthResult,
+            retirementOptions: retirementResult?.scenarios || {}
+        };
 
-// === Begin object results ===
-    const results = {
-      formData: formData,
-      severance: severanceResult,
-      retirement: retirementResult,
-      health: healthResult,
-      retirementOptions: retirementResult?.scenarios || {}
-    };
+        // Store globally (if needed later)
+        window.calculatorResults = results;
 
-    // Store globally (if needed later)
-    window.calculatorResults = results;
+        // Update results tabs
+        Calculator.updateRetirementResults(results.retirement, formData);
+        Calculator.updateHealthResults(document.getElementById('health-results'), results.health);
+        updateLifetimeReport(results.retirement, formData);
 
-    // Update results tabs
-    Calculator.updateRetirementResults(results.retirement, formData);
-    Calculator.updateHealthResults(document.getElementById('health-results'), results.health);
-    updateLifetimeReport(results.retirement, formData);
-
-    // Switch to results tab (optional)
-    UIManager.switchTab('retirement');
-
-  } catch (error) {
-    console.error("❌ Form processing error:", error);
-    UIManager.showError("An error occurred while processing your form. Please check your inputs.");
-  } finally {
-    UIManager.hideLoading();
-  }
-} catch (error) { console.error('Error caught in try block:', error); }
-}
+        // Switch to results tab (optional)
+        UIManager.switchTab('retirement');
+    
+        } catch (error) {
+            console.error("❌ Form processing error:", error);
+            UIManager.showError("An error occurred while processing your form. Please check your inputs.");
+        } finally {
+            UIManager.hideLoading();
+        }
+    } // End of handleFormSubmit method
+} // End of FormManager class
 
 // Service Duration Validation Functions
 
