@@ -827,7 +827,6 @@ class FormValidator {
 
     static showFieldError(element, message) {
         try {
-} catch (error) { console.error('Caught error:', error); }
             // Check if element exists before trying to access its properties
             if (!element) {
                 console.warn(`Attempted to show error on non-existent element: ${message}`);
@@ -857,11 +856,11 @@ class FormValidator {
         } catch (error) {
             console.error('Error showing field error:', error);
         }
+} catch (error) { console.error('Error caught in try block:', error); }
     }
 
     static clearFieldError(element) {
         try {
-} catch (error) { console.error('Caught error:', error); }
             if (!element || !element.classList) {
                 return;
             }
@@ -880,6 +879,7 @@ class FormValidator {
         } catch (error) {
             console.error('Error clearing field error:', error);
         }
+} catch (error) { console.error('Error caught in try block:', error); }
     }
 
     static clearAllErrors() {
@@ -923,7 +923,6 @@ const UIManager = {
 
     showResults() {
         try {
-} catch (error) { console.error('Caught error:', error); }
         const resultsColumn = document.querySelector('.results-column');
             if (!resultsColumn) {
                 console.warn('Results column not found');
@@ -956,7 +955,6 @@ const UIManager = {
             // Store last calculation results
             window.addEventListener('beforeunload', function() {
                 try {
-} catch (error) { console.error('Caught error:', error); }
                     const formData = document.getElementById('calculator-form').elements;
                     localStorage.setItem('lastFormData', JSON.stringify(Array.from(formData).reduce((obj, field) => {
                         if (field.id) obj[field.id] = field.value;
@@ -965,12 +963,12 @@ const UIManager = {
                 } catch (e) {
                     console.warn('Unable to save form data:', e);
                 }
+} catch (error) { console.error('Error caught in try block:', error); }
             });
 
             // Restore last calculation on load
             window.addEventListener('load', function() {
                 try {
-} catch (error) { console.error('Caught error:', error); }
                     const lastFormData = JSON.parse(localStorage.getItem('lastFormData'));
                     if (lastFormData) {
                         Object.entries(lastFormData).forEach(([id, value]) => {
@@ -981,6 +979,7 @@ const UIManager = {
                 } catch (e) {
                     console.warn('Unable to restore form data:', e);
                         }
+} catch (error) { console.error('Error caught in try block:', error); }
                     });
             }
 
@@ -1030,7 +1029,6 @@ const UIManager = {
 class TabManager {
 static activateTab(tabId) {
 try {
-} catch (error) { console.error('Caught error:', error); }
     // Hide all tab contents first
     document.querySelectorAll('.tab-content').forEach(content => {
         content.style.display = 'none';
@@ -1059,6 +1057,7 @@ try {
 } catch (error) {
     console.error('Error in activateTab:', error);
 }
+} catch (error) { console.error('Error caught in try block:', error); }
 }
 
 static setupTabNavigation() {
@@ -1152,7 +1151,6 @@ class AccessibilityManager {
 class FormFeedbackManager {
     static initialize() {
         try {
-} catch (error) { console.error('Caught error:', error); }
             this.setupInputFeedback();
             // Only setup progress indicator if form exists
             const calculatorForm = document.getElementById('calculator-form');
@@ -1162,6 +1160,7 @@ class FormFeedbackManager {
         } catch (error) {
             console.error('Error initializing form feedback:', error);
         }
+} catch (error) { console.error('Error caught in try block:', error); }
     }
 
     static setupInputFeedback() {
@@ -1224,7 +1223,6 @@ class FormFeedbackManager {
 const CalculationManager = {
     async calculateBenefits(formData) {
         try {
-} catch (error) { console.error('Caught error:', error); }
             // Calculate severance pay
             const severance = calculateSeverance(
                 formData.fsGrade,
@@ -1269,6 +1267,7 @@ const CalculationManager = {
             console.error('Error calculating benefits:', error);
             throw new CalculationError('Error calculating benefits. Please check your inputs.');
         }
+} catch (error) { console.error('Error caught in try block:', error); }
     }
 };
 
@@ -1299,7 +1298,6 @@ function populateYearsOfServiceDropdown() {
     }
 
     try {
-} catch (error) { console.error('Caught error:', error); }
         // Clear existing options
         yearsSelect.innerHTML = '';
         
@@ -1326,6 +1324,7 @@ function populateYearsOfServiceDropdown() {
     } catch (error) {
         console.error('Error populating years dropdown:', error);
     }
+} catch (error) { console.error('Error caught in try block:', error); }
 }
 
 // Function to populate High-Three Salary dropdowns
@@ -1345,7 +1344,6 @@ function populateHighThreeSalaryDropdowns() {
         }
 
         try {
-} catch (error) { console.error('Caught error:', error); }
             // Clear existing options
             select.innerHTML = '';
             
@@ -1372,6 +1370,7 @@ function populateHighThreeSalaryDropdowns() {
         } catch (error) {
             console.error(`Error populating salary dropdown ${inputId}:`, error);
         }
+} catch (error) { console.error('Error caught in try block:', error); }
     });
 }
 
@@ -1387,7 +1386,6 @@ function initializeTERADropdowns() {
     }
 
     try {
-} catch (error) { console.error('Caught error:', error); }
         // Clear existing options
         teraYearsSelect.innerHTML = '';
         teraAgeSelect.innerHTML = '';
@@ -1421,6 +1419,7 @@ function initializeTERADropdowns() {
     } catch (error) {
         console.error('Error initializing V/TERA dropdowns:', error);
     }
+} catch (error) { console.error('Error caught in try block:', error); }
 }
 
 // Replace the POST_ALLOWANCES object with just Washington, DC
@@ -1651,13 +1650,13 @@ function calculateSeverance(fsGrade, fsStep, yearsService, age, post, annualLeav
 //Salary Lookup
 function lookupBaseSalary(grade, step) {
   try {
-} catch (error) { console.error('Caught error:', error); }
     const stepNum = parseInt(step);
     if (isNaN(stepNum) || !SALARY_TABLES[grade]) return 0;
     return SALARY_TABLES[grade].steps[stepNum - 1] || 0;
   } catch {
     return 0;
   }
+} catch (error) { console.error('Error caught in try block:', error); }
 }
 
 // Add getMRA function before calculateScenario
@@ -1723,7 +1722,6 @@ function calculateFSPSAnnuity(fsGrade, fsStep, yearsService, age, highThreeYears
 // Calculate Health Insurance
 function calculateHealthInsurance(currentPlanOption, coverageType, homeState) {
     try {
-} catch (error) { console.error('Caught error:', error); }
         // Validate inputs
         if (!currentPlanOption || !coverageType || !homeState) {
             console.warn("Health insurance section skipped — returning default values.");
@@ -1809,6 +1807,7 @@ function calculateHealthInsurance(currentPlanOption, coverageType, homeState) {
             recommendations: ['Error calculating health insurance costs. Please check your selections.']
         };
     }
+} catch (error) { console.error('Error caught in try block:', error); }
 }
 
 function generateHealthInsuranceRecommendations(fehbRates, cobraCosts, acaEstimate, planOption) {
@@ -2063,7 +2062,6 @@ static getFormData() {
 //Handles form submission and prevents default behavior
 static async handleFormSubmit(e) {
   try {
-} catch (error) { console.error('Caught error:', error); }
     e.preventDefault();
     e.stopPropagation();
 
@@ -2110,13 +2108,13 @@ static async handleFormSubmit(e) {
   } finally {
     UIManager.hideLoading();
   }
+} catch (error) { console.error('Error caught in try block:', error); }
 }
 }
 
 // Service Duration Validation Functions
 function getValidatedServiceDuration() {
     try {
-} catch (error) { console.error('Caught error:', error); }
         const scdInput = document.getElementById('service-computation-date');
         const yearsServiceInput = document.getElementById('years-service');
         const warningDiv = document.getElementById('service-duration-warning');
@@ -2171,6 +2169,7 @@ function getValidatedServiceDuration() {
             totalMonths: 0
         };
     }
+} catch (error) { console.error('Error caught in try block:', error); }
 }  
 
 function clearSCD() {
@@ -2199,7 +2198,6 @@ window.getValidatedServiceDuration = getValidatedServiceDuration;
 class Calculator {
     static initialize() {
         try {
-} catch (error) { console.error('Caught error:', error); }
             this.setupFormHandlers();
             this.addTouchSupport();  // Added touch support for mobile devices
 
@@ -2213,6 +2211,7 @@ class Calculator {
         } catch (error) {
             console.error('Error initializing Calculator:', error);
         }
+} catch (error) { console.error('Error caught in try block:', error); }
     }
 
     // Method to add touch support for form submission
@@ -2236,7 +2235,6 @@ class Calculator {
         calculatorForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
-} catch (error) { console.error('Caught error:', error); }
                 FormValidator.clearAllErrors();
                 UIManager.showLoading();
                 UIManager.clearError();
@@ -2258,6 +2256,7 @@ class Calculator {
             } finally {
                 UIManager.hideLoading();
             }
+} catch (error) { console.error('Error caught in try block:', error); }
         });
 
         // Add reset handler
@@ -2895,7 +2894,6 @@ class Calculator {
 
 function initializeAfterLoad() {
     try {
-} catch (error) { console.error('Caught error:', error); }
         // Initialize Calculator
         Calculator.initialize();
         
@@ -2917,6 +2915,7 @@ function initializeAfterLoad() {
     } catch (error) {
         console.error('Error in initializeAfterLoad:', error);
     }
+} catch (error) { console.error('Error caught in try block:', error); }
 }
 
 // Call initialize when DOM is ready
@@ -2983,7 +2982,6 @@ async function calculate(event) {
     event.preventDefault();
     
     try {
-} catch (error) { console.error('Caught error:', error); }
         // ... existing calculation code ...
         
         // Show results container and switch to Severance tab
@@ -2999,6 +2997,7 @@ async function calculate(event) {
         console.error('Error in calculate:', error);
         // ... existing error handling ...
     }
+} catch (error) { console.error('Error caught in try block:', error); }
 }
 
 // Initialize form handling when DOM is loaded
