@@ -2171,6 +2171,7 @@ static getFormData() {
         fsStep: document.getElementById('fs-step')?.value || '',
         yearsService: calculatedYearsService,
         sickLeaveYears: sickLeaveYears,
+        sickLeaveBalance: sickLeaveBalance,
         serviceComputationDate: serviceComputationDate,
         serviceDuration: serviceDuration,
         age: parseInt(document.getElementById('age')?.value) || 0,
@@ -2547,7 +2548,7 @@ static setupFormHandlers() {
         // Update retirement results
         const retirementResults = document.getElementById('retirement-results');
         if (retirementResults && results.retirement) {
-            this.updateRetirementResults(retirementResults, results.retirement, results.formData, results.health);
+            this.updateRetirementResults(retirementResults, results.retirement, results.formData || {}, results.health);
         }
 
         // Update health results
@@ -2773,9 +2774,9 @@ static setupFormHandlers() {
             formatYearsAsDuration(retirement.serviceDuration.totalYears) : 
             formatYearsAsDuration(formData.yearsService);
 
-        const sickLeaveText = formData.sickLeaveYears ? 
+        const sickLeaveText = formData?.sickLeaveYears ? 
             `${(formData.sickLeaveYears * 2087).toFixed(0)} hours (${formatYearsAsDuration(formData.sickLeaveYears)})` : 
-            '';
+        '';
 
         const totalServiceText = formatYearsAsDuration(formData.yearsService + (formData.sickLeaveYears || 0));
 
