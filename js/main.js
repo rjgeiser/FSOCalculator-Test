@@ -2550,11 +2550,23 @@ static setupFormHandlers() {
         }
 
         // Update lifetime results - Add this section
-        const lifetimeResults = document.getElementById('lifetime-results');
-            if (lifetimeResults && results.retirement) {
-            this.updateLifetimeReport(lifetimeResults, results.retirement, results.formData);
-        }
+        console.log('Starting updateResults with:', results);
+
+    // Update lifetime results
+    const lifetimeResults = document.getElementById('lifetime-results');
+    if (lifetimeResults && results.retirement) {
+        console.log('Passing to updateLifetimeReport:', {
+            retirement: results.retirement,
+            formData: results.formData
+        });
+        this.updateLifetimeReport(lifetimeResults, results.retirement, results.formData);
+    } else {
+        console.warn('Missing lifetimeResults container or retirement data:', {
+            containerExists: !!lifetimeResults,
+            hasRetirementData: !!results.retirement
+        });
     }
+}
 
     // --- Begin static method updateSeveranceResults ---
     static updateSeveranceResults(container, severance) {
@@ -2855,162 +2867,173 @@ static updateRetirementResults(container, retirement, formData, health) {
 }
 
     // --- Begin function updateLifetimeReport ---
-    static updateLifetimeReport(retirement, formData) {
-      console.log("🧾 Running updateLifetimeReport");
-      const reportContainer = document.getElementById('lifetime-results');
-      if (!reportContainer || !retirement) return;
-    
-      const maxAge = 85;
-      const currentAge = parseInt(formData.age, 10) || 57;
-      const service = parseFloat(formData.yearsService || 0);
-      const grade = formData.fsGrade || '';
-      const teraMinAge = parseInt(formData.teraAge || 50, 10);
-      const teraMinYears = parseInt(formData.teraYears || 20, 10);
-    
-      const tbodyEligible = [];
-      const tbodyIneligible = [];
-      const notesEligible = [];
-      const notesIneligible = [];
-    
-      // === Begin eligibility rules ===
-      const eligibilityRules = {
-        immediate: (age, service, grade) => {
-          const reasons = [];
-          if (age < 50) reasons.push("must be at least 50 years old");
-          if (service < 20) reasons.push("requires 20+ years of service");
-          if (!/^FS-0[1-3]$|^SFS$/.test(grade)) reasons.push("requires grade FS-01 or higher");
-          return reasons;
-        },
-        tera: (age, service) => {
-          const reasons = [];
-          if (age < teraMinAge) reasons.push(`must be at least ${teraMinAge} years old`);
-          if (service < teraMinYears) reasons.push(`requires ${teraMinYears}+ years of service`);
-          return reasons;
-        },
-        vera: (age, service) => {
-          const reasons = [];
-          if (age < teraMinAge) reasons.push(`must be at least ${teraMinAge} years old`);
-          if (service < teraMinYears) reasons.push(`requires ${teraMinYears}+ years of service`);
-          return reasons;
-        },
-        mraPlusTen: (age, service) => {
-          const reasons = [];
-          if (age < 57) reasons.push("must reach MRA (57)");
-          if (service < 10) reasons.push("requires 10+ years of service");
-          return reasons;
-        },
-        deferred: (_, service) => {
-          return service < 5 ? ["requires at least 5 years of creditable service"] : [];
-        }
-      };
-    
-      for (const [key, data] of Object.entries(retirement)) {
-        const label = labelMap[key] || key;
-        let annual = typeof data.annualAnnuity === "number" ? data.annualAnnuity : 0;
-    
-        if (annual === 0) {
-          const s1 = parseFloat(formData.salaryYear1 || 0);
-          const s2 = parseFloat(formData.salaryYear2 || 0);
-          const s3 = parseFloat(formData.salaryYear3 || 0);
-          let average = (s1 + s2 + s3) / 3;
-    
-          if (average === 0 && typeof lookupBaseSalary === "function") {
-            const base = lookupBaseSalary(formData.fsGrade, formData.fsStep);
-            average = base || 80000;
-          }
-    
-          // === Begin multiplier fallback ===
-          const multiplierMap = {
-            immediate: 0.017,
-            tera: 0.017,
-            vera: 0.017,
-            mraPlusTen: 0.01,
-            deferred: 0.015
-          };
-          const multiplier = multiplierMap[key] || 0.01;
-          const years = parseFloat(formData.yearsService || 0);
-          annual = Math.round(average * years * multiplier);
-          console.log(`🔁 Recalculated ${label} annuity for ineligible scenario: $${annual}`);
-        }
-    
-        let startAge = parseInt(data.startingAge, 10);
-        if (!startAge) {
-          if (key === "mraPlusTen") startAge = 57;
-          else if (key === "deferred") startAge = 62;
-          else startAge = currentAge;
-        }
-    
-        const years = Math.max(0, maxAge - startAge);
-        const total = Math.round(annual * years);
-    
-        let assumptions = `$${annual.toLocaleString()}/yr × ${years} years starting at age ${startAge}`;
-        if (parseFloat(data.supplementalAnnuity) > 0) {
-          assumptions += " (Includes SRS until age 62)";
-        }
-    
-        const row = `<tr><td>${label}</td><td>$${total.toLocaleString()}</td></tr>`;
-        const reasonList = eligibilityRules[key]?.(currentAge, service, grade) || [];
-    
-        const explicitlyEligible = data.eligible === true || data.isEligible === true;
-        const deferredFlag = key === "mraPlusTen" && data.description?.includes("eligible to begin at age");
-        const showAsEligible = explicitlyEligible || deferredFlag;
-    
-        if (showAsEligible) {
-          tbodyEligible.push(row);
-          notesEligible.push(`<strong>${label}:</strong> ${assumptions}`);
-        } else {
-          tbodyIneligible.push(row);
-          const reasons = reasonList.length
-            ? `Ineligible because ${reasonList.join(", ")}`
-            : "Ineligible (missing data)";
-          notesIneligible.push(`<strong>${label}:</strong> ${reasons} — but would be ${assumptions}`);
-        }
-      }
-    
-      if (window.calculatorResults?.severance?.grossSeverance) {
-        const severance = window.calculatorResults.severance.grossSeverance;
-        tbodyEligible.unshift(`<tr><td>Severance</td><td>$${severance.toLocaleString()}</td></tr>`);
-        notesEligible.unshift(`<strong>Severance:</strong> One-time payment of $${severance.toLocaleString()}`);
-      }
-    
-      reportContainer.innerHTML = `
-        <div class="form-section">
-          <h3>Eligible Retirement Options</h3>
-          <div class="comparison-table">
-            <table>
-              <thead>
-                  <tr>
-                      <th>Eligible Retirement Options</th>
-                      <th>Total Value (to age ${maxAge})</th>
-                  </tr>
-              </thead>
-              <tbody>${tbodyEligible.join('')}</tbody>
-            </table>
-          </div>
-    
-          <h3>Ineligible Options (for Comparison Only)</h3>
-          <div class="comparison-table">
-            <table>
-              <thead>
-                  <tr>
-                      <th>Ineligible Retirement Options</th>
-                      <th>Potential Value (if eligible)</th>
-                  </tr>
-              </thead>
-              <tbody>${tbodyIneligible.join('')}</tbody>
-            </table>
-    
-            <div class="form-text">
-              <h3>Assumptions</h3>
-              <ul>
-                <li>${[...notesEligible, ...notesIneligible].join("</li><li>")}</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      `;
+ static updateLifetimeReport(container, retirement, formData) {
+    console.log('Starting updateLifetimeReport with:', { retirement, formData });
+
+    if (!container || !retirement || !formData) {
+        console.warn('Missing required parameters for updateLifetimeReport');
+        return;
     }
 
+    const maxAge = 85;
+    const currentAge = parseInt(formData.age, 10) || 57;
+    const service = parseFloat(formData.yearsService || 0);
+    const grade = formData.fsGrade || '';
+    const teraMinAge = parseInt(formData.teraAge || 50, 10);
+    const teraMinYears = parseInt(formData.teraYears || 20, 10);
+
+    const tbodyEligible = [];
+    const tbodyIneligible = [];
+    const notesEligible = [];
+    const notesIneligible = [];
+
+    // Process each retirement scenario
+    if (retirement.scenarios) {
+        console.log('Processing retirement scenarios:', retirement.scenarios);
+        
+        Object.entries(retirement.scenarios).forEach(([type, scenario]) => {
+            console.log(`Processing ${type} scenario:`, scenario);
+
+            const label = labelMap[type] || type;
+            const annual = scenario.annualAnnuity || 0;
+            
+            // Calculate years receiving benefits
+            const startAge = type === 'deferred' ? 62 : 
+                           type === 'mraPlusTen' ? Math.max(57, currentAge) : 
+                           currentAge;
+            
+            const years = Math.max(0, maxAge - startAge);
+            const total = Math.round(annual * years);
+
+            let assumptions = `$${annual.toLocaleString()}/yr × ${years} years starting at age ${startAge}`;
+            if (scenario.monthlySupplemental > 0) {
+                const annualSupplemental = scenario.monthlySupplemental * 12;
+                assumptions += ` (+ $${annualSupplemental.toLocaleString()} SRS until age 62)`;
+            }
+
+            const row = `<tr>
+                <td>${label}</td>
+                <td>${Utils.formatCurrency(total)}</td>
+            </tr>`;
+
+            if (scenario.isEligible) {
+                tbodyEligible.push(row);
+                notesEligible.push(`<strong>${label}:</strong> ${assumptions}`);
+            } else {
+                tbodyIneligible.push(row);
+                const reasons = this.getIneligibilityReasons(type, currentAge, service, grade);
+                const reasonText = reasons.length ? 
+                    `Ineligible because ${reasons.join(", ")}` : 
+                    "Ineligible (missing requirements)";
+                notesIneligible.push(`<strong>${label}:</strong> ${reasonText} — but would be ${assumptions}`);
+            }
+        });
+    }
+
+    // Add severance if available
+    if (retirement.severanceAmount) {
+        tbodyEligible.unshift(`
+            <tr>
+                <td>Severance</td>
+                <td>${Utils.formatCurrency(retirement.severanceAmount)}</td>
+            </tr>`
+        );
+        notesEligible.unshift(`<strong>Severance:</strong> One-time payment of ${Utils.formatCurrency(retirement.severanceAmount)}`);
+    }
+
+    console.log('Generated content:', {
+        eligibleRows: tbodyEligible.length,
+        ineligibleRows: tbodyIneligible.length,
+        eligibleNotes: notesEligible.length,
+        ineligibleNotes: notesIneligible.length
+    });
+
+    // Update the container with results
+    container.innerHTML = `
+        <div class="form-section">
+            <h3>Eligible Retirement Options</h3>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Eligible Retirement Options</th>
+                            <th>Total Value (to age ${maxAge})</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tbodyEligible.join('')}</tbody>
+                </table>
+            </div>
+
+            <h3>Ineligible Options (for Comparison Only)</h3>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ineligible Retirement Options</th>
+                            <th>Potential Value (if eligible)</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tbodyIneligible.join('')}</tbody>
+                </table>
+
+                <div class="form-text">
+                    <h3>Assumptions</h3>
+                    <ul>
+                        <li>${[...notesEligible, ...notesIneligible].join("</li><li>")}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>`;
+}
+
+// Helper method to determine ineligibility reasons
+static getIneligibilityReasons(type, age, service, grade) {
+    const reasons = [];
+    switch (type) {
+        case 'immediate':
+            if (age < 50) reasons.push("must be at least 50 years old");
+            if (service < 20) reasons.push("requires 20+ years of service");
+            if (!/^FS-0[1-3]$|^SFS$/.test(grade)) reasons.push("requires grade FS-01 or higher");
+            break;
+        case 'tera':
+            if (age < 50) reasons.push("must be at least 50 years old");
+            if (service < 15) reasons.push("requires 15+ years of service");
+            break;
+        case 'mraPlusTen':
+            if (age < 57) reasons.push("must reach MRA (57)");
+            if (service < 10) reasons.push("requires 10+ years of service");
+            break;
+        case 'deferred':
+            if (service < 5) reasons.push("requires at least 5 years of service");
+            break;
+    }
+    return reasons;
+}
+    
+// Helper method to determine ineligibility reasons
+static getIneligibilityReasons(type, age, service, grade) {
+    const reasons = [];
+    switch (type) {
+        case 'immediate':
+            if (age < 50) reasons.push("must be at least 50 years old");
+            if (service < 20) reasons.push("requires 20+ years of service");
+            if (!/^FS-0[1-3]$|^SFS$/.test(grade)) reasons.push("requires grade FS-01 or higher");
+            break;
+        case 'tera':
+            if (age < 50) reasons.push("must be at least 50 years old");
+            if (service < 15) reasons.push("requires 15+ years of service");
+            break;
+        case 'mraPlusTen':
+            if (age < 57) reasons.push("must reach MRA (57)");
+            if (service < 10) reasons.push("requires 10+ years of service");
+            break;
+        case 'deferred':
+            if (service < 5) reasons.push("requires at least 5 years of service");
+            break;
+    }
+    return reasons;
+}
+    
 // Helper method to generate the deductions table
 static generateDeductionsTable(scenario, health) {
     const monthlyAnnuity = scenario.monthlyAnnuity || 0;
