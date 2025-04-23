@@ -29,6 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Place this near the top of main.js or in a shared config area
+
+// === Begin object labelMap ===
 const labelMap = {
   immediate: 'Immediate',
   tera: 'TERA',
@@ -37,6 +39,8 @@ const labelMap = {
   deferred: 'Deferred'
 };
 
+
+// --- Begin function calculateSickLeaveServiceDuration ---
 function calculateSickLeaveServiceDuration(sickLeaveHours) {
     if (!sickLeaveHours || sickLeaveHours <= 0) {
         return null;
@@ -67,6 +71,8 @@ function calculateSickLeaveServiceDuration(sickLeaveHours) {
     };
 }
 
+
+// --- Begin function calculateServiceDuration ---
 function calculateServiceDuration(serviceComputationDate) {
     if (!serviceComputationDate) {
         console.log('No SCD provided, returning null');
@@ -106,6 +112,8 @@ function calculateServiceDuration(serviceComputationDate) {
 }
 
 // Career Progression Model Constants
+
+// === Begin object CAREER_PROGRESSION ===
 const CAREER_PROGRESSION = {
     'FS-04': {
         baseStep: 66574,
@@ -140,6 +148,8 @@ const CAREER_PROGRESSION = {
 };
 
 // Function to simulate career progression and calculate average salary
+
+// --- Begin function simulateCareerProgression ---
 function simulateCareerProgression(currentGrade, currentStep, yearsService) {
     // Start from FS-04 Step 1 and simulate progression
     const grades = ['FS-04', 'FS-03', 'FS-02', 'FS-01', 'SFS'];
@@ -199,6 +209,8 @@ function simulateCareerProgression(currentGrade, currentStep, yearsService) {
 }
 
 // Calculate enhanced supplemental annuity based on career progression
+
+// --- Begin function calculateEnhancedSupplemental ---
 function calculateEnhancedSupplemental(currentGrade, currentStep, yearsService, age) {
     console.log('Starting SRS calculation with:', {
         currentGrade,
@@ -262,6 +274,8 @@ function calculateEnhancedSupplemental(currentGrade, currentStep, yearsService, 
 }
 
 // Calculate retirement scenario
+
+// --- Begin function calculateScenario ---
 function calculateScenario(highThreeAverage, yearsService, currentAge, type, isInvoluntarySeparation = false, teraEligible = false, teraYearsRequired = 10, teraAgeRequired = 43, sickLeaveServiceDuration = null, serviceDuration = null) {
     let annuityReductionFactor = 1; // default to 100% unless reduced
     let reductionNote = '';
@@ -274,6 +288,8 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
     });
 
     // Round years to nearest month
+
+// --- Begin function roundToMonths ---
     function roundToMonths(years) {
         if (!years) return 0;
         const totalMonths = Math.round(years * 12);
@@ -300,6 +316,8 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
     let age62Comparison = null;
 
     //Calculate MRA age with a years and months value and a maximum of 57
+
+// --- Begin function formatMRA ---
     function formatMRA(decimalAge) {
       const capped = Math.min(decimalAge, 57); // FSPS max
       const years = Math.floor(capped);
@@ -510,6 +528,8 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
         });
     }
 
+
+// === Begin object result ===
     const result = {
         isEligible,
         annualAnnuity: finalAnnuity || 0,
@@ -565,10 +585,14 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
 }
 
 // Core utility functions
+
+// === Begin object Utils ===
 const Utils = {
     debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
+
+// === Begin object later ===
             const later = () => {
                 clearTimeout(timeout);
                 func(...args);
@@ -619,6 +643,8 @@ const Utils = {
 };
 
 // DOM Elements Cache
+
+// === Begin object DOM ===
 const DOM = {
     form: document.getElementById('calculator-form'),
     inputs: {
@@ -654,6 +680,8 @@ const DOM = {
 
 // Enhanced error handling
 // Performance monitoring
+
+// === Begin object PerformanceMonitor ===
 const PerformanceMonitor = {
     marks: {},
     start: function(label) {
@@ -676,6 +704,8 @@ window.addEventListener('error', function(event) {
     event.preventDefault();
     
     // Get more detailed error information
+
+// === Begin object errorInfo ===
     const errorInfo = {
         message: event.error?.message || event.message || 'Unknown error',
         stack: event.error?.stack,
@@ -707,7 +737,11 @@ window.addEventListener('load', function() {
     });
 });
 
+
+// === Begin class ErrorHandler ===
 class ErrorHandler {
+
+    // --- Begin static method handleError ---
     static handleError(error, context = '') {
         // Log the error with context
         console.error(`Error in ${context}:`, error);
@@ -741,6 +775,8 @@ class ErrorHandler {
     }
 }
 
+
+// === Begin class ValidationError ===
 class ValidationError extends Error {
     constructor(message) {
         super(message);
@@ -748,6 +784,8 @@ class ValidationError extends Error {
     }
 }
 
+
+// === Begin class CalculationError ===
 class CalculationError extends Error {
     constructor(message) {
         super(message);
@@ -756,11 +794,17 @@ class CalculationError extends Error {
 }
 
 // Enhanced Form Validator
+
+// === Begin class FormValidator ===
 class FormValidator {
+
+    // --- Begin static method validateFormData ---
     static validateFormData(formData) {
         const errors = [];
         
         // Required fields validation with updated field IDs
+
+// === Begin object requiredFields ===
         const requiredFields = {
             fsGrade: { name: 'Grade Level', element: 'fs-grade' },
             fsStep: { name: 'Step', element: 'fs-step' },
@@ -825,6 +869,8 @@ class FormValidator {
         return true;
     }
 
+
+    // --- Begin static method showFieldError ---
     static showFieldError(element, message) {
       try {
         // Check if element exists before trying to access its properties
@@ -860,6 +906,8 @@ class FormValidator {
       }
     }
 
+
+    // --- Begin static method clearFieldError ---
     static clearFieldError(element) {
       try {
         if (!element || !element.classList) {
@@ -882,6 +930,8 @@ class FormValidator {
       }
     }
 
+
+    // --- Begin static method clearAllErrors ---
     static clearAllErrors() {
         document.querySelectorAll('.form-control').forEach(element => {
             this.clearFieldError(element);
@@ -889,7 +939,9 @@ class FormValidator {
     }
 
 // UI Manager for handling UI updates
-}  // close class FormValidatorconst UIManager = {
+
+// === Begin object UIManager ===
+const UIManager = {
     showLoading() {
         const loading = document.getElementById('loading');
         if (loading) {
@@ -983,6 +1035,8 @@ class FormValidator {
             }
 
             // Verify that we have content in at least one results container
+
+// === Begin object hasContent ===
             const hasContent = ['severance-results', 'retirement-results', 'health-results', 'lifetime-results'].some(id => {
                 const container = document.getElementById(id);
                 return container && container.innerHTML.trim() !== '';
@@ -1025,7 +1079,11 @@ class FormValidator {
         // Define tabButtons first
         const tabButtons = document.querySelectorAll('.tab-button');
 
+
+// === Begin class TabManager ===
 class TabManager {
+
+    // --- Begin static method activateTab ---
     static activateTab(tabId) {
         try {
             // Hide all tab contents first
@@ -1043,6 +1101,8 @@ class TabManager {
 
         // Show selected tab content
         const selectedContent = document.getElementById(tabId);
+
+// === Begin object selectedButton ===
         const selectedButton = document.querySelector(`[data-tab="${tabId}"]`);
 
         if (selectedContent && selectedButton) {
@@ -1059,6 +1119,8 @@ class TabManager {
     } catch (error) { console.error('Error caught in try block:', error); }
 }
 
+
+    // --- Begin static method setupTabNavigation ---
     static setupTabNavigation() {
         // Add click handlers to tab buttons
         document.querySelectorAll('.tab-button').forEach(button => {
@@ -1072,11 +1134,17 @@ class TabManager {
     this.showDefaultTab();
     }
 
+
+    // --- Begin static method showDefaultTab ---
     static showDefaultTab() {
         this.activateTab('severance');
     }
 
+
+// === Begin class AccessibilityManager ===
 class AccessibilityManager {
+
+    // --- Begin static method initialize ---
     static initialize() {
 // Enhanced accessibility
                this.setupSkipLink();
@@ -1084,6 +1152,8 @@ class AccessibilityManager {
         this.setupKeyboardNavigation();
     }
 
+
+    // --- Begin static method setupSkipLink ---
     static setupSkipLink() {
         const skipLink = document.querySelector('.skip-link');
         const mainContent = document.querySelector('main');
@@ -1094,6 +1164,8 @@ class AccessibilityManager {
         });
     }
 
+
+    // --- Begin static method enhanceFormControls ---
     static enhanceFormControls() {
         // Add ARIA labels and descriptions
         document.querySelectorAll('.form-control').forEach(control => {
@@ -1104,6 +1176,8 @@ class AccessibilityManager {
             
             const description = control.closest('.form-group').querySelector('.form-text');
             if (description) {
+
+// === Begin object descId ===
                 const descId = `desc-${control.id}`;
                 description.id = descId;
                 control.setAttribute('aria-describedby', descId);
@@ -1111,6 +1185,8 @@ class AccessibilityManager {
         });
     }
 
+
+    // --- Begin static method setupKeyboardNavigation ---
     static setupKeyboardNavigation() {
         // Enhanced keyboard navigation for tabs
         const tabList = document.querySelector('.tab-buttons');
@@ -1146,7 +1222,11 @@ class AccessibilityManager {
 }
 
 // Enhanced form feedback
+
+// === Begin class FormFeedbackManager ===
 class FormFeedbackManager {
+
+    // --- Begin static method initialize ---
     static initialize() {
         try {
             this.setupInputFeedback();
@@ -1161,6 +1241,8 @@ class FormFeedbackManager {
 } catch (error) { console.error('Error caught in try block:', error); }
     }
 
+
+    // --- Begin static method setupInputFeedback ---
     static setupInputFeedback() {
         const calculatorForm= document.getElementById('calculator-form');
         if (!calculatorForm) return;
@@ -1185,6 +1267,8 @@ class FormFeedbackManager {
         });
     }
 
+
+    // --- Begin static method setupProgressIndicator ---
     static setupProgressIndicator() {
         const calculatorForm= document.getElementById('calculator-form');
         if (!calculatorForm) return;
@@ -1204,6 +1288,8 @@ class FormFeedbackManager {
         calculatorForm.addEventListener('input', () => this.updateProgress());
     }
 
+
+    // --- Begin static method updateProgress ---
     static updateProgress() {
         const calculatorForm = document.getElementById('calculator-form');
         const progressBar = calculatorForm.querySelector('.progress-bar');
@@ -1217,6 +1303,8 @@ class FormFeedbackManager {
     }
 
 // Calculation Manager for handling all calculations
+
+// === Begin object CalculationManager ===
 const CalculationManager = {
     async calculateBenefits(formData) {
         try {
@@ -1269,6 +1357,8 @@ const CalculationManager = {
 };
 
 // Validate input function - simplified
+
+// --- Begin function validateInput ---
 function validateInput(e) {
     const input = e.target;
     if (input.id.startsWith('salary-year-')) {
@@ -1286,6 +1376,8 @@ function validateInput(e) {
 }
 
 // Function to populate Years of Service dropdown
+
+// --- Begin function populateYearsOfServiceDropdown ---
 function populateYearsOfServiceDropdown() {
     console.log('Populating years of service dropdown');
     const yearsSelect = document.getElementById('years-service');
@@ -1324,6 +1416,8 @@ function populateYearsOfServiceDropdown() {
 } catch (error) { console.error('Error caught in try block:', error); }
 
 // Function to populate High-Three Salary dropdowns
+
+// --- Begin function populateHighThreeSalaryDropdowns ---
 function populateHighThreeSalaryDropdowns() {
     console.log('Populating high-three salary dropdowns');
     const minSalary = 92000;
@@ -1370,6 +1464,8 @@ function populateHighThreeSalaryDropdowns() {
     });
 
 // Initialize TERA dropdowns
+
+// --- Begin function initializeTERADropdowns ---
 function initializeTERADropdowns() {
     console.log('Initializing V/TERA dropdowns');
     const teraYearsSelect = document.getElementById('tera-years');
@@ -1417,11 +1513,15 @@ function initializeTERADropdowns() {
 } catch (error) { console.error('Error caught in try block:', error); }
 
 // Replace the POST_ALLOWANCES object with just Washington, DC
+
+// === Begin object POST_ALLOWANCES ===
 const POST_ALLOWANCES = {
     'Washington, DC': 33.94
 };
 
 // Salary Tables Constants
+
+// === Begin object SALARY_TABLES ===
 const SALARY_TABLES = {
     'SFS': {
         base: 172500,
@@ -1480,6 +1580,8 @@ window.HEALTH_INSURANCE_RATES = {
 };
 
 // Add state-specific ACA adjustment factors
+
+// === Begin object STATE_ACA_FACTORS ===
 const STATE_ACA_FACTORS = {
     'default': 1.0,
     'AL': 1.02,  // Alabama
@@ -1536,6 +1638,8 @@ const STATE_ACA_FACTORS = {
 };
 
 // ACA coverage level adjustments
+
+// === Begin object ACA_COVERAGE_FACTORS ===
 const ACA_COVERAGE_FACTORS = {
     'self': {
         deductible: { high: 1500, standard: 2500, basic: 3000 },
@@ -1552,6 +1656,8 @@ const ACA_COVERAGE_FACTORS = {
 };
 
 // Calculate Severance Pay
+
+// --- Begin function calculateSeverance ---
 function calculateSeverance(fsGrade, fsStep, yearsService, age, post, annualLeaveBalance = 0, serviceDuration = null) {
     // Input validation
     if (!fsGrade || !fsStep || !yearsService || !age || !post) {
@@ -1625,6 +1731,8 @@ function calculateSeverance(fsGrade, fsStep, yearsService, age, post, annualLeav
     const hourlyRate = baseSalary / 2087;
     const annualLeavePayout = hourlyRate * annualLeaveBalance;
 
+
+// === Begin object result ===
     const result = {
         baseSalary: baseSalary,
         monthlyPay: monthlyPay,
@@ -1642,6 +1750,8 @@ function calculateSeverance(fsGrade, fsStep, yearsService, age, post, annualLeav
 }
 
 //Salary Lookup
+
+// --- Begin function lookupBaseSalary ---
 function lookupBaseSalary(grade, step) {
   try {
     const stepNum = parseInt(step);
@@ -1653,6 +1763,8 @@ function lookupBaseSalary(grade, step) {
 } catch (error) { console.error('Error caught in try block:', error); }
 
 // Add getMRA function before calculateScenario
+
+// --- Begin function getMRA ---
 function getMRA(currentAge) {
     // Calculate birth year from current age
     const currentYear = new Date().getFullYear();
@@ -1672,6 +1784,8 @@ function getMRA(currentAge) {
 }
 
 // Calculate FSPS Annuity
+
+// --- Begin function calculateFSPSAnnuity ---
 function calculateFSPSAnnuity(fsGrade, fsStep, yearsService, age, highThreeYears, post, teraEligible = false, teraYearsRequired = 10, teraAgeRequired = 43, sickLeaveServiceDuration = null, serviceDuration = null) {
     const currentSalary = SALARY_TABLES[fsGrade].steps[parseInt(fsStep) - 1];
     const postAllowanceRate = POST_ALLOWANCES[post] / 100;
@@ -1688,6 +1802,8 @@ function calculateFSPSAnnuity(fsGrade, fsStep, yearsService, age, highThreeYears
     }
     
     // Calculate scenarios including TERA
+
+// === Begin object scenarios ===
     const scenarios = {
         immediate: calculateScenario(highThreeAverage, effectiveYearsService, age, "immediate", false, teraEligible, teraYearsRequired, teraAgeRequired, sickLeaveServiceDuration, serviceDuration),
         tera: calculateScenario(highThreeAverage, effectiveYearsService, age, "tera", false, teraEligible, teraYearsRequired, teraAgeRequired, sickLeaveServiceDuration, serviceDuration),
@@ -1713,6 +1829,8 @@ function calculateFSPSAnnuity(fsGrade, fsStep, yearsService, age, highThreeYears
 }
 
 // Calculate Health Insurance
+
+// --- Begin function calculateHealthInsurance ---
 function calculateHealthInsurance(currentPlanOption, coverageType, homeState) {
     try {
         // Validate inputs
@@ -1748,6 +1866,8 @@ function calculateHealthInsurance(currentPlanOption, coverageType, homeState) {
 
         // Calculate COBRA costs (total monthly premium + 2% admin fee)
         const totalMonthlyPremium = currentRates.cobra / 1.02; // Remove the 2% admin fee to get base total premium
+
+// === Begin object cobraCosts ===
         const cobraCosts = {
             monthly: currentRates.cobra,
             duration: 18,
@@ -1768,6 +1888,8 @@ function calculateHealthInsurance(currentPlanOption, coverageType, homeState) {
             throw new Error(`Missing ACA coverage factors for type: ${coverageType}`);
         }
         
+
+// === Begin object acaEstimate ===
         const acaEstimate = {
             monthly: baseACARate,
             deductible: ACA_COVERAGE_FACTORS[coverageType].deductible[planOption] || 3000,
@@ -1802,6 +1924,8 @@ function calculateHealthInsurance(currentPlanOption, coverageType, homeState) {
     }
 } catch (error) { console.error('Error caught in try block:', error); }
 
+
+// --- Begin function generateHealthInsuranceRecommendations ---
 function generateHealthInsuranceRecommendations(fehbRates, cobraCosts, acaEstimate, planOption) {
     const recommendations = [];
     
@@ -1845,6 +1969,8 @@ function generateHealthInsuranceRecommendations(fehbRates, cobraCosts, acaEstima
     }
 
 // Clear error function
+
+// --- Begin function clearError ---
 function clearError() {
     DOM.error.style.display = 'none';
     DOM.error.textContent = '';
@@ -1880,6 +2006,8 @@ document.querySelectorAll('input[type="number"]').forEach(input => {
 const memoizedCalculateScenario = Utils.memoize(calculateScenario);
 
 // Add debounced form validation
+
+// === Begin object debouncedValidateInput ===
 const debouncedValidateInput = Utils.debounce((e) => {
     const input = e.target;
     if (input.id.startsWith('salary-year-')) {
@@ -1895,6 +2023,8 @@ const debouncedValidateInput = Utils.debounce((e) => {
 }, 150);
 
 // Optimize tab switching
+
+// --- Begin function switchTab ---
 function switchTab(tabId) {
     document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -1904,6 +2034,8 @@ function switchTab(tabId) {
 }
 
 // Add SFS ranks and salary data
+
+// === Begin object SFS_RANKS ===
 const SFS_RANKS = {
     'Career Minister': {
         step: 14,
@@ -1945,6 +2077,8 @@ SALARY_TABLES.SFS = {
 };
 
 // Update getFormData function to handle SFS ranks
+
+// --- Begin function getFormData ---
 function getFormData() {
     const grade = document.getElementById('fs-grade').value;
     const step = document.getElementById('fs-step').value;
@@ -1987,7 +2121,11 @@ function getFormData() {
 }
 
 // Replace with a single, comprehensive handler:
+
+// === Begin class FormManager ===
 class FormManager {
+
+    // --- Begin static method init ---
 static init() {
 const calculatorForm= document.getElementById('calculator-form');
 if (calculatorForm) {
@@ -2005,6 +2143,8 @@ if (calculatorForm) {
 }
 
 // Get form data function
+
+    // --- Begin static method getFormData ---
 static getFormData() {
     const serviceComputationDate = document.getElementById('service-computation-date')?.value;
     const yearsServiceInput = parseInt(document.getElementById('years-service')?.value) || 0;
@@ -2052,6 +2192,8 @@ static getFormData() {
 }
 
 //Handles form submission and prevents default behavior
+
+    // --- Begin static method async ---
 static async handleFormSubmit(e) {
   try {
     e.preventDefault();
@@ -2075,6 +2217,8 @@ static async handleFormSubmit(e) {
     const healthResult = Calculator.calculateHealth(formData);
 
     // Merge results into unified object
+
+// === Begin object results ===
     const results = {
       formData: formData,
       severance: severanceResult,
@@ -2104,6 +2248,8 @@ static async handleFormSubmit(e) {
 }
 
 // Service Duration Validation Functions
+
+// --- Begin function getValidatedServiceDuration ---
 function getValidatedServiceDuration() {
     try {
         const scdInput = document.getElementById('service-computation-date');
@@ -2162,6 +2308,8 @@ function getValidatedServiceDuration() {
     }
 } catch (error) { console.error('Error caught in try block:', error); }
 
+
+// --- Begin function clearSCD ---
 function clearSCD() {
     const scdInput = document.getElementById('service-computation-date');
     const warningDiv = document.getElementById('service-duration-warning');
@@ -2185,7 +2333,11 @@ function clearSCD() {
 window.getValidatedServiceDuration = getValidatedServiceDuration;
 
 // Form submission and results handling
+
+// === Begin class Calculator ===
 class Calculator {
+
+    // --- Begin static method initialize ---
     static initialize() {
         try {
             this.setupFormHandlers();
@@ -2205,6 +2357,8 @@ class Calculator {
     }
 
     // Method to add touch support for form submission
+
+    // --- Begin static method addTouchSupport ---
     static addTouchSupport() {
         const calculatorForm = document.getElementById('calculator-form');
         if (!calculatorForm) return;  // Check if form exists
@@ -2218,6 +2372,8 @@ class Calculator {
         }
     }
 
+
+    // --- Begin static method setupFormHandlers ---
     static setupFormHandlers() {
         if (!calculatorForm) return;
 
@@ -2232,6 +2388,8 @@ class Calculator {
                 const formData = this.getFormData();
                 FormValidator.validateFormData(formData);
 
+
+// === Begin object results ===
                 const results = {
                     formData: formData,
                     severance: this.calculateSeverance(formData),
@@ -2268,6 +2426,8 @@ class Calculator {
             });
         }
 
+
+    // --- Begin static method getFormData ---
     static getFormData() {
         const serviceComputationDate = document.getElementById('service-computation-date')?.value;
         const yearsServiceInput = parseInt(document.getElementById('years-service')?.value) || 0;
@@ -2290,6 +2450,8 @@ class Calculator {
         const sickLeaveYears = sickLeaveBalance / 2087;
         console.log('Additional years from sick leave:', sickLeaveYears);
 
+
+// === Begin object formData ===
         const formData = {
             fsGrade: document.getElementById('fs-grade')?.value || '',
             fsStep: document.getElementById('fs-step')?.value || '',
@@ -2319,6 +2481,8 @@ class Calculator {
         return formData;
     }
 
+
+    // --- Begin static method calculateSeverance ---
     static calculateSeverance(formData) {
         console.log('Calculating Severance with:', formData);
         
@@ -2340,6 +2504,8 @@ class Calculator {
         return result;
     }
 
+
+    // --- Begin static method calculateRetirement ---
     static calculateRetirement(formData) {
         console.log('Calculating Retirement with:', formData);
 
@@ -2364,6 +2530,8 @@ class Calculator {
         return result;
     }
 
+
+    // --- Begin static method calculateHealth ---
     static calculateHealth(formData) {
         console.log('Calculating health with formData:', formData); // Debug log
         const healthResult = calculateHealthInsurance(
@@ -2375,6 +2543,8 @@ class Calculator {
         return healthResult;
     }
 
+
+    // --- Begin static method updateResults ---
     static updateResults(results) {
         console.log('Updating results with:', results); // Debug log
 
@@ -2397,12 +2567,16 @@ class Calculator {
         }
     }
 
+
+    // --- Begin static method updateSeveranceResults ---
     static updateSeveranceResults(container, severance) {
         if (!container || !severance) {
             console.warn('Missing required parameters for updateSeveranceResults');
             return;
         }
 
+
+// === Begin object serviceDurationText ===
         const serviceDurationText = severance.serviceDuration ? formatServiceDuration(severance.serviceDuration) : `${severance.yearsOfService.toFixed(1)} years`;
 
         // Check if grade is FS-01 or SFS
@@ -2504,6 +2678,8 @@ class Calculator {
         }
     }
 
+
+    // --- Begin static method updateHealthResults ---
     static updateHealthResults(container, health) {
         if (!container || !health) {
             console.warn('Missing required parameters for updateHealthResults');
@@ -2576,6 +2752,8 @@ class Calculator {
         `;
     }
 
+
+    // --- Begin static method updateRetirementResults ---
     static updateRetirementResults(container, retirement, formData, health) {
         if (!container || !retirement) {
             console.warn('Missing required parameters for updateRetirementResults');
@@ -2587,6 +2765,8 @@ class Calculator {
         console.log('Monthly health premium for retirement calculation:', monthlyHealthPremium);
 
         // Format service duration in years and months
+
+// --- Begin function formatYearsAsDuration ---
         function formatYearsAsDuration(years) {
             if (!years) return '0 years';
             const totalMonths = Math.round(years * 12);
@@ -2880,6 +3060,8 @@ class Calculator {
             </ul>
         </div>`;
 
+
+// --- Begin function initializeAfterLoad ---
 function initializeAfterLoad() {
     try {
         // Initialize Calculator
@@ -2918,6 +3100,8 @@ if (document.readyState === 'loading') {
         const sickLeaveBalanceInput = document.getElementById('sick-leave-balance');
     const annualLeaveBalanceInput = document.getElementById('annual-leave-balance');
 
+
+// --- Begin function handleOptionalInputs ---
         function handleOptionalInputs() {
             const serviceComputationDate = serviceComputationDateInput.value || 'N/A';
             const sickLeaveBalance = parseFloat(sickLeaveBalanceInput.value) || 0;
@@ -2934,6 +3118,8 @@ if (document.readyState === 'loading') {
         const annualLeaveBalanceInput = document.getElementById('annual-leave-balance');
         const annualLeavePayoutSummary = document.getElementById('annual-leave-payout-summary');
 
+
+// --- Begin function calculateAnnualLeavePayout ---
         function calculateAnnualLeavePayout(baseSalary, postAllowanceRate) {
             const annualLeaveInput = document.getElementById('annual-leave');
             const annualLeaveBalance = annualLeaveInput && annualLeaveInput.value ? 
@@ -3035,6 +3221,8 @@ document.addEventListener('DOMContentLoaded', () => {
     TabManager.setupTabNavigation();
 });
 
+
+// --- Begin function formatServiceDuration ---
 function formatServiceDuration(serviceDuration) {
     if (!serviceDuration) {
         return '';
@@ -3068,6 +3256,8 @@ function formatServiceDuration(serviceDuration) {
 }
 
 // Function to update step dropdown visibility based on grade
+
+// --- Begin function updateStepDropdown ---
 function updateStepDropdown(grade) {
     const fsStep = document.getElementById('fs-step');
     if (!fsStep) return;
@@ -3146,6 +3336,8 @@ document.addEventListener('DOMContentLoaded', function() {
  // }
 //});
 
+
+// --- Begin function updateLifetimeReport ---
 function updateLifetimeReport(retirement, formData) {
   console.log("🧾 Running updateLifetimeReport");
   const reportContainer = document.getElementById('lifetime-results');
@@ -3163,6 +3355,8 @@ function updateLifetimeReport(retirement, formData) {
   const notesEligible = [];
   const notesIneligible = [];
 
+
+// === Begin object eligibilityRules ===
   const eligibilityRules = {
     immediate: (age, service, grade) => {
       const reasons = [];
@@ -3203,6 +3397,8 @@ function updateLifetimeReport(retirement, formData) {
         average = base || 80000;
       }
 
+
+// === Begin object multiplierMap ===
       const multiplierMap = {
         immediate: 0.017,
         tera: 0.017,
@@ -3230,6 +3426,8 @@ function updateLifetimeReport(retirement, formData) {
       assumptions += " (Includes SRS until age 62)";
     }
 
+
+// === Begin object row ===
     const row = `<tr><td>${label}</td><td>$${total.toLocaleString()}</td></tr>`;
     const reasonList = eligibilityRules[key]?.(currentAge, service, grade) || [];
 
