@@ -2354,8 +2354,6 @@ class Calculator {
         }
     }
 
-
-    // --- Begin static method setupFormHandlers ---
 // --- Begin static method setupFormHandlers ---
 static setupFormHandlers() {
   const calculatorForm = document.getElementById('calculator-form');
@@ -2371,13 +2369,20 @@ static setupFormHandlers() {
       const formData = this.getFormData();
       FormValidator.validateFormData(formData);
 
+      // Calculate all results first
+      const severanceResult = this.calculateSeverance(formData);
+      const retirementResult = this.calculateRetirement(formData);
+      const healthResult = this.calculateHealth(formData);
+
+      // Create results object after calculations
       const results = {
         formData: formData,
-        severance: this.calculateSeverance(formData),
-        retirement: this.calculateRetirement(formData),
-        health: this.calculateHealth(formData)
+        severance: severanceResult,
+        retirement: retirementResult,
+        health: healthResult
       };
 
+      // Update the UI with results
       this.updateResults(results);
       UIManager.showResults();
     } catch (error) {
@@ -2387,12 +2392,6 @@ static setupFormHandlers() {
     }
   });
 
-    // Update lifetime results
-    const lifetimeResults = document.getElementById('lifetime-results');
-        if (lifetimeResults) {
-            this.updateLifetimeReport(lifetimeResults, results.retirement, results.formData);
-        }
-    
   // Add reset handler
   calculatorForm.addEventListener('reset', () => {
     FormValidator.clearAllErrors();
@@ -2412,6 +2411,7 @@ static setupFormHandlers() {
     });
   }
 }
+    
     // --- Begin static method getFormData ---
     static getFormData() {
         const serviceComputationDate = document.getElementById('service-computation-date')?.value;
