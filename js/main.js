@@ -28,6 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Place this near the top of main.js or in a shared config area
+const labelMap = {
+  immediate: 'Immediate',
+  tera: 'TERA',
+  vera: 'VERA',
+  mraPlusTen: 'MRA+10',
+  deferred: 'Deferred'
+};
+
 function calculateSickLeaveServiceDuration(sickLeaveHours) {
     if (!sickLeaveHours || sickLeaveHours <= 0) {
         return null;
@@ -3159,14 +3168,6 @@ function updateLifetimeReport(retirement, formData) {
   const tbodyIneligible = [];
   const notesEligible = [];
   const notesIneligible = [];
-
-  const labelMap = {
-    immediate: "Immediate",
-    tera: "TERA",
-    vera: "VERA",
-    mraPlusTen: "MRA+10",
-    deferred: "Deferred"
-  };
 
   const eligibilityRules = {
     immediate: (age, service, grade) => {
