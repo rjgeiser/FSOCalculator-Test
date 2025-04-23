@@ -797,285 +797,247 @@ class CalculationError extends Error {
 
 // === Begin class FormValidator ===
 class FormValidator {
+  static validateFormData(formData) {
+    const errors = [];
 
-    // --- Begin static method validateFormData ---
-    static validateFormData(formData) {
-        const errors = [];
-        
-        // Required fields validation with updated field IDs
+    const requiredFields = {
+      fsGrade: { name: 'Grade Level', element: 'fs-grade' },
+      fsStep: { name: 'Step', element: 'fs-step' },
+      yearsService: { name: 'Years of Service', element: 'years-service' },
+      age: { name: 'Current Age', element: 'age' }
+    };
 
-// === Begin object requiredFields ===
-        const requiredFields = {
-            fsGrade: { name: 'Grade Level', element: 'fs-grade' },
-            fsStep: { name: 'Step', element: 'fs-step' },
-            yearsService: { name: 'Years of Service', element: 'years-service' },
-            age: { name: 'Current Age', element: 'age' }
-            // Health insurance fields are now optional
-        };
+    Object.entries(requiredFields).forEach(([field, info]) => {
+      const element = document.getElementById(info.element);
+      if (!element) {
+        console.warn(`Form field element not found: ${info.element}`);
+        return;
+      }
 
-        Object.entries(requiredFields).forEach(([field, info]) => {
-            const element = document.getElementById(info.element);
-            if (!element) {
-                console.warn(`Form field element not found: ${info.element}`);
-                return; // Skip validation for non-existent elements
-            }
-            
-            const value = formData[field];
-            if (!value && value !== 0) { // Allow 0 as a valid value
-                errors.push(`${info.name} is required`);
-                this.showFieldError(element, `${info.name} is required`);
-            } else {
-                this.clearFieldError(element);
-            }
-        });
+      const value = formData[field];
+      if (!value && value !== 0) {
+        errors.push(`${info.name} is required`);
+        this.showFieldError(element, `${info.name} is required`);
+      } else {
+        this.clearFieldError(element);
+      }
+    });
 
-        // Numeric validations
-        if (formData.yearsService) {
-            const yearsElement = document.getElementById('years-service');
-            if (formData.yearsService < 1 || formData.yearsService > 40) {
-                errors.push('Years of Service must be between 1 and 40');
-                this.showFieldError(yearsElement, 'Must be between 1 and 40 years');
-            }
-        }
-
-        if (formData.age) {
-            const ageElement = document.getElementById('age');
-            if (formData.age < 21 || formData.age > 80) {
-                errors.push('Age must be between 21 and 80');
-                this.showFieldError(ageElement, 'Must be between 21 and 80 years');
-            }
-        }
-
-        // TERA validation
-        if (formData.teraEligible === 'yes') {
-            const teraYearsElement = document.getElementById('tera-years');
-            const teraAgeElement = document.getElementById('tera-age');
-            
-            if (!formData.teraYears) {
-                errors.push('V/TERA Years is required when V/TERA is eligible');
-                this.showFieldError(teraYearsElement, 'Required for V/TERA eligibility');
-            }
-            
-            if (!formData.teraAge) {
-                errors.push('V/TERA Age is required when V/TERA is eligible');
-                this.showFieldError(teraAgeElement, 'Required for V/TERA eligibility');
-            }
-        }
-
-        if (errors.length > 0) {
-            throw new ValidationError(errors.join('\n'));
-        }
-
-        return true;
-    }
-
-
-    // --- Begin static method showFieldError ---
-    static showFieldError(element, message) {
-      try {
-        // Check if element exists before trying to access its properties
-        if (!element) {
-          console.warn(`Attempted to show error on non-existent element: ${message}`);
-          return;
-        }
-    
-        // Ensure element has classList before trying to modify it
-        if (element.classList) {
-          element.classList.add('invalid');
-          element.classList.remove('valid');
-        }
-    
-        // Get parent element safely
-        const parent = element.parentElement;
-        if (!parent) {
-          console.warn(`Element has no parent: ${element.id}`);
-          return;
-        }
-    
-        let errorDiv = parent.querySelector('.validation-message');
-        if (!errorDiv) {
-          errorDiv = document.createElement('div');
-          errorDiv.className = 'validation-message';
-          parent.appendChild(errorDiv);
-        }
-    
-        errorDiv.textContent = message;
-    
-      } catch (error) {
-        console.error('Error showing field error:', error);
+    if (formData.yearsService) {
+      const yearsElement = document.getElementById('years-service');
+      if (formData.yearsService < 1 || formData.yearsService > 40) {
+        errors.push('Years of Service must be between 1 and 40');
+        this.showFieldError(yearsElement, 'Must be between 1 and 40 years');
       }
     }
 
-
-    // --- Begin static method clearFieldError ---
-    static clearFieldError(element) {
-      try {
-        if (!element || !element.classList) {
-          return;
-        }
-    
-        element.classList.remove('invalid');
-        element.classList.add('valid');
-    
-        const parent = element.parentElement;
-        if (!parent) return;
-    
-        const errorDiv = parent.querySelector('.validation-message');
-        if (errorDiv) {
-          errorDiv.textContent = '';
-          errorDiv.classList.remove('error');
-        }
-      } catch (error) {
-        console.error('Error clearing field error:', error);
+    if (formData.age) {
+      const ageElement = document.getElementById('age');
+      if (formData.age < 21 || formData.age > 80) {
+        errors.push('Age must be between 21 and 80');
+        this.showFieldError(ageElement, 'Must be between 21 and 80 years');
       }
     }
 
+    if (formData.teraEligible === 'yes') {
+      const teraYearsElement = document.getElementById('tera-years');
+      const teraAgeElement = document.getElementById('tera-age');
 
-    // --- Begin static method clearAllErrors ---
-    static clearAllErrors() {
-        document.querySelectorAll('.form-control').forEach(element => {
-            this.clearFieldError(element);
-        });
+      if (!formData.teraYears) {
+        errors.push('V/TERA Years is required when V/TERA is eligible');
+        this.showFieldError(teraYearsElement, 'Required for V/TERA eligibility');
+      }
+
+      if (!formData.teraAge) {
+        errors.push('V/TERA Age is required when V/TERA is eligible');
+        this.showFieldError(teraAgeElement, 'Required for V/TERA eligibility');
+      }
     }
 
-// UI Manager for handling UI updates
+    if (errors.length > 0) {
+      throw new ValidationError(errors.join('\n'));
+    }
+
+    return true;
+  }
+
+  static showFieldError(element, message) {
+    try {
+      if (!element) {
+        console.warn(`Attempted to show error on non-existent element: ${message}`);
+        return;
+      }
+
+      if (element.classList) {
+        element.classList.add('invalid');
+        element.classList.remove('valid');
+      }
+
+      const parent = element.parentElement;
+      if (!parent) {
+        console.warn(`Element has no parent: ${element.id}`);
+        return;
+      }
+
+      let errorDiv = parent.querySelector('.validation-message');
+      if (!errorDiv) {
+        errorDiv = document.createElement('div');
+        errorDiv.className = 'validation-message';
+        parent.appendChild(errorDiv);
+      }
+
+      errorDiv.textContent = message;
+    } catch (error) {
+      console.error('Error showing field error:', error);
+    }
+  }
+
+  static clearFieldError(element) {
+    try {
+      if (!element || !element.classList) return;
+
+      element.classList.remove('invalid');
+      element.classList.add('valid');
+
+      const parent = element.parentElement;
+      if (!parent) return;
+
+      const errorDiv = parent.querySelector('.validation-message');
+      if (errorDiv) {
+        errorDiv.textContent = '';
+        errorDiv.classList.remove('error');
+      }
+    } catch (error) {
+      console.error('Error clearing field error:', error);
+    }
+  }
+
+  static clearAllErrors() {
+    document.querySelectorAll('.form-control').forEach(element => {
+      this.clearFieldError(element);
+    });
+  }
+}
 
 // === Begin object UIManager ===
-}  // Close class definition
+
 const UIManager = {
-    showLoading() {
-        const loading = document.getElementById('loading');
-        if (loading) {
-            loading.style.display = 'flex';
-        }
-    },
+  showLoading() {
+    const loading = document.getElementById('loading');
+    if (loading) loading.style.display = 'flex';
+  },
 
-    hideLoading() {
-        const loading = document.getElementById('loading');
-        if (loading) {
-            loading.style.display = 'none';
-        }
-    },
+  hideLoading() {
+    const loading = document.getElementById('loading');
+    if (loading) loading.style.display = 'none';
+  },
 
-    showError(message) {
-        const error = document.getElementById('error');
-        if (error) {
-            error.textContent = message;
-            error.style.display = 'block';
-        }
-    },
-
-    clearError() {
-        const error = document.getElementById('error');
-        if (error) {
-            error.textContent = '';
-            error.style.display = 'none';
-        }
-    },
-
-    showResults() {
-        try {
-        const resultsColumn = document.querySelector('.results-column');
-            if (!resultsColumn) {
-                console.warn('Results column not found');
-                return;
-            }
-
-            // Show the results container
-            resultsColumn.style.display = 'block';
-            resultsColumn.style.visibility = 'visible'; // Ensure visibility
-            resultsColumn.style.opacity = '1'; // Ensure opacity
-
-            // Make sure all results containers are visible
-            ['severance-results', 'retirement-results', 'health-results', 'lifetime-results'].forEach(id => {
-                const container = document.getElementById(id);
-                if (container) {
-                    container.style.display = 'block';
-                    container.style.visibility = 'visible';
-                    container.style.opacity = '1';
-                }
-            });
-
-            // Ensure results are visible on mobile
-            if (window.innerWidth <= 768) {
-                resultsColumn.scrollIntoView({ behavior: 'smooth' });
-            }
-
-            // Offline storage support
-            if ('localStorage' in window && 'serviceWorker' in navigator) {
-
-            // Store last calculation results
-            window.addEventListener('beforeunload', function() {
-                try {
-                    const formData = document.getElementById('calculator-form').elements;
-                    localStorage.setItem('lastFormData', JSON.stringify(Array.from(formData).reduce((obj, field) => {
-                        if (field.id) obj[field.id] = field.value;
-                        return obj;
-                    }, {})));
-                } catch (e) {
-                    console.warn('Unable to save form data:', e);
-                }
-} catch (error) { console.error('Error caught in try block:', error); }
-            });
-
-            // Restore last calculation on load
-            window.addEventListener('load', function() {
-                try {
-                    const lastFormData = JSON.parse(localStorage.getItem('lastFormData'));
-                    if (lastFormData) {
-                        Object.entries(lastFormData).forEach(([id, value]) => {
-                            const field = document.getElementById(id);
-                            if (field) field.value = value;
-                        });
-                    }
-                } catch (e) {
-                    console.warn('Unable to restore form data:', e);
-                        }
-} catch (error) { console.error('Error caught in try block:', error); }
-                    });
-            }
-
-            // Verify that we have content in at least one results container
-
-// === Begin object hasContent ===
-            const hasContent = ['severance-results', 'retirement-results', 'health-results', 'lifetime-results'].some(id => {
-                const container = document.getElementById(id);
-                return container && container.innerHTML.trim() !== '';
-            });
-
-            if (!hasContent) {
-                console.warn('No results content found in containers');
-                return;
-            }
-
-            // Activate first tab if not already done
-            const firstTab = document.querySelector('.tab-button');
-            if (firstTab && !document.querySelector('.tab-button.active')) {
-                TabManager.activateTab(firstTab.id);
-            }
-
-            // Ensure the active tab content is visible
-            const activeTab = document.querySelector('.tab-button.active');
-            if (activeTab) {
-                const activeContent = document.getElementById(activeTab.getAttribute('data-tab'));
-                if (activeContent) {
-                    activeContent.style.display = 'block';
-                    activeContent.style.visibility = 'visible';
-                    activeContent.style.opacity = '1';
-                }
-            }
-
-            // Log visibility state for debugging
-            console.log('Results visibility state:', {
-                resultsColumn: resultsColumn.style.display,
-                activeTab: document.querySelector('.tab-button.active')?.id,
-                activeContent: document.querySelector('.tab-content.active')?.id
-            });
-        } catch (error) {
-            console.error('Error showing results:', error);
-        }
+  showError(message) {
+    const error = document.getElementById('error');
+    if (error) {
+      error.textContent = message;
+      error.style.display = 'block';
     }
+  },
+
+  clearError() {
+    const error = document.getElementById('error');
+    if (error) {
+      error.textContent = '';
+      error.style.display = 'none';
+    }
+  },
+
+  showResults() {
+    try {
+      const resultsColumn = document.querySelector('.results-column');
+      if (!resultsColumn) {
+        console.warn('Results column not found');
+        return;
+      }
+
+      resultsColumn.style.display = 'block';
+      resultsColumn.style.visibility = 'visible';
+      resultsColumn.style.opacity = '1';
+
+      ['severance-results', 'retirement-results', 'health-results', 'lifetime-results'].forEach(id => {
+        const container = document.getElementById(id);
+        if (container) {
+          container.style.display = 'block';
+          container.style.visibility = 'visible';
+          container.style.opacity = '1';
+        }
+      });
+
+      if (window.innerWidth <= 768) {
+        resultsColumn.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      if ('localStorage' in window && 'serviceWorker' in navigator) {
+        window.addEventListener('beforeunload', function () {
+          try {
+            const formData = document.getElementById('calculator-form').elements;
+            localStorage.setItem('lastFormData', JSON.stringify(Array.from(formData).reduce((obj, field) => {
+              if (field.id) obj[field.id] = field.value;
+              return obj;
+            }, {})));
+          } catch (e) {
+            console.warn('Unable to save form data:', e);
+          }
+        });
+
+        window.addEventListener('load', function () {
+          try {
+            const lastFormData = JSON.parse(localStorage.getItem('lastFormData'));
+            if (lastFormData) {
+              Object.entries(lastFormData).forEach(([id, value]) => {
+                const field = document.getElementById(id);
+                if (field) field.value = value;
+              });
+            }
+          } catch (e) {
+            console.warn('Unable to restore form data:', e);
+          }
+        });
+      }
+
+      const hasContent = ['severance-results', 'retirement-results', 'health-results', 'lifetime-results'].some(id => {
+        const container = document.getElementById(id);
+        return container && container.innerHTML.trim() !== '';
+      });
+
+      if (!hasContent) {
+        console.warn('No results content found in containers');
+        return;
+      }
+
+      const firstTab = document.querySelector('.tab-button');
+      if (firstTab && !document.querySelector('.tab-button.active')) {
+        TabManager.activateTab(firstTab.id);
+      }
+
+      const activeTab = document.querySelector('.tab-button.active');
+      if (activeTab) {
+        const activeContent = document.getElementById(activeTab.getAttribute('data-tab'));
+        if (activeContent) {
+          activeContent.style.display = 'block';
+          activeContent.style.visibility = 'visible';
+          activeContent.style.opacity = '1';
+        }
+      }
+
+      console.log('Results visibility state:', {
+        resultsColumn: resultsColumn.style.display,
+        activeTab: document.querySelector('.tab-button.active')?.id,
+        activeContent: document.querySelector('.tab-content.active')?.id
+      });
+
+    } catch (error) {
+      console.error('Error showing results:', error);
+    }
+  }
 };
+
 
         // Define tabButtons first
         const tabButtons = document.querySelectorAll('.tab-button');
