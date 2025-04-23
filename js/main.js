@@ -3299,6 +3299,4 @@ function updateLifetimeReport(retirement, formData) {
       </div>
     </div>
   `;
-}
-
-
+};
