@@ -861,26 +861,25 @@ class FormValidator {
     }
 
     static clearFieldError(element) {
-        try {
-            if (!element || !element.classList) {
-                return;
-            }
-            
-            element.classList.remove('invalid');
-            element.classList.add('valid');
-            
-            const parent = element.parentElement;
-            if (!parent) return;
-            
-            const errorDiv = parent.querySelector('.validation-message');
-            if (errorDiv) {
-                errorDiv.textContent = '';
-                errorDiv.classList.remove('error');
-            }
-        } catch (error) {
-            console.error('Error clearing field error:', error);
+      try {
+        if (!element || !element.classList) {
+          return;
         }
-} catch (error) { console.error('Error caught in try block:', error); }
+    
+        element.classList.remove('invalid');
+        element.classList.add('valid');
+    
+        const parent = element.parentElement;
+        if (!parent) return;
+    
+        const errorDiv = parent.querySelector('.validation-message');
+        if (errorDiv) {
+          errorDiv.textContent = '';
+          errorDiv.classList.remove('error');
+        }
+      } catch (error) {
+        console.error('Error clearing field error:', error);
+      }
     }
 
     static clearAllErrors() {
@@ -888,7 +887,6 @@ class FormValidator {
             this.clearFieldError(element);
         });
     }
-}
 
 // UI Manager for handling UI updates
 const UIManager = {
@@ -1028,55 +1026,55 @@ const UIManager = {
         const tabButtons = document.querySelectorAll('.tab-button');
 
 class TabManager {
-static activateTab(tabId) {
-try {
-    // Hide all tab contents first
-    document.querySelectorAll('.tab-content').forEach(content => {
-        content.style.display = 'none';
-        content.classList.remove('active');
-        content.setAttribute('aria-hidden', 'true');
-    });
+    static activateTab(tabId) {
+        try {
+            // Hide all tab contents first
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+                content.classList.remove('active');
+                content.setAttribute('aria-hidden', 'true');
+            });
     
-    // Remove active class from all buttons
-    document.querySelectorAll('.tab-button').forEach(button => {
-        button.classList.remove('active');
-        button.setAttribute('aria-selected', 'false');
-    });
+        // Remove active class from all buttons
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.classList.remove('active');
+            button.setAttribute('aria-selected', 'false');
+        });
 
-    // Show selected tab content
-    const selectedContent = document.getElementById(tabId);
-    const selectedButton = document.querySelector(`[data-tab="${tabId}"]`);
+        // Show selected tab content
+        const selectedContent = document.getElementById(tabId);
+        const selectedButton = document.querySelector(`[data-tab="${tabId}"]`);
 
-    if (selectedContent && selectedButton) {
-        selectedContent.style.display = 'block';
-        selectedContent.classList.add('active');
-        selectedContent.setAttribute('aria-hidden', 'false');
+        if (selectedContent && selectedButton) {
+            selectedContent.style.display = 'block';
+            selectedContent.classList.add('active');
+            selectedContent.setAttribute('aria-hidden', 'false');
         
-        selectedButton.classList.add('active');
-        selectedButton.setAttribute('aria-selected', 'true');
+            selectedButton.classList.add('active');
+            selectedButton.setAttribute('aria-selected', 'true');
+        }
+    } catch (error) {
+        console.error('Error in activateTab:', error);
     }
-} catch (error) {
-    console.error('Error in activateTab:', error);
-}
-} catch (error) { console.error('Error caught in try block:', error); }
+    } catch (error) { console.error('Error caught in try block:', error); }
 }
 
-static setupTabNavigation() {
-// Add click handlers to tab buttons
-document.querySelectorAll('.tab-button').forEach(button => {
-    button.addEventListener('click', () => {
-        const tabId = button.getAttribute('data-tab');
-        this.activateTab(tabId);
-    });
-});
+    static setupTabNavigation() {
+        // Add click handlers to tab buttons
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                this.activateTab(tabId);
+            });
+        });
 
-// Show Severance tab by default
-this.showDefaultTab();
-}
+    // Show Severance tab by default
+    this.showDefaultTab();
+    }
 
-static showDefaultTab() {
-this.activateTab('severance');
-}
+    static showDefaultTab() {
+        this.activateTab('severance');
+    }
 }
 
 class AccessibilityManager {
