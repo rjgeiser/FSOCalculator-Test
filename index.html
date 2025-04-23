@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="color-scheme" content="light dark">
     <meta name="description" content="Foreign Service Officer Separation Benefits Calculator - Calculate severance pay, FSPS annuity, and health insurance options">
     <meta name="author" content="Roy Geiser">
     <meta name="developer" content="Roy Geiser - Foreign Service Benefits Calculator">
@@ -33,9 +34,13 @@
             <section class="form-column">
                 <form id="calculator-form">
                     <div class="theme-toggle-wrapper">
+                      <span class="theme-label">Theme</span>
                       <label class="theme-switch" for="theme-toggle-checkbox">
                         <input type="checkbox" id="theme-toggle-checkbox" />
-                        <span class="slider"></span>
+                        <span class="slider">
+                          <span class="icon light">☀️</span>
+                          <span class="icon dark">🌙</span>
+                        </span>
                       </label>
                     </div>
                     <div class="form-container">
@@ -545,22 +550,24 @@
 
 <!-- Theme toggle script -->
 <script>
-  const themeToggle = document.getElementById("theme-toggle-checkbox");
-
-  // Load saved theme from localStorage on page load
-  const savedTheme = localStorage.getItem("theme");
-  if (savedTheme) {
-    document.documentElement.setAttribute("data-theme", savedTheme);
-    themeToggle.checked = savedTheme === "dark";
-  }
-
-  // Listen for user toggle
-  themeToggle.addEventListener("change", () => {
-    const isDark = themeToggle.checked;
-    const theme = isDark ? "dark" : "light";
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  });
+    document.addEventListener("DOMContentLoaded", () => {
+      const themeToggle = document.getElementById("theme-toggle-checkbox");
+    
+      // Load saved theme from localStorage on page load
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme) {
+        document.documentElement.setAttribute("data-theme", savedTheme);
+        themeToggle.checked = savedTheme === "dark";
+      }
+    
+      // Listen for user toggle
+      themeToggle.addEventListener("change", () => {
+        const isDark = themeToggle.checked;
+        const theme = isDark ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+      });
+    });
 </script>               
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>eruda.init();</script>
