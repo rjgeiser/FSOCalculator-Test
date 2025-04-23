@@ -1766,21 +1766,23 @@ footer a:hover {
 }
 
 /* Light mode override (explicit) */
-select,
-select.form-control,
-select option {
-  background-color: white !important;
-  color: #1a202c !important;
-  -webkit-appearance: none !important;
-  -webkit-text-fill-color: #1a202c !important;
-  appearance: none !important;
+:root {
+  --background-color: #ffffff;
+  --text-color: #1a202c;
+  --border-color: #cbd5e0;
 }
 
-[data-theme="dark"] select,
-[data-theme="dark"] select option {
-  background-color: #2d3748 !important;
-  color: #e2e8f0 !important;
-  -webkit-text-fill-color: #e2e8f0 !important;
+select,
+select.form-control,
+select option,
+input,
+textarea {
+  background-color: var(--background-color) !important;
+  color: var(--text-color) !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  -webkit-text-fill-color: var(--text-color) !important;
+  border-color: var(--border-color) !important;
 }
 
 /* Dark Mode via [data-theme="dark"] */
@@ -1810,6 +1812,15 @@ select option {
   border-color: var(--border-color) !important;
 }
 
+[data-theme="dark"] label,
+[data-theme="dark"] legend,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] .section-header {
+  color: var(--text-color) !important;
+}
+
 [data-theme="dark"] .comparison-table th,
 [data-theme="dark"] .comparison-table td,
 [data-theme="dark"] .form-text,
@@ -1819,31 +1830,34 @@ select option {
   color: var(--text-color) !important;
 }
 
-[data-theme="dark"] input,
-[data-theme="dark"] textarea,
-[data-theme="dark"] select {
-  background-color: #2d3748 !important;
-  color: var(--text-color) !important;
-  border-color: var(--border-color) !important;
-}
-
 [data-theme="dark"] select,
+[data-theme="dark"] select option,
 [data-theme="dark"] input,
 [data-theme="dark"] textarea {
   background-color: #2d3748 !important;
   color: #e2e8f0 !important;
   -webkit-text-fill-color: #e2e8f0 !important;
   border-color: #4a5568 !important;
-}
-
-select,
-select option,
-input,
-textarea {
-  background-color: var(--background-color, #ffffff) !important;
-  color: var(--text-color, #1a202c) !important;
   -webkit-appearance: none !important;
   appearance: none !important;
-  -webkit-text-fill-color: var(--text-color, #1a202c) !important;
-  border-color: var(--border-color, #cbd5e0) !important;
+}
+
+[data-theme="dark"] button,
+[data-theme="dark"] .btn {
+  background-color: #2b6cb0 !important;
+  color: #ffffff !important;
+  border: 1px solid #4a5568 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] button:hover,
+[data-theme="dark"] .btn:hover {
+  background-color: #2c5282 !important;
+}
+
+[data-theme="dark"] footer,
+[data-theme="dark"] .footer {
+  background-color: #1a202c !important;
+  color: #a0aec0 !important;
+  border-top: 1px solid #4a5568 !important;
 }
