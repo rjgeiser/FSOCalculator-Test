@@ -1254,54 +1254,54 @@ class FormFeedbackManager {
 
 // === Begin object CalculationManager ===
 const CalculationManager = {
-    async calculateBenefits(formData) {
-        try {
-            // Calculate severance pay
-            const severance = calculateSeverance(
-                formData.fsGrade,
-                formData.fsStep,
-                formData.yearsService,
-                formData.age,
-                formData.currentPost,
-                formData.annualLeaveBalance,
-                formData.serviceDuration
-            );
+  async calculateBenefits(formData) {
+    try {
+      // Calculate severance pay
+      const severance = calculateSeverance(
+        formData.fsGrade,
+        formData.fsStep,
+        formData.yearsService,
+        formData.age,
+        formData.currentPost,
+        formData.annualLeaveBalance,
+        formData.serviceDuration
+      );
 
-            // Calculate annuity
-            const annuity = calculateFSPSAnnuity(
-                formData.fsGrade,
-                formData.fsStep,
-                formData.yearsService,
-                formData.age,
-                [formData.salaryYear1, formData.salaryYear2, formData.salaryYear3],
-                formData.currentPost,
-                formData.teraEligible === 'yes',
-                parseInt(formData.teraYears),
-                parseInt(formData.teraAge),
-                formData.sickLeaveYears,
-                formData.serviceDuration
-            );
+      // Calculate annuity
+      const annuity = calculateFSPSAnnuity(
+        formData.fsGrade,
+        formData.fsStep,
+        formData.yearsService,
+        formData.age,
+        [formData.salaryYear1, formData.salaryYear2, formData.salaryYear3],
+        formData.currentPost,
+        formData.teraEligible === 'yes',
+        parseInt(formData.teraYears),
+        parseInt(formData.teraAge),
+        formData.sickLeaveYears,
+        formData.serviceDuration
+      );
 
-            // Calculate health insurance
-            const health = calculateHealthInsurance(
-                formData.currentPlan,
-                formData.planOption,
-                formData.coverageType,
-                formData.state
-            );
+      // Calculate health insurance
+      const health = calculateHealthInsurance(
+        formData.currentPlan,
+        formData.planOption,
+        formData.coverageType,
+        formData.state
+      );
 
-            return {
-                severance,
-                annuity,
-                health,
-                formData
-            };
-        } catch (error) {
-            console.error('Error calculating benefits:', error);
-            throw new CalculationError('Error calculating benefits. Please check your inputs.');
-        }
-} catch (error) { console.error('Error caught in try block:', error); }
+      return {
+        severance,
+        annuity,
+        health,
+        formData
+      };
+
+    } catch (error) {
+      console.error('Error calculating benefits:', error);
+      throw new CalculationError('Error calculating benefits. Please check your inputs.');
     }
+  }
 };
 
 // Validate input function - simplified
