@@ -1184,81 +1184,71 @@ class AccessibilityManager {
 // === Begin class FormFeedbackManager ===
 class FormFeedbackManager {
 
-    // --- Begin static method initialize ---
-    static initialize() {
-        try {
-            this.setupInputFeedback();
-            // Only setup progress indicator if form exists
-            const calculatorForm = document.getElementById('calculator-form');
-            if (calculatorForm) {
-                this.setupProgressIndicator();
-            }
-        } catch (error) {
-            console.error('Error initializing form feedback:', error);
+  // --- Begin static method initialize ---
+  static initialize() {
+    try {
+      this.setupInputFeedback();
+      const calculatorForm = document.getElementById('calculator-form');
+      if (calculatorForm) {
+        this.setupProgressIndicator();
+      }
+    } catch (error) {
+      console.error('Error initializing form feedback:', error);
+    }
+  }
+
+  // --- Begin static method setupInputFeedback ---
+  static setupInputFeedback() {
+    const calculatorForm = document.getElementById('calculator-form');
+    if (!calculatorForm) return;
+
+    const requiredInputs = calculatorForm.querySelectorAll('.form-control[required]');
+    requiredInputs.forEach(input => {
+      input.addEventListener('input', () => {
+        if (input.value) {
+          input.classList.add('is-valid');
+          input.classList.remove('is-invalid');
+        } else {
+          input.classList.add('is-invalid');
+          input.classList.remove('is-valid');
         }
-} catch (error) { console.error('Error caught in try block:', error); }
+      });
+
+      if (input.value) {
+        input.classList.add('is-valid');
+      }
+    });
+  }
+
+  // --- Begin static method setupProgressIndicator ---
+  static setupProgressIndicator() {
+    const calculatorForm = document.getElementById('calculator-form');
+    if (!calculatorForm) return;
+
+    let progressBar = calculatorForm.querySelector('.progress-bar');
+    if (!progressBar) {
+      progressBar = document.createElement('div');
+      progressBar.className = 'progress-bar';
+      calculatorForm.insertBefore(progressBar, calculatorForm.firstChild);
     }
 
+    this.updateProgress();
+    calculatorForm.addEventListener('input', () => this.updateProgress());
+  }
 
-    // --- Begin static method setupInputFeedback ---
-    static setupInputFeedback() {
-        const calculatorForm= document.getElementById('calculator-form');
-        if (!calculatorForm) return;
+  // --- Begin static method updateProgress ---
+  static updateProgress() {
+    const calculatorForm = document.getElementById('calculator-form');
+    const progressBar = calculatorForm.querySelector('.progress-bar');
+    if (!calculatorForm || !progressBar) return;
 
-        const requiredInputs = calculatorForm.querySelectorAll('.form-control[required]');
-        requiredInputs.forEach(input => {
-            // Add visual feedback classes
-            input.addEventListener('input', () => {
-                if (input.value) {
-                    input.classList.add('is-valid');
-                    input.classList.remove('is-invalid');
-                } else {
-                    input.classList.add('is-invalid');
-                    input.classList.remove('is-valid');
-                }
-            });
+    const total = calculatorForm.querySelectorAll('.form-control[required]').length;
+    const filled = calculatorForm.querySelectorAll('.form-control[required]:valid').length;
+    const progress = total > 0 ? (filled / total) * 100 : 0;
 
-            // Initial validation state
-            if (input.value) {
-                input.classList.add('is-valid');
-            }
-        });
-    }
-
-
-    // --- Begin static method setupProgressIndicator ---
-    static setupProgressIndicator() {
-        const calculatorForm= document.getElementById('calculator-form');
-        if (!calculatorForm) return;
-
-        // Create progress bar if it doesn't exist
-        let progressBar = calculatorForm.querySelector('.progress-bar');
-        if (!progressBar) {
-            progressBar = document.createElement('div');
-            progressBar.className = 'progress-bar';
-            // Insert at the beginning of the form
-            calculatorForm.insertBefore(progressBar, calculatorForm.firstChild);
-        }
-        
-        this.updateProgress();
-        
-        // Update progress as user fills form
-        calculatorForm.addEventListener('input', () => this.updateProgress());
-    }
-
-
-    // --- Begin static method updateProgress ---
-    static updateProgress() {
-        const calculatorForm = document.getElementById('calculator-form');
-        const progressBar = calculatorForm.querySelector('.progress-bar');
-        if (!calculatorForm || !progressBar) return;
-
-        const total = calculatorForm.querySelectorAll('.form-control[required]').length;
-        const filled = calculatorForm.querySelectorAll('.form-control[required]:valid').length;
-        const progress = total > 0 ? (filled / total) * 100 : 0;
-        
-        progressBar.style.width = `${progress}%`;
-    }
+    progressBar.style.width = `${progress}%`;
+  }
+}
 
 // Calculation Manager for handling all calculations
 
