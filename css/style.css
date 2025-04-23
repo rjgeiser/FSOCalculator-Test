@@ -1761,7 +1761,6 @@ textarea {
 [data-theme="dark"] .tabs,
 [data-theme="dark"] .tab-buttons,
 [data-theme="dark"] .tab-content,
-[data-theme="dark"] .comparison-table,
 [data-theme="dark"] .calculation-details,
 [data-theme="dark"] .retirement-options,
 [data-theme="dark"] .retirement-notes,
@@ -1836,6 +1835,26 @@ textarea {
   background-color: #2b6cb0 !important;
   color: #ffffff !important;
   border-color: #2b6cb0 !important;
+}
+
+/* Dark mode support for comparison-table */
+body.dark-mode .comparison-table {
+    background-color: #2d3748; /* Darker background */
+    color: #e2e8f0; /* Light text for better contrast */
+}
+
+body.dark-mode .comparison-table th {
+    background-color: #4a5568; /* Darker header background */
+    color: #e2e8f0; /* Light header text */
+}
+
+body.dark-mode .comparison-table td {
+    background-color: #2d3748; /* Match the dark background */
+    color: #e2e8f0; /* Light text */
+}
+
+body.dark-mode .comparison-table tr:hover td {
+    background-color: #3c4858; /* Slightly lighter hover effect */
 }
 
 [data-theme="dark"] footer,
