@@ -1327,138 +1327,138 @@ function validateInput(e) {
 
 // --- Begin function populateYearsOfServiceDropdown ---
 function populateYearsOfServiceDropdown() {
-    console.log('Populating years of service dropdown');
-    const yearsSelect = document.getElementById('years-service');
-    if (!yearsSelect) {
-        console.error('Years of Service dropdown not found');
-        return;
+  console.log('Populating years of service dropdown');
+  const yearsSelect = document.getElementById('years-service');
+  if (!yearsSelect) {
+    console.error('Years of Service dropdown not found');
+    return;
+  }
+
+  try {
+    // Clear existing options
+    yearsSelect.innerHTML = '';
+
+    // Add default option
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Select Years';
+    yearsSelect.appendChild(defaultOption);
+
+    // Add year options
+    for (let year = 1; year <= 40; year++) {
+      const option = document.createElement('option');
+      option.value = year.toString();
+      option.textContent = `${year} ${year === 1 ? 'year' : 'years'}`;
+      yearsSelect.appendChild(option);
     }
 
-    try {
-        // Clear existing options
-        yearsSelect.innerHTML = '';
-        
-        // Add default option
-        const defaultOption = document.createElement('option');
-        defaultOption.value = '';
-        defaultOption.textContent = 'Select Years';
-        yearsSelect.appendChild(defaultOption);
-        
-        // Add year options
-        for (let year = 1; year <= 40; year++) {
-            const option = document.createElement('option');
-            option.value = year.toString();
-            option.textContent = `${year} ${year === 1 ? 'year' : 'years'}`;
-            yearsSelect.appendChild(option);
-        }
+    // Force redraw for mobile browsers
+    yearsSelect.style.display = 'none';
+    yearsSelect.offsetHeight;
+    yearsSelect.style.display = '';
 
-        // Force redraw for mobile browsers
-        yearsSelect.style.display = 'none';
-        yearsSelect.offsetHeight;
-        yearsSelect.style.display = '';
-        
-        console.log('Years of service dropdown populated successfully');
-    } catch (error) {
-        console.error('Error populating years dropdown:', error);
-    }
-} catch (error) { console.error('Error caught in try block:', error); }
+    console.log('Years of service dropdown populated successfully');
+  } catch (error) {
+    console.error('Error populating years dropdown:', error);
+  }
+}
 
-// Function to populate High-Three Salary dropdowns
+    // Function to populate High-Three Salary dropdowns
 
 // --- Begin function populateHighThreeSalaryDropdowns ---
 function populateHighThreeSalaryDropdowns() {
-    console.log('Populating high-three salary dropdowns');
-    const minSalary = 92000;
-    const maxSalary = 205000;
-    const step = 5000;
-    
-    const salaryInputs = ['salary-year-1', 'salary-year-2', 'salary-year-3'];
-    
-    salaryInputs.forEach(inputId => {
-        const select = document.getElementById(inputId);
-        if (!select) {
-            console.error(`Salary dropdown ${inputId} not found`);
-            return;
-        }
+  console.log('Populating high-three salary dropdowns');
+  const minSalary = 92000;
+  const maxSalary = 205000;
+  const step = 5000;
 
-        try {
-            // Clear existing options
-            select.innerHTML = '';
-            
-            // Add default option
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Select Salary';
-            select.appendChild(defaultOption);
-            
-            // Add salary options
-            for (let salary = minSalary; salary <= maxSalary; salary += step) {
-                const option = document.createElement('option');
-                option.value = salary.toString();
-                option.textContent = `$${salary.toLocaleString()}`;
-                select.appendChild(option);
-            }
+  const salaryInputs = ['salary-year-1', 'salary-year-2', 'salary-year-3'];
 
-            // Force redraw for mobile browsers
-            select.style.display = 'none';
-            select.offsetHeight;
-            select.style.display = '';
-            
-            console.log(`Salary dropdown ${inputId} populated successfully`);
-        } catch (error) {
-            console.error(`Error populating salary dropdown ${inputId}:`, error);
-        }
-} catch (error) { console.error('Error caught in try block:', error); }
-    });
+  salaryInputs.forEach(inputId => {
+    const select = document.getElementById(inputId);
+    if (!select) {
+      console.error(`Salary dropdown ${inputId} not found`);
+      return;
+    }
+
+    try {
+      // Clear existing options
+      select.innerHTML = '';
+
+      // Add default option
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = 'Select Salary';
+      select.appendChild(defaultOption);
+
+      // Add salary options
+      for (let salary = minSalary; salary <= maxSalary; salary += step) {
+        const option = document.createElement('option');
+        option.value = salary.toString();
+        option.textContent = `$${salary.toLocaleString()}`;
+        select.appendChild(option);
+      }
+
+      // Force redraw for mobile browsers
+      select.style.display = 'none';
+      select.offsetHeight;
+      select.style.display = '';
+
+      console.log(`Salary dropdown ${inputId} populated successfully`);
+    } catch (error) {
+      console.error(`Error populating salary dropdown ${inputId}:`, error);
+    }
+  });
+}
 
 // Initialize TERA dropdowns
 
 // --- Begin function initializeTERADropdowns ---
 function initializeTERADropdowns() {
-    console.log('Initializing V/TERA dropdowns');
-    const teraYearsSelect = document.getElementById('tera-years');
-    const teraAgeSelect = document.getElementById('tera-age');
-    
-    if (!teraYearsSelect || !teraAgeSelect) {
-        console.error('V/TERA dropdowns not found');
-        return;
+  console.log('Initializing V/TERA dropdowns');
+  const teraYearsSelect = document.getElementById('tera-years');
+  const teraAgeSelect = document.getElementById('tera-age');
+
+  if (!teraYearsSelect || !teraAgeSelect) {
+    console.error('V/TERA dropdowns not found');
+    return;
+  }
+
+  try {
+    // Clear existing options
+    teraYearsSelect.innerHTML = '';
+    teraAgeSelect.innerHTML = '';
+
+    // Add TERA Years options
+    for (let year = 10; year <= 20; year++) {
+      const option = document.createElement('option');
+      option.value = year.toString();
+      option.textContent = `${year} years`;
+      teraYearsSelect.appendChild(option);
     }
 
-    try {
-        // Clear existing options
-        teraYearsSelect.innerHTML = '';
-        teraAgeSelect.innerHTML = '';
-        
-        // Add TERA Years options
-        for (let year = 10; year <= 20; year++) {
-            const option = document.createElement('option');
-            option.value = year.toString();
-            option.textContent = `${year} years`;
-            teraYearsSelect.appendChild(option);
-        }
-        
-        // Add TERA Age options
-        for (let age = 43; age <= 50; age++) {
-            const option = document.createElement('option');
-            option.value = age.toString();
-            option.textContent = `${age} years`;
-            teraAgeSelect.appendChild(option);
-        }
-
-        // Force redraw for mobile browsers
-        teraYearsSelect.style.display = 'none';
-        teraYearsSelect.offsetHeight;
-        teraYearsSelect.style.display = '';
-        
-        teraAgeSelect.style.display = 'none';
-        teraAgeSelect.offsetHeight;
-        teraAgeSelect.style.display = '';
-        
-        console.log('V/TERA dropdowns initialized successfully');
-    } catch (error) {
-        console.error('Error initializing V/TERA dropdowns:', error);
+    // Add TERA Age options
+    for (let age = 43; age <= 50; age++) {
+      const option = document.createElement('option');
+      option.value = age.toString();
+      option.textContent = `${age} years`;
+      teraAgeSelect.appendChild(option);
     }
-} catch (error) { console.error('Error caught in try block:', error); }
+
+    // Force redraw for mobile browsers
+    teraYearsSelect.style.display = 'none';
+    teraYearsSelect.offsetHeight;
+    teraYearsSelect.style.display = '';
+
+    teraAgeSelect.style.display = 'none';
+    teraAgeSelect.offsetHeight;
+    teraAgeSelect.style.display = '';
+
+    console.log('V/TERA dropdowns initialized successfully');
+  } catch (error) {
+    console.error('Error initializing V/TERA dropdowns:', error);
+  }
+}
 
 // Replace the POST_ALLOWANCES object with just Washington, DC
 
@@ -1708,7 +1708,7 @@ function lookupBaseSalary(grade, step) {
   } catch {
     return 0;
   }
-} catch (error) { console.error('Error caught in try block:', error); }
+}
 
 // Add getMRA function before calculateScenario
 
@@ -1870,7 +1870,7 @@ function calculateHealthInsurance(currentPlanOption, coverageType, homeState) {
             recommendations: ['Error calculating health insurance costs. Please check your selections.']
         };
     }
-} catch (error) { console.error('Error caught in try block:', error); }
+}
 
 
 // --- Begin function generateHealthInsuranceRecommendations ---
@@ -2254,7 +2254,7 @@ function getValidatedServiceDuration() {
             totalMonths: 0
         };
     }
-} catch (error) { console.error('Error caught in try block:', error); }
+}
 
 
 // --- Begin function clearSCD ---
@@ -2285,24 +2285,22 @@ window.getValidatedServiceDuration = getValidatedServiceDuration;
 // === Begin class Calculator ===
 class Calculator {
 
-    // --- Begin static method initialize ---
-    static initialize() {
-        try {
-            this.setupFormHandlers();
-            this.addTouchSupport();  // Added touch support for mobile devices
+  // --- Begin static method initialize ---
+  static initialize() {
+    try {
+      this.setupFormHandlers();
+      this.addTouchSupport();  // Added touch support for mobile devices
 
-            // Set Washington, DC as default post if no value is selected
-            const currentPostSelect = document.getElementById('current-post');
-            if (currentPostSelect && !currentPostSelect.value) {
-                currentPostSelect.value = "Washington, DC";
-            }
+      const currentPostSelect = document.getElementById('current-post');
+      if (currentPostSelect && !currentPostSelect.value) {
+        currentPostSelect.value = "Washington, DC";
+      }
 
-            console.log('Calculator initialized successfully');
-        } catch (error) {
-            console.error('Error initializing Calculator:', error);
-        }
-} catch (error) { console.error('Error caught in try block:', error); }
+      console.log('Calculator initialized successfully');
+    } catch (error) {
+      console.error('Error initializing Calculator:', error);
     }
+  }
 
     // Method to add touch support for form submission
 
@@ -2323,38 +2321,35 @@ class Calculator {
 
     // --- Begin static method setupFormHandlers ---
     static setupFormHandlers() {
-        if (!calculatorForm) return;
-
-        // Set up the form submission handler
-        calculatorForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            try {
-                FormValidator.clearAllErrors();
-                UIManager.showLoading();
-                UIManager.clearError();
-
-                const formData = this.getFormData();
-                FormValidator.validateFormData(formData);
-
-
-// === Begin object results ===
-                const results = {
-                    formData: formData,
-                    severance: this.calculateSeverance(formData),
-                    retirement: this.calculateRetirement(formData),
-                    health: this.calculateHealth(formData)
-                };
-
-                this.updateResults(results);
-                UIManager.showResults();
-            } catch (error) {
-                ErrorHandler.handleError(error, 'form submission');
-            } finally {
-                UIManager.hideLoading();
-            }
-} catch (error) { console.error('Error caught in try block:', error); }
-        });
-
+      const calculatorForm = document.getElementById('calculator-form');
+      if (!calculatorForm) return;
+    
+      calculatorForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+          FormValidator.clearAllErrors();
+          UIManager.showLoading();
+          UIManager.clearError();
+    
+          const formData = this.getFormData();
+          FormValidator.validateFormData(formData);
+    
+          const results = {
+            formData: formData,
+            severance: this.calculateSeverance(formData),
+            retirement: this.calculateRetirement(formData),
+            health: this.calculateHealth(formData)
+          };
+    
+          this.updateResults(results);
+          UIManager.showResults();
+        } catch (error) {
+          ErrorHandler.handleError(error, 'form submission');
+        } finally {
+          UIManager.hideLoading();
+        }
+      });
+    }
         // Add reset handler
         calculatorForm.addEventListener('reset', () => {
             FormValidator.clearAllErrors();
@@ -2478,7 +2473,6 @@ class Calculator {
         return result;
     }
 
-
     // --- Begin static method calculateHealth ---
     static calculateHealth(formData) {
         console.log('Calculating health with formData:', formData); // Debug log
@@ -2490,7 +2484,6 @@ class Calculator {
         console.log('Health calculation result:', healthResult); // Debug log
         return healthResult;
     }
-
 
     // --- Begin static method updateResults ---
     static updateResults(results) {
@@ -2522,7 +2515,6 @@ class Calculator {
             console.warn('Missing required parameters for updateSeveranceResults');
             return;
         }
-
 
 // === Begin object serviceDurationText ===
         const serviceDurationText = severance.serviceDuration ? formatServiceDuration(severance.serviceDuration) : `${severance.yearsOfService.toFixed(1)} years`;
@@ -2626,7 +2618,6 @@ class Calculator {
         }
     }
 
-
     // --- Begin static method updateHealthResults ---
     static updateHealthResults(container, health) {
         if (!container || !health) {
@@ -2699,7 +2690,6 @@ class Calculator {
             </div>
         `;
     }
-
 
     // --- Begin static method updateRetirementResults ---
     static updateRetirementResults(container, retirement, formData, health) {
@@ -2938,7 +2928,6 @@ class Calculator {
                                                     <td style="text-align: right;"><strong>${Utils.formatCurrency(scenario.monthlyAnnuity - (scenario.monthlyAnnuity * 0.10) - (health?.fehb?.monthly || 0))}</strong></td>
                                                 </tr>
                                             </table>
-                                            }
                                         </div>
 
                                         <div style="margin: 1rem 0;">
@@ -3008,95 +2997,87 @@ class Calculator {
             </ul>
         </div>`;
 
-
+// --- Begin function initializeAfterLoad ---
 // --- Begin function initializeAfterLoad ---
 function initializeAfterLoad() {
-    try {
-        // Initialize Calculator
-        Calculator.initialize();
-        
-        // Initialize TabManager
-        TabManager.setupTabNavigation();
-        
-        // Initialize other components
-        populateYearsOfServiceDropdown();
-        populateHighThreeSalaryDropdowns();
-        initializeTERADropdowns();
-        
-        // Initialize accessibility features
-        AccessibilityManager.initialize();
-        
-        // Initialize form feedback
-        FormFeedbackManager.initialize();
+  try {
+    // Initialize Calculator
+    Calculator.initialize();
+    
+    // Initialize TabManager
+    TabManager.setupTabNavigation();
+    
+    // Initialize other components
+    populateYearsOfServiceDropdown();
+    populateHighThreeSalaryDropdowns();
+    initializeTERADropdowns();
+    
+    // Initialize accessibility features
+    AccessibilityManager.initialize();
+    
+    // Initialize form feedback
+    FormFeedbackManager.initialize();
 
-        console.log('All components initialized successfully');
-    } catch (error) {
-        console.error('Error in initializeAfterLoad:', error);
-    }
-} catch (error) { console.error('Error caught in try block:', error); }
+    console.log('All components initialized successfully');
+  } catch (error) {
+    console.error('Error in initializeAfterLoad:', error);
+  }
+}
 
 // Call initialize when DOM is ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeAfterLoad);
+  document.addEventListener('DOMContentLoaded', initializeAfterLoad);
 } else {
-    initializeAfterLoad();
+  initializeAfterLoad();
 }
 
-// Additional optional inputs handling
-    document.addEventListener('DOMContentLoaded', function() {
-        const serviceComputationDateInput = document.getElementById('service-computation-date');
-        const sickLeaveBalanceInput = document.getElementById('sick-leave-balance');
-    const annualLeaveBalanceInput = document.getElementById('annual-leave-balance');
+// --- Combined DOMContentLoaded Initialization ---
+document.addEventListener('DOMContentLoaded', function () {
+  const serviceComputationDateInput = document.getElementById('service-computation-date');
+  const sickLeaveBalanceInput = document.getElementById('sick-leave-balance');
+  const annualLeaveBalanceInput = document.getElementById('annual-leave-balance');
+  const annualLeavePayoutSummary = document.getElementById('annual-leave-payout-summary');
+  const annualLeaveInput = document.getElementById('annual-leave');
 
+  // --- Handle Optional Inputs ---
+  function handleOptionalInputs() {
+    const serviceComputationDate = serviceComputationDateInput?.value || 'N/A';
+    const sickLeaveBalance = parseFloat(sickLeaveBalanceInput?.value) || 0;
+    const annualLeaveBalance = parseFloat(annualLeaveBalanceInput?.value) || 0;
+    // These values can be passed to calculations later
+  }
 
-// --- Begin function handleOptionalInputs ---
-        function handleOptionalInputs() {
-            const serviceComputationDate = serviceComputationDateInput.value || 'N/A';
-            const sickLeaveBalance = parseFloat(sickLeaveBalanceInput.value) || 0;
-    const annualLeaveBalance = parseFloat(annualLeaveBalanceInput.value) || 0;
-    // Use these values in calculations as needed
-        }
+  if (serviceComputationDateInput)
+    serviceComputationDateInput.addEventListener('input', handleOptionalInputs);
+  if (sickLeaveBalanceInput)
+    sickLeaveBalanceInput.addEventListener('input', handleOptionalInputs);
+  if (annualLeaveBalanceInput)
+    annualLeaveBalanceInput.addEventListener('input', handleOptionalInputs);
 
-    if(serviceComputationDateInput) serviceComputationDateInput.addEventListener('input', handleOptionalInputs);
-    if(sickLeaveBalanceInput) sickLeaveBalanceInput.addEventListener('input', handleOptionalInputs);
-    if(annualLeaveBalanceInput) annualLeaveBalanceInput.addEventListener('input', handleOptionalInputs);
-    });
+  // --- Calculate Annual Leave Payout ---
+  function calculateAnnualLeavePayout(baseSalary, postAllowanceRate) {
+    const balanceInput = annualLeaveInput || annualLeaveBalanceInput;
+    const balance = balanceInput && balanceInput.value ? parseFloat(balanceInput.value) : 0;
+    const hourlyRate = (baseSalary * (1 + postAllowanceRate)) / 2087;
+    const payout = hourlyRate * balance;
+    return payout.toFixed(2);
+  }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const annualLeaveBalanceInput = document.getElementById('annual-leave-balance');
-        const annualLeavePayoutSummary = document.getElementById('annual-leave-payout-summary');
+  if (annualLeavePayoutSummary) {
+    const updatePayout = () => {
+      const baseSalary = parseFloat(document.getElementById('base-salary')?.value) || 0;
+      const postAllowanceRate = parseFloat(document.getElementById('post-allowance-rate')?.value) || 0;
+      const payout = calculateAnnualLeavePayout(baseSalary, postAllowanceRate);
+      annualLeavePayoutSummary.innerHTML = `Annual Leave Payout: $${payout}`;
+    };
 
+    if (annualLeaveBalanceInput)
+      annualLeaveBalanceInput.addEventListener('input', updatePayout);
 
-// --- Begin function calculateAnnualLeavePayout ---
-        function calculateAnnualLeavePayout(baseSalary, postAllowanceRate) {
-            const annualLeaveInput = document.getElementById('annual-leave');
-            const annualLeaveBalance = annualLeaveInput && annualLeaveInput.value ? 
-                parseFloat(annualLeaveInput.value) : 
-                (parseFloat(annualLeaveBalanceInput.value) || 0);
-            const hourlyRate = (baseSalary * (1 + postAllowanceRate)) / 2087; // Standard federal work year hours
-            const payout = hourlyRate * annualLeaveBalance;
-            return payout.toFixed(2);
-        }
-
-        if (annualLeaveBalanceInput && annualLeavePayoutSummary) {
-            annualLeaveBalanceInput.addEventListener('input', function() {
-                const baseSalary = parseFloat(document.getElementById('base-salary').value) || 0;
-                const postAllowanceRate = parseFloat(document.getElementById('post-allowance-rate').value) || 0;
-                const payout = calculateAnnualLeavePayout(baseSalary, postAllowanceRate);
-                annualLeavePayoutSummary.innerHTML = `Annual Leave Payout: $${payout}`;
-            });
-
-            const annualLeaveInput = document.getElementById('annual-leave');
-            if (annualLeaveInput) {
-                annualLeaveInput.addEventListener('input', function() {
-                    const baseSalary = parseFloat(document.getElementById('base-salary').value) || 0;
-                    const postAllowanceRate = parseFloat(document.getElementById('post-allowance-rate').value) || 0;
-                    const payout = calculateAnnualLeavePayout(baseSalary, postAllowanceRate);
-                    annualLeavePayoutSummary.innerHTML = `Annual Leave Payout: $${payout}`;
-                });
-            }
-        }
-    });
+    if (annualLeaveInput)
+      annualLeaveInput.addEventListener('input', updatePayout);
+  }
+});
 
 // Modify the calculate function to show Severance tab after calculation
 async function calculate(event) {
@@ -3118,57 +3099,55 @@ async function calculate(event) {
         console.error('Error in calculate:', error);
         // ... existing error handling ...
     }
-} catch (error) { console.error('Error caught in try block:', error); }
+}
 
 // Initialize form handling when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+  // Ensure all classes are defined
+  if (
+    typeof Calculator !== 'undefined' &&
+    typeof FormManager !== 'undefined' &&
+    typeof UIManager !== 'undefined' &&
+    typeof TabManager !== 'undefined'
+  ) {
+    // Initialize core modules
     FormManager.init();
-        // Ensure all classes are defined first
-        if (typeof Calculator !== 'undefined' && 
-            typeof FormManager !== 'undefined' && 
-            typeof UIManager !== 'undefined') {
-            FormManager.init();
+    TabManager.setupTabNavigation();
 
-    // Additional iOS-specific form handling
+    // iOS-specific form handling
     const calculatorForm = document.getElementById('calculator-form');
     if (calculatorForm) {
-
-        // Add touch event handling for iOS
-        const submitButton = calculatorForm.querySelector('button[type="submit"]');
-        if (submitButton) {
-            submitButton.addEventListener('touchend', (e) => {
-                e.preventDefault(); // Prevent default touch behavior
-                e.stopPropagation();
-                FormManager.handleFormSubmit(e);
-                return false;
-            }, { passive: false }); // Set passive to false for iOS
-        }
-        
-        // Prevent default form behavior on iOS
-        calculatorForm.addEventListener('touchstart', (e) => {
-            if (e.target.tagName === 'BUTTON' && e.target.type === 'submit') {
-                e.preventDefault();
-            }
+      const submitButton = calculatorForm.querySelector('button[type="submit"]');
+      
+      // Handle tap to submit on iOS
+      if (submitButton) {
+        submitButton.addEventListener('touchend', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          FormManager.handleFormSubmit(e);
+          return false;
         }, { passive: false });
-        
-        // Handle iOS keyboard done button
-        calculatorForm.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                document.activeElement.blur();
-            }
-        });
+      }
+
+      // Prevent native iOS form submission
+      calculatorForm.addEventListener('touchstart', (e) => {
+        if (e.target.tagName === 'BUTTON' && e.target.type === 'submit') {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      // Handle Enter key in mobile Safari
+      calculatorForm.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          document.activeElement.blur();
+        }
+      });
     }
-} else {
+  } else {
     console.error('Required classes not initialized');
-}
+  }
 });
-
-// Initialize tab navigation when the document is ready
-document.addEventListener('DOMContentLoaded', () => {
-    TabManager.setupTabNavigation();
-});
-
 
 // --- Begin function formatServiceDuration ---
 function formatServiceDuration(serviceDuration) {
