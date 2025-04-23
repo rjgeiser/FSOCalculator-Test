@@ -2049,25 +2049,28 @@ static getFormData() {
 
 //Handles form submission and prevents default behavior
 static async handleFormSubmit(e) {
-try {
+  try {
     e.preventDefault();
     e.stopPropagation();
-    
+
+    // Clear any previous errors or results
     FormValidator.clearAllErrors();
     UIManager.clearError();
     UIManager.showLoading();
 
+    // Gather all form input
     const formData = FormManager.getFormData();
-    console.log('Form Data:', formData); // Debug log
+    console.log('📄 Form Data:', formData);
 
+    // Validate user inputs
     FormValidator.validateFormData(formData);
 
-    // Calculate all benefits
+    // Run all calculators
     const severanceResult = Calculator.calculateSeverance(formData);
     const retirementResult = Calculator.calculateRetirement(formData);
     const healthResult = Calculator.calculateHealth(formData);
-    
-    // Create a unified results object
+
+    // Merge results into unified object
     const results = {
       formData: formData,
       severance: severanceResult,
@@ -2075,6 +2078,24 @@ try {
       health: healthResult,
       retirementOptions: retirementResult?.scenarios || {}
     };
+
+    // Store globally (if needed later)
+    window.calculatorResults = results;
+
+    // Update results tabs
+    Calculator.updateRetirementResults(results.retirement, formData);
+    Calculator.updateHealthResults(document.getElementById('health-results'), results.health);
+    updateLifetimeReport(results.retirement, formData);
+
+    // Switch to results tab (optional)
+    UIManager.switchTab('retirement');
+
+  } catch (error) {
+    console.error("❌ Form processing error:", error);
+    UIManager.showError("An error occurred while processing your form. Please check your inputs.");
+  } finally {
+    UIManager.hideLoading();
+  }
 }
     // Call updateLifetimeReport with the corrected object
     updateLifetimeReport(results.retirementOptions, formData);
