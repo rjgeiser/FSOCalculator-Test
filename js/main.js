@@ -3092,7 +3092,102 @@ static getRetirementTypeDetails(type, minServiceYears, minVeraAge) {
                 </div>`,
             citation: '<p class="citation">Source: Foreign Service Act of 1980, as amended, 22 U.S.C. 4051-4052; 5 U.S.C. Chapter 84</p>'
         },
-        // Add other retirement types here...
+        tera: {
+            eligibilityRequirements: `
+                <h6>Eligibility Requirements</h6>
+                <ul>
+                    <li>Minimum ${minServiceYears} years of service required</li>
+                    <li>Must be part of authorized TERA window</li>
+                </ul>
+                <h6>Benefit Calculation</h6>
+                <ul>
+                    <li>1.7% × years of service × high-3 average salary</li>
+                    <li>Reduced by 2% per year under 20 years service</li>
+                    <li>Eligible for Special Retirement Supplement if age requirements met</li>
+                </ul>`,
+            policyNotes: `
+                <div class="alert alert-info">
+                    <strong>Policy Notes:</strong>
+                    <ul>
+                        <li>Eligible for FEHB and FEGLI coverage if 5-year requirement met</li>
+                        <li>Permanent reduction in annuity based on years under 20</li>
+                        <li>Agency-specific eligibility rules may apply</li>
+                    </ul>
+                </div>`,
+            citation: '<p class="citation">Source: 22 U.S.C. 4008a; Department Authority</p>'
+        },
+        vera: {
+            eligibilityRequirements: `
+                <h6>Eligibility Requirements</h6>
+                <ul>
+                    <li>Age ${minVeraAge}+ with ${minServiceYears}+ years of service</li>
+                    <li>Must be part of authorized VERA window</li>
+                </ul>
+                <h6>Benefit Calculation</h6>
+                <ul>
+                    <li>1.7% × first 20 years of service × high-3 average salary</li>
+                    <li>Plus 1% × remaining years over 20 × high-3 average salary</li>
+                    <li>Special Retirement Supplement until age 62</li>
+                </ul>`,
+            policyNotes: `
+                <div class="alert alert-info">
+                    <strong>Policy Notes:</strong>
+                    <ul>
+                        <li>Eligible for FEHB and FEGLI coverage if 5-year requirement met</li>
+                        <li>No reduction in basic annuity</li>
+                        <li>Agency-specific eligibility rules may apply</li>
+                    </ul>
+                </div>`,
+            citation: '<p class="citation">Source: 5 U.S.C. 8336(d)(2); Department Authority</p>'
+        },
+        mraPlusTen: {
+            eligibilityRequirements: `
+                <h6>Eligibility Requirements</h6>
+                <ul>
+                    <li>Reach Minimum Retirement Age (MRA)</li>
+                    <li>At least 10 years of service</li>
+                </ul>
+                <h6>Benefit Calculation</h6>
+                <ul>
+                    <li>1% × years of service × high-3 average salary</li>
+                    <li>Reduced by 5% per year under age 62</li>
+                    <li>No Special Retirement Supplement</li>
+                </ul>`,
+            policyNotes: `
+                <div class="alert alert-info">
+                    <strong>Policy Notes:</strong>
+                    <ul>
+                        <li>FEHB/FEGLI only if taking immediate annuity</li>
+                        <li>Permanent reduction unless postponed to 62</li>
+                        <li>Can postpone annuity to reduce or eliminate age reduction</li>
+                    </ul>
+                </div>`,
+            citation: '<p class="citation">Source: 5 U.S.C. 8412(g); Foreign Service Act</p>'
+        },
+        deferred: {
+            eligibilityRequirements: `
+                <h6>Eligibility Requirements</h6>
+                <ul>
+                    <li>At least 5 years of service</li>
+                    <li>Payable at age 62</li>
+                </ul>
+                <h6>Benefit Calculation</h6>
+                <ul>
+                    <li>1% × years of service × high-3 average salary</li>
+                    <li>No reduction for age</li>
+                    <li>No Special Retirement Supplement</li>
+                </ul>`,
+            policyNotes: `
+                <div class="alert alert-info">
+                    <strong>Policy Notes:</strong>
+                    <ul>
+                        <li>Not eligible to continue FEHB or FEGLI</li>
+                        <li>No survivor benefits until annuity begins</li>
+                        <li>No COLA until age 62</li>
+                    </ul>
+                </div>`,
+            citation: '<p class="citation">Source: 5 U.S.C. 8413(b); Foreign Service Act</p>'
+        }
     };
 
     return details[type] || {
