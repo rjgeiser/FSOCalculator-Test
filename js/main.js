@@ -2885,48 +2885,45 @@ static updateRetirementResults(container, retirement, formData, health) {
     // Process each retirement scenario
     if (retirement.scenarios) {
         console.log('Processing retirement scenarios:', retirement.scenarios);
-
+    
         Object.entries(retirement.scenarios).forEach(([type, scenario]) => {
             console.log(`Processing ${type} scenario:`, scenario);
-
+    
             const label = labelMap[type] || type;
             const annual = scenario.annualAnnuity || 0;
-
+            const monthlySupplemental = scenario.monthlySupplemental || 0;
+    
             // Calculate years receiving benefits
-            const startAge = type === 'deferred' ? 62 :
-                             type === 'mraPlusTen' ? Math.max(57, currentAge) :
-                             currentAge;
+            const startAge = 
+                type === 'deferred' ? Math.max(62, currentAge) :
+                type === 'mraPlusTen' ? Math.max(57, currentAge) :
+                currentAge;
             const years = Math.max(0, maxAge - startAge);
             const total = Math.round(annual * years);
-
+    
             let assumptions = `$${annual.toLocaleString()}/yr × ${years} years starting at age ${startAge}`;
-            if (scenario.monthlySupplemental > 0) {
-                const annualSupplemental = scenario.monthlySupplemental * 12;
+            if (monthlySupplemental > 0) {
+                const annualSupplemental = monthlySupplemental * 12;
                 assumptions += ` (+ $${annualSupplemental.toLocaleString()} SRS until age 62)`;
             }
-
-            // If the scenario is eligible
+    
+            if (!scenario.annualAnnuity && !scenario.monthlySupplemental) {
+                console.error(`Missing data for ${type} scenario. Skipping calculations.`);
+            }
+    
+            // Push to eligible or ineligible lists
+            const row = `<tr>
+                <td>${label}</td>
+                <td>${Utils.formatCurrency(total)}</td>
+            </tr>`;
+            const notes = `<strong>${label}:</strong> ${assumptions}`;
+    
             if (scenario.isEligible) {
-                const row = `<tr>
-                    <td>${label}</td>
-                    <td>${Utils.formatCurrency(total)}</td>
-                </tr>`;
                 tbodyEligible.push(row);
-                notesEligible.push(`<strong>${label}:</strong> ${assumptions}`);
+                notesEligible.push(notes);
             } else {
-                // If the scenario is ineligible, still calculate the hypothetical total benefit
-                const row = `<tr>
-                    <td>${label}</td>
-                    <td>${Utils.formatCurrency(total)}</td>
-                </tr>`;
                 tbodyIneligible.push(row);
-
-                // Add ineligibility reasons
-                const reasons = this.getIneligibilityReasons(type, currentAge, formData.yearsService, formData.fsGrade);
-                const reasonText = reasons.length
-                    ? `Ineligible because ${reasons.join(", ")}`
-                    : "Ineligible (missing requirements)";
-                notesIneligible.push(`<strong>${label}:</strong> ${reasonText} — but would be ${assumptions}`);
+                notesIneligible.push(notes);
             }
         });
     }
@@ -2953,7 +2950,7 @@ static updateRetirementResults(container, retirement, formData, health) {
                     <thead>
                         <tr>
                             <th>Ineligible Retirement Options</th>
-                            <th>Potential Value (if eligible)</th>
+                            <th>Potential Value (to age ${maxAge}))</th>
                         </tr>
                     </thead>
                     <tbody>${tbodyIneligible.join('')}</tbody>
