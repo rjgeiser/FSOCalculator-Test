@@ -1798,6 +1798,7 @@ select option {
 }
 
 [data-theme="dark"] .form-container,
+[data-theme="dark"] .form-section,
 [data-theme="dark"] .results-container,
 [data-theme="dark"] .option-card,
 [data-theme="dark"] .tab-content,
