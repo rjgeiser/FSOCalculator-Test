@@ -334,17 +334,23 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
         } else if (effectiveYearsService >= 25) {
             isEligible = true;
             description = "Immediate retirement (25 years any age)";
-        }
+
     } else if (type === "tera" && teraEligible && effectiveYearsService >= teraYearsRequired) {
-            isEligible = true;
-            description = `TERA retirement (${teraYearsRequired}+ years of service)`;
-        
-            // Apply reduction factor for < 20 years of service
-            const monthsUnder20 = (20 - effectiveYearsService) * 12;
-            const reductionFactor = 1 - (monthsUnder20 * (1 / 12) * 0.01); // 1/12 of 1% per month
-            annuityReductionFactor = Math.max(0, reductionFactor); // Prevent negative annuity
-        
-            reductionNote = `Annuity reduced by ${Math.round((1 - annuityReductionFactor) * 100)}% for service under 20 years (TERA reduction)`;
+        isEligible = true;
+        description = `TERA retirement (${teraYearsRequired}+ years of service)`;
+    
+        // Calculate annuity percentage using FSPS formula
+        const firstTwentyYears = Math.min(20, effectiveYearsService) * 0.017;
+        const yearsOver20 = Math.max(0, effectiveYearsService - 20) * 0.01;
+        annuityPercentage = firstTwentyYears + yearsOver20;
+    
+        // Apply TERA reduction: 1/12 of 1% per month under 20 years
+        const monthsUnder20 = Math.max(0, (20 - effectiveYearsService) * 12);
+        const reductionFactor = 1 - (monthsUnder20 * (1 / 12) * 0.01); // = 0.95 for 15 years
+        annuityReductionFactor = Math.max(0, reductionFactor); // Prevent negative reduction
+    
+        reductionNote = `Annuity reduced by ${(100 - reductionFactor * 100).toFixed(1)}% for service under 20 years (TERA reduction)`;
+   
     } else if (type === "vera" && teraEligible) {
             const veraAgeThreshold = parseInt(teraAgeRequired) || 43;
             const veraYearsThreshold = parseInt(teraYearsRequired) || 15;
@@ -420,7 +426,11 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
 
     // Calculate annual and monthly amounts
     const baseAnnuity = highThreeAverage * annuityPercentage;
-    const finalAnnuity = baseAnnuity * (1 - mraReduction);
+    const reductionMultiplier = (type === 'tera')
+      ? annuityReductionFactor
+      : (1 - mraReduction);
+    
+    const finalAnnuity = baseAnnuity * reductionMultiplier;
     const monthlyAnnuity = finalAnnuity / 12;
 
     // Calculate supplement if eligible
@@ -2808,10 +2818,6 @@ class Calculator {
                                                     <td style="text-align: right;"><strong>${Utils.formatCurrency(scenario.monthlyAnnuity - (scenario.monthlyAnnuity * 0.10) - (health?.fehb?.monthly || 0))}</strong></td>
                                                 </tr>
                                             </table>
-                                            if (scenario.isEligibleForSupplement) {
-                                                html += '<p style="margin-top: 0.5rem; font-style: italic; color: #555;">
-                                                    Includes Special Retirement Supplement (SRS) until age 62
-                                                </p>';
                                             }
                                         </div>
 
