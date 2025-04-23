@@ -2968,31 +2968,7 @@ static updateRetirementResults(container, retirement, formData, health) {
             </div>
         </div>`;
 }
-
-// Helper method to determine ineligibility reasons
-static getIneligibilityReasons(type, age, service, grade) {
-    const reasons = [];
-    switch (type) {
-        case 'immediate':
-            if (age < 50) reasons.push("must be at least 50 years old");
-            if (service < 20) reasons.push("requires 20+ years of service");
-            if (!/^FS-0[1-3]$|^SFS$/.test(grade)) reasons.push("requires grade FS-01 or higher");
-            break;
-        case 'tera':
-            if (age < 50) reasons.push("must be at least 50 years old");
-            if (service < 15) reasons.push("requires 15+ years of service");
-            break;
-        case 'mraPlusTen':
-            if (age < 57) reasons.push("must reach MRA (57)");
-            if (service < 10) reasons.push("requires 10+ years of service");
-            break;
-        case 'deferred':
-            if (service < 5) reasons.push("requires at least 5 years of service");
-            break;
-    }
-    return reasons;
-}
-    
+   
 // Helper method to determine ineligibility reasons
 static getIneligibilityReasons(type, age, service, grade) {
     const reasons = [];
