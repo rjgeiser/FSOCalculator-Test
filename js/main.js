@@ -887,6 +887,7 @@ class FormValidator {
             this.clearFieldError(element);
         });
     }
+}
 
 // UI Manager for handling UI updates
 const UIManager = {
