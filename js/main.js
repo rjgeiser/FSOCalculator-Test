@@ -1075,7 +1075,6 @@ class TabManager {
     static showDefaultTab() {
         this.activateTab('severance');
     }
-}
 
 class AccessibilityManager {
     static initialize() {
@@ -1216,7 +1215,6 @@ class FormFeedbackManager {
         
         progressBar.style.width = `${progress}%`;
     }
-}
 
 // Calculation Manager for handling all calculations
 const CalculationManager = {
@@ -1324,7 +1322,6 @@ function populateYearsOfServiceDropdown() {
         console.error('Error populating years dropdown:', error);
     }
 } catch (error) { console.error('Error caught in try block:', error); }
-}
 
 // Function to populate High-Three Salary dropdowns
 function populateHighThreeSalaryDropdowns() {
@@ -1371,7 +1368,6 @@ function populateHighThreeSalaryDropdowns() {
         }
 } catch (error) { console.error('Error caught in try block:', error); }
     });
-}
 
 // Initialize TERA dropdowns
 function initializeTERADropdowns() {
@@ -1419,7 +1415,6 @@ function initializeTERADropdowns() {
         console.error('Error initializing V/TERA dropdowns:', error);
     }
 } catch (error) { console.error('Error caught in try block:', error); }
-}
 
 // Replace the POST_ALLOWANCES object with just Washington, DC
 const POST_ALLOWANCES = {
@@ -1656,7 +1651,6 @@ function lookupBaseSalary(grade, step) {
     return 0;
   }
 } catch (error) { console.error('Error caught in try block:', error); }
-}
 
 // Add getMRA function before calculateScenario
 function getMRA(currentAge) {
@@ -1807,7 +1801,6 @@ function calculateHealthInsurance(currentPlanOption, coverageType, homeState) {
         };
     }
 } catch (error) { console.error('Error caught in try block:', error); }
-}
 
 function generateHealthInsuranceRecommendations(fehbRates, cobraCosts, acaEstimate, planOption) {
     const recommendations = [];
@@ -2109,7 +2102,6 @@ static async handleFormSubmit(e) {
   }
 } catch (error) { console.error('Error caught in try block:', error); }
 }
-}
 
 // Service Duration Validation Functions
 function getValidatedServiceDuration() {
@@ -2169,7 +2161,6 @@ function getValidatedServiceDuration() {
         };
     }
 } catch (error) { console.error('Error caught in try block:', error); }
-}  
 
 function clearSCD() {
     const scdInput = document.getElementById('service-computation-date');
@@ -2276,7 +2267,6 @@ class Calculator {
                 submitButton.click(); // Trigger native click
             });
         }
-    }
 
     static getFormData() {
         const serviceComputationDate = document.getElementById('service-computation-date')?.value;
@@ -2889,7 +2879,6 @@ class Calculator {
                 <li>Consider consulting with HR for official calculations and guidance</li>
             </ul>
         </div>`;
-    }
 
 function initializeAfterLoad() {
     try {
@@ -2915,7 +2904,6 @@ function initializeAfterLoad() {
         console.error('Error in initializeAfterLoad:', error);
     }
 } catch (error) { console.error('Error caught in try block:', error); }
-}
 
 // Call initialize when DOM is ready
 if (document.readyState === 'loading') {
@@ -2997,7 +2985,6 @@ async function calculate(event) {
         // ... existing error handling ...
     }
 } catch (error) { console.error('Error caught in try block:', error); }
-}
 
 // Initialize form handling when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
