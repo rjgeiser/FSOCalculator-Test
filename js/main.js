@@ -2950,7 +2950,7 @@ static updateRetirementResults(container, retirement, formData, health) {
                     <thead>
                         <tr>
                             <th>Ineligible Retirement Options</th>
-                            <th>Potential Value (to age ${maxAge}))</th>
+                            <th>Potential Value (to age ${maxAge})</th>
                         </tr>
                     </thead>
                     <tbody>${tbodyIneligible.join('')}</tbody>
