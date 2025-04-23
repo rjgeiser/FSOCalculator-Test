@@ -2977,6 +2977,7 @@ static generateRetirementNotes(minVeraAge, minServiceYears) {
             <li>Consider consulting with HR for official calculations and guidance</li>
         </ul>
     </div>`;
+    }
 }
         
 // --- Begin function initializeAfterLoad ---
