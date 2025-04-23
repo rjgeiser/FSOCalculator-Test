@@ -941,6 +941,7 @@ class FormValidator {
 // UI Manager for handling UI updates
 
 // === Begin object UIManager ===
+}  // Close class definition
 const UIManager = {
     showLoading() {
         const loading = document.getElementById('loading');
