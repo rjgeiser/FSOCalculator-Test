@@ -2075,7 +2075,7 @@ try {
       health: healthResult,
       retirementOptions: retirementResult?.scenarios || {}
     };
-
+}
     // Call updateLifetimeReport with the corrected object
     updateLifetimeReport(results.retirementOptions, formData);
 
