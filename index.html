@@ -487,30 +487,28 @@
                 </form>
             </section>
             <!-- Right Column - Results -->
-            <!-- Light & Dark Mode Toggle -->            
-            <div class="theme-toggle-wrapper">
-              <label class="theme-switch" for="theme-toggle-checkbox">
-                <input type="checkbox" id="theme-toggle-checkbox" />
-                <span class="slider">
-                  <i class="icon light fas fa-sun"></i>
-                  <i class="icon dark fas fa-moon"></i>
-                </span>
-              </label>
-            </div>
             <section class="results-column">
                 <div id="loading" class="loading-container" style="display: none;">
                     <div class="loading-spinner"></div>
                     <p>Calculating your benefits...</p>
                 </div>
-
                 <div id="error" class="error-message" style="display: none;"></div>
-
                 <div class="tabs">
                     <div class="tab-buttons">
                         <button class="tab-button" data-tab="severance">Severance</button>
                         <button class="tab-button" data-tab="retirement">Retirement</button>
                         <button class="tab-button" data-tab="health">Health</button>
                         <button class="tab-button" data-tab="lifetime">Lifetime</button>
+                    </div>
+                    <!-- Light & Dark Mode Toggle -->            
+                    <div class="theme-toggle-wrapper">
+                      <label class="theme-switch" for="theme-toggle-checkbox">
+                        <input type="checkbox" id="theme-toggle-checkbox" />
+                        <span class="slider">
+                          <i class="icon light fas fa-sun"></i>
+                          <i class="icon dark fas fa-moon"></i>
+                        </span>
+                      </label>
                     </div>
                     <div id="severance" class="tab-content">
                         <h3>Severance Pay Calculation</h3>
