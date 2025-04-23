@@ -526,11 +526,10 @@ label {
 /* Light & Dark Mode Toggle */
 .theme-toggle-wrapper {
   position: sticky;
-  top: 1rem;
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  top: 2rem;
+  z-index: 100;
+  align-self: flex-start;
+  margin-left: 1rem;
   gap: 0.5rem;
   padding: 0 1rem;
   background: transparent;
