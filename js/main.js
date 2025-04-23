@@ -2994,8 +2994,7 @@ static setupFormHandlers() {
                 <li>Consider consulting with HR for official calculations and guidance</li>
             </ul>
         </div>`;
-
-// --- Begin function initializeAfterLoad ---
+        
 // --- Begin function initializeAfterLoad ---
 function initializeAfterLoad() {
   try {
@@ -3403,4 +3402,51 @@ function updateLifetimeReport(retirement, formData) {
       </div>
     </div>
   `;
-}
+        } // End of updateRetirementResults method
+    } // End of Calculator class
+    
+} // End of updateLifetimeReport function
+
+// Initialize all components when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        // Initialize core components
+        Calculator.initialize();
+        FormManager.init();
+        TabManager.setupTabNavigation();
+        AccessibilityManager.initialize();
+        FormFeedbackManager.initialize();
+        
+        // Initialize dropdowns
+        populateYearsOfServiceDropdown();
+        populateHighThreeSalaryDropdowns();
+        initializeTERADropdowns();
+        
+        // Set up event listeners
+        const fsGrade = document.getElementById('fs-grade');
+        if (fsGrade) {
+            fsGrade.addEventListener('change', function() {
+                updateStepDropdown(this.value);
+            });
+            
+            // Initialize with current grade value
+            if (fsGrade.value) {
+                updateStepDropdown(fsGrade.value);
+            }
+        }
+    } catch (error) {
+        console.error('Error during initialization:', error);
+        ErrorHandler.handleError(error, 'initialization');
+    }
+});
+
+// Add event cleanup
+window.addEventListener('beforeunload', function() {
+    // Remove form event listeners
+    const calculatorForm = document.getElementById('calculator-form');
+    if (calculatorForm) {
+        calculatorForm.removeEventListener('submit', FormManager.handleFormSubmit);
+        calculatorForm.removeEventListener('touchstart', null);
+        calculatorForm.removeEventListener('keypress', null);
+    }
+});
