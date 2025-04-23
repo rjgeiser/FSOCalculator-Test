@@ -2097,41 +2097,6 @@ static async handleFormSubmit(e) {
     UIManager.hideLoading();
   }
 }
-    // Call updateLifetimeReport with the corrected object
-    updateLifetimeReport(results.retirementOptions, formData);
-
-
-    console.log('Health Result:', healthResult); // Debug log
-
-    // Ensure health data is properly structured
-    if (healthResult && !healthResult.error) {
-        const results = {
-            formData: formData,
-            severance: severanceResult,
-            retirement: retirementResult,
-            health: healthResult
-        };
-
-        Calculator.updateResults(results);
-        UIManager.showResults();
-        TabManager.showDefaultTab();
-    } else {
-        throw new Error(healthResult.error || 'Error calculating health benefits');
-    }
-    
-    return false;
-} catch (error) {
-    console.error('Error in handleFormSubmit:', error);
-    if (error instanceof ValidationError) {
-        UIManager.showError(error.message);
-    } else {
-        ErrorHandler.handleError(error, 'handleFormSubmit');
-    }
-} finally {
-    UIManager.hideLoading();
-}
-}
-}
 
 // Service Duration Validation Functions
 function getValidatedServiceDuration() {
