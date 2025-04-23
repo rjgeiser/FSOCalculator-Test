@@ -3250,20 +3250,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-//Add light and dark mode toggle
-//document.addEventListener('DOMContentLoaded', () => {
- // const toggle = document.getElementById('themeToggle');
- // if (toggle) {
- //   toggle.addEventListener('click', () => {
- //     document.body.classList.toggle('dark-mode');
- //     toggle.textContent = document.body.classList.contains('dark-mode')
- //       ? '☀️ Light Mode'
- //       : '🌙 Dark Mode';
- //   });
- // }
-//});
-
-
 // --- Begin function updateLifetimeReport ---
 function updateLifetimeReport(retirement, formData) {
   console.log("🧾 Running updateLifetimeReport");
@@ -3282,8 +3268,7 @@ function updateLifetimeReport(retirement, formData) {
   const notesEligible = [];
   const notesIneligible = [];
 
-
-// === Begin object eligibilityRules ===
+  // === Begin eligibility rules ===
   const eligibilityRules = {
     immediate: (age, service, grade) => {
       const reasons = [];
@@ -3293,6 +3278,12 @@ function updateLifetimeReport(retirement, formData) {
       return reasons;
     },
     tera: (age, service) => {
+      const reasons = [];
+      if (age < teraMinAge) reasons.push(`must be at least ${teraMinAge} years old`);
+      if (service < teraMinYears) reasons.push(`requires ${teraMinYears}+ years of service`);
+      return reasons;
+    },
+    vera: (age, service) => {
       const reasons = [];
       if (age < teraMinAge) reasons.push(`must be at least ${teraMinAge} years old`);
       if (service < teraMinYears) reasons.push(`requires ${teraMinYears}+ years of service`);
@@ -3324,11 +3315,11 @@ function updateLifetimeReport(retirement, formData) {
         average = base || 80000;
       }
 
-
-// === Begin object multiplierMap ===
+      // === Begin multiplier fallback ===
       const multiplierMap = {
         immediate: 0.017,
         tera: 0.017,
+        vera: 0.017,
         mraPlusTen: 0.01,
         deferred: 0.015
       };
@@ -3349,12 +3340,10 @@ function updateLifetimeReport(retirement, formData) {
     const total = Math.round(annual * years);
 
     let assumptions = `$${annual.toLocaleString()}/yr × ${years} years starting at age ${startAge}`;
-    if (data.supplementalAnnuity > 0) {
+    if (parseFloat(data.supplementalAnnuity) > 0) {
       assumptions += " (Includes SRS until age 62)";
     }
 
-
-// === Begin object row ===
     const row = `<tr><td>${label}</td><td>$${total.toLocaleString()}</td></tr>`;
     const reasonList = eligibilityRules[key]?.(currentAge, service, grade) || [];
 
@@ -3380,7 +3369,6 @@ function updateLifetimeReport(retirement, formData) {
     notesEligible.unshift(`<strong>Severance:</strong> One-time payment of $${severance.toLocaleString()}`);
   }
 
-  // 👇 Render results (if your code includes it)
   reportContainer.innerHTML = `
     <div class="form-section">
       <h3>Eligible Retirement Options</h3>
@@ -3392,8 +3380,7 @@ function updateLifetimeReport(retirement, formData) {
                   <th>Total Value (to age ${maxAge})</th>
               </tr>
           </thead>
-          <tbody>${tbodyEligible.join('')}
-          </tbody>
+          <tbody>${tbodyEligible.join('')}</tbody>
         </table>
       </div>
 
@@ -3408,7 +3395,13 @@ function updateLifetimeReport(retirement, formData) {
           </thead>
           <tbody>${tbodyIneligible.join('')}</tbody>
         </table>
-          <div class="form-text"><h3>Assumptions</h3><ul><li>${[...notesEligible, ...notesIneligible].join("</li><li>")}</li></ul></div>
+
+        <div class="form-text">
+          <h3>Assumptions</h3>
+          <ul>
+            <li>${[...notesEligible, ...notesIneligible].join("</li><li>")}</li>
+          </ul>
+        </div>
       </div>
     </div>
   `;
