@@ -2734,7 +2734,7 @@ class Calculator {
                             eligibilityRequirements = `
                                 <h6>Eligibility Requirements</h6>
                                 <ul>
-                                    <li>Eligible with ${teraYearsRequired}+ years of service</li>
+                                    <li>Eligible with ${minServiceYears}+ years of service</li>
                                 </ul>`;
                             policyNotes = `
                                 <div class="alert alert-info" style="margin-top: 10px; padding: 10px; background-color: #e2e8f0; border-radius: 4px;">
@@ -2752,7 +2752,7 @@ class Calculator {
                             eligibilityRequirements = `
                                 <h6>Eligibility Requirements</h6>
                                 <ul>
-                                    <li>Eligible if age ${teraAgeRequired}+ with ${teraYearsRequired}+ years of service</li>
+                                    <li>Eligible if age ${minVeraAge}+ with ${minServiceYears}+ years of service</li>
                                 </ul>`;
                             policyNotes = `
                                 <div class="alert alert-info" style="margin-top: 10px; padding: 10px; background-color: #e2e8f0; border-radius: 4px;">
