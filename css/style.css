@@ -541,8 +541,10 @@ label {
 .theme-label {
   font-size: 1rem;
   font-weight: 600;
-  margin-right: 0.5rem;
-  line-height: 28px;
+  line-height: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .theme-switch {
