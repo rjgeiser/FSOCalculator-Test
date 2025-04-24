@@ -592,24 +592,13 @@ input:checked + .slider::before {
 }
 
 .icon {
-  font-size: 1rem;
   height: 20px;
   width: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 1;
   pointer-events: none;
   z-index: 2;
-  transform: translateY(0); /* Remove misalignment shim */
-}
-
-.icon.light {
-  color: #f6e05e;
-}
-
-.icon.dark {
-  color: #4a5568;
 }
 
 /* Enhanced Mobile Responsiveness */
