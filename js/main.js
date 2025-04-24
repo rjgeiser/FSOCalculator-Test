@@ -413,7 +413,7 @@ function calculateScenario(highThreeAverage, yearsService, currentAge, type, isI
         const reductionFactor = 1 - (monthsUnder20 * (1 / 12) * 0.01); // = 0.95 for 15 years
         annuityReductionFactor = Math.max(0, reductionFactor); // Prevent negative reduction
     
-        reductionNote = `Annuity reduced by ${(100 - reductionFactor * 100).toFixed(1)}% for service under 20 years (TERA reduction)`;
+        reductionNote = `Annuity reduced by ${(100 - reductionFactor * 100).toFixed(1)}% for service under 20 years (TERA reduction - 1/12 of 1% per month)`;
     } else if (type === "vera" && teraEligible) {
         const veraAgeThreshold = parseInt(teraAgeRequired) || 43;
         const veraYearsThreshold = parseInt(teraYearsRequired) || 15;
