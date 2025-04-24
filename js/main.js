@@ -2992,12 +2992,12 @@ static updateRetirementResults(container, retirement, formData, health) {
 
   container.innerHTML = `
     <div class="form-section">
-      <h3>Eligible Retirement Options</h3>
+      <h3>Eligible Retirement</h3>
       <div class="comparison-table">
         <table>
           <thead>
             <tr>
-              <th>Eligible Retirement Options</th>
+              <th>Eligible Options</th>
               <th>Total Value (to age ${maxAge})</th>
             </tr>
           </thead>
@@ -3005,13 +3005,13 @@ static updateRetirementResults(container, retirement, formData, health) {
         </table>
       </div>
 
-      <h3>Ineligible Options (for Comparison Only)</h3>
+      <h3>Ineligible Retirement (for Comparison Only)</h3>
       <div class="comparison-table">
         <table>
           <thead>
             <tr>
-              <th>Ineligible Retirement Options</th>
-              <th>Potential Value (to age ${maxAge})</th>
+              <th>Ineligible Options</th>
+              <th>Total Value (to age ${maxAge})</th>
             </tr>
           </thead>
           <tbody>${tbodyIneligible.join('')}</tbody>
