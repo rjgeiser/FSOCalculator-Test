@@ -523,19 +523,25 @@ label {
 }
 
 /* Light & Dark Mode Toggle */
+/* ========== THEME TOGGLE STYLES ========== */
 .theme-toggle-wrapper {
   display: flex;
-  position: relative;
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  position: sticky;
+  top: 1rem;
+  background: white;
+  z-index: 999;
 }
 
 .theme-label {
   font-weight: 600;
   font-size: 0.9rem;
-  color: var(--text-color, #1a202c);
+  color: var(--text-color);
+  line-height: 1;
+  margin-right: 0.5rem;
 }
 
 .theme-switch {
@@ -553,48 +559,46 @@ label {
 
 .slider {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 7px;
   width: 100%;
   height: 28px;
   background-color: #cbd5e0;
   border-radius: 34px;
-  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
   box-sizing: border-box;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .slider::before {
   content: "";
   position: absolute;
-  height: 20px;
-  width: 20px;
   top: 4px;
   left: 4px;
-  background-color: #ffffff;
+  height: 20px;
+  width: 20px;
+  background-color: white;
   border-radius: 50%;
   transition: transform 0.3s ease;
   z-index: 1;
 }
 
 input:checked + .slider::before {
-  transform: translateX(28px);
+  transform: translateX(32px);
 }
 
 .icon {
   font-size: 1rem;
-  height: 20px;
-  width: 20px;
+  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 1;
-  pointer-events: none;
+  height: 20px;
+  width: 20px;
   z-index: 2;
-  transform: translateY(1px); /* corrects vertical centering */
-  outline: none !important;
-  box-shadow: none !important;
+  pointer-events: none;
 }
 
 .icon.light {
@@ -603,6 +607,11 @@ input:checked + .slider::before {
 
 .icon.dark {
   color: #4a5568;
+}
+
+/* Remove tap highlight on Safari */
+.theme-switch, .slider, .icon {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Enhanced Mobile Responsiveness */
@@ -1477,8 +1486,10 @@ input[type="number"]::-webkit-inner-spin-button {
 
 /* Ensure form scrolling */
 html, body {
-    height: auto;
-    overflow-y: auto;
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow-y: auto;
 }
 
 .form-container {
