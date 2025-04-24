@@ -525,13 +525,13 @@ label {
 
 /* Light & Dark Mode Toggle */
 .theme-toggle-wrapper {
+  diplay: flex;
+  align-times: right;
   position: sticky;
   top: 2rem;
-  z-index: 100;
-  align-self: flex-start;
-  margin-left: 1rem;
+  z-index: 1000;
+  margin-left: 0.5rem 1rem;
   gap: 0.5rem;
-  padding: 0 1rem;
   background: transparent;
 }
 
@@ -783,7 +783,7 @@ input:checked + .slider:before {
     }
 }
 
-/* Dark mode support for better contrast */
+/* Dark mode support for better contrast
 
 
     select.form-control option {
@@ -807,7 +807,7 @@ input:checked + .slider:before {
 
     .comparison-table th {
     }
-}
+} */
 
 /* Tooltip Styles */
 .tooltip {
@@ -1775,7 +1775,9 @@ textarea {
 [data-theme="dark"] h3,
 [data-theme="dark"] h4,
 [data-theme="dark"] h5,
+[data-theme="dark"] h6,
 [data-theme="dark"] p,
+[data-theme="dark"] strong,
 [data-theme="dark"] .section-header {
   color: #f7fafc !important;
 }
