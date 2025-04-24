@@ -528,30 +528,30 @@ label {
 }
 
 /* Light & Dark Mode Toggle */
-/* ========== THEME TOGGLE STYLES ========== */
 .theme-toggle-wrapper {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  height: 28px;
+  justify-content: flex-end;
+  height: 32px;
   gap: 0.5rem;
-  padding: 0 1rem;
+  padding: 0.5rem 1rem;
 }
 
 .theme-label {
   font-size: 1rem;
   font-weight: 600;
+  margin: 0;
   line-height: 1;
-  height: 100%;
   display: flex;
   align-items: center;
+  height: 28px;
 }
 
 .theme-switch {
   position: relative;
-  display: inline-block;
   width: 60px;
   height: 28px;
+  display: inline-block;
 }
 
 .theme-switch input {
@@ -561,16 +561,17 @@ label {
 }
 
 .slider {
+  background-color: #cbd5e0;
+  border-radius: 34px;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 6px;
-  width: 100%;
   height: 100%;
-  background-color: #cbd5e0;
-  border-radius: 34px;
+  width: 100%;
+  padding: 0 6px;
   box-sizing: border-box;
+  cursor: pointer;
 }
 
 .slider::before {
@@ -578,8 +579,8 @@ label {
   position: absolute;
   top: 4px;
   left: 4px;
-  height: 20px;
   width: 20px;
+  height: 20px;
   background-color: white;
   border-radius: 50%;
   transition: transform 0.3s ease;
@@ -591,15 +592,16 @@ input:checked + .slider::before {
 }
 
 .icon {
-  font-size: 0.9rem;
+  font-size: 1rem;
   height: 20px;
   width: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 1;
   pointer-events: none;
   z-index: 2;
-  transform: translateY(1px);
+  transform: translateY(0); /* Remove misalignment shim */
 }
 
 .icon.light {
