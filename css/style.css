@@ -528,20 +528,15 @@ label {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 0.75rem;
-  padding: 0.5rem 0;
-  position: sticky;
-  top: 1rem;
-  background: white;
-  z-index: 999;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .theme-label {
+  font-size: 0.95rem;
   font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--text-color);
-  line-height: 1;
-  margin-right: 0.5rem;
+  margin: 0;
+  line-height: 28px; /* Match height of the toggle */
 }
 
 .theme-switch {
@@ -559,17 +554,15 @@ label {
 
 .slider {
   position: relative;
-  width: 100%;
-  height: 28px;
-  background-color: #cbd5e0;
-  border-radius: 34px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 8px;
+  width: 60px;
+  height: 28px;
+  background-color: #cbd5e0;
+  border-radius: 34px;
+  padding: 0 6px;
   box-sizing: border-box;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .slider::before {
@@ -586,19 +579,19 @@ label {
 }
 
 input:checked + .slider::before {
-  transform: translateX(32px);
+  transform: translateX(28px);
 }
 
 .icon {
-  font-size: 1rem;
-  line-height: 1;
+  font-size: 0.9rem;
+  height: 20px;
+  width: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 20px;
-  width: 20px;
-  z-index: 2;
   pointer-events: none;
+  z-index: 2;
+  transform: translateY(1px); /* vertical nudge for alignment */
 }
 
 .icon.light {
@@ -1453,17 +1446,17 @@ input[type="number"]::-webkit-inner-spin-button {
     overflow: visible;
 }
 
-.form-container {
-    height: auto;
-    overflow-y: visible;
-    padding: 1rem;
+.form-column {
+  height: 100vh;
+  overflow-y: auto;
+  padding: 1rem;
+  position: relative;
 }
 
-.form-column {
-  position: relative;
-  overflow-y: auto;
-  width: 100%;
-  padding: 1rem;
+.form-container {
+  height: auto;
+  min-height: unset;
+  overflow-y: unset;
 }
 
 /* Mobile Responsiveness */
