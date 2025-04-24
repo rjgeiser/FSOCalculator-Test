@@ -1435,9 +1435,10 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .content-wrapper {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: row;
+    height: auto;
+    min-height: 100vh;
     gap: 2rem;
     padding: 1rem;
     overflow: visible;
@@ -1450,8 +1451,10 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .form-column {
-    height: auto;
-    overflow: visible;
+  position: relative;
+  overflow-y: auto;
+  width: 100%;
+  padding: 1rem;
 }
 
 /* Mobile Responsiveness */
