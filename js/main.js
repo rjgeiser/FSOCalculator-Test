@@ -2883,6 +2883,7 @@ static updateRetirementResults(container, retirement, formData, health) {
   const currentAge = parseInt(formData.age, 10) || 57;
   const service = parseFloat(formData.yearsService || 0);
   const grade = formData.fsGrade || '';
+  const step = parseInt(formData.fsStep || 1, 10);
   const teraMinAge = parseInt(formData.teraAge || 43, 10);
   const teraMinYears = parseInt(formData.teraYears || 15, 10);
 
@@ -2925,7 +2926,32 @@ static updateRetirementResults(container, retirement, formData, health) {
   if (retirement.scenarios) {
     Object.entries(retirement.scenarios).forEach(([type, scenario]) => {
       const label = labelMap[type] || type;
-      const annual = scenario.annualAnnuity || 0;
+
+      // Try to use provided annuity or calculate one
+      let annual = typeof scenario.annualAnnuity === "number" ? scenario.annualAnnuity : 0;
+      if (annual === 0) {
+        const s1 = parseFloat(formData.salaryYear1 || 0);
+        const s2 = parseFloat(formData.salaryYear2 || 0);
+        const s3 = parseFloat(formData.salaryYear3 || 0);
+        let average = (s1 + s2 + s3) / 3;
+
+        if (average === 0 && typeof lookupBaseSalary === "function") {
+          const base = lookupBaseSalary(formData.fsGrade, step);
+          average = base || 80000;
+        }
+
+        const multiplierMap = {
+          immediate: 0.017,
+          tera: 0.017,
+          vera: 0.017,
+          mraPlusTen: 0.01,
+          deferred: 0.015
+        };
+
+        const multiplier = multiplierMap[type] || 0.01;
+        annual = Math.round(average * service * multiplier);
+      }
+
       const monthlySupplemental = scenario.monthlySupplemental || 0;
 
       const startAge =
@@ -2971,7 +2997,7 @@ static updateRetirementResults(container, retirement, formData, health) {
         <table>
           <thead>
             <tr>
-              <th>Eligible Options</th>
+              <th>Eligible Retirement Options</th>
               <th>Total Value (to age ${maxAge})</th>
             </tr>
           </thead>
@@ -2984,8 +3010,8 @@ static updateRetirementResults(container, retirement, formData, health) {
         <table>
           <thead>
             <tr>
-              <th>Ineligible Options</th>
-              <th>Total Value (to age ${maxAge})</th>
+              <th>Ineligible Retirement Options</th>
+              <th>Potential Value (to age ${maxAge})</th>
             </tr>
           </thead>
           <tbody>${tbodyIneligible.join('')}</tbody>
