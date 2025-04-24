@@ -1777,7 +1777,7 @@ textarea {
 [data-theme="dark"] h5,
 [data-theme="dark"] p,
 [data-theme="dark"] .section-header {
-  color: var(--text-color) !important;
+  color: #f7fafc !important;
 }
 
 [data-theme="dark"] .comparison-table th,
