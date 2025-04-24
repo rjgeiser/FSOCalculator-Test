@@ -1513,6 +1513,11 @@ window.HEALTH_INSURANCE_RATES = {
         'self-plus-one': { monthly: 150.83, cobra: 603.31 * 1.02 },
         'family': { monthly: 172.70, cobra: 690.80 * 1.02 }
     },
+        'GEHA-High Deductible': {
+        'self': { monthly: 165.26, cobra: 661.05 * 1.02 },
+        'self-plus-one': { monthly: 436.63, cobra: 1746.51 * 1.02 },
+        'family': { monthly: 355.31, cobra: 1421.25 * 1.02 }
+    },
     'Compass Rose': {
         'self': { monthly: 203.64, cobra: 814.56 * 1.02 },
         'self-plus-one': { monthly: 488.74, cobra: 1954.96 * 1.02 },
