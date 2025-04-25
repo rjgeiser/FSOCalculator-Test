@@ -527,41 +527,40 @@ label {
     display: block;
 }
 
+/* Container holding form and results side-by-side */
 .content-wrapper {
   display: flex;
-  align-items: flex-start;
+  position: relative; /* key to anchor absolute positioning */
 }
 
-/* Toggle wrapper between form and results columns */
-.toggle-center-column {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 1rem 0;
-  min-width: 80px;
-  max-width: 80px;
-  flex-shrink: 0;
-  margin-top: 1rem;
+/* Floated overlay toggle */
+.toggle-overlay {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  pointer-events: auto;
 }
 
 /* Toggle layout */
 .theme-toggle-wrapper {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  height: 28px;
   gap: 0.5rem;
+  background: var(--background-color, #f9fafb);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Label styling */
 .theme-label {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  margin: 0;
+  line-height: 28px;
   display: flex;
   align-items: center;
-  height: 28px;
 }
 
 /* Switch styling */
@@ -569,7 +568,6 @@ label {
   position: relative;
   width: 60px;
   height: 28px;
-  display: inline-block;
 }
 
 .theme-switch input {
@@ -581,7 +579,6 @@ label {
 .slider {
   background-color: #cbd5e0;
   border-radius: 34px;
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
