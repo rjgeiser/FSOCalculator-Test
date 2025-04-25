@@ -1495,39 +1495,34 @@ const SALARY_TABLES = {
 // Health Insurance Rates moved to top for global access
 window.HEALTH_INSURANCE_RATES = {
     'BCBS-basic': {
-        'self': { monthly: 198.89, cobra: 795.54 * 1.02 },
-        'self-plus-one': { monthly: 424.01, cobra: 1696.02 * 1.02 },
-        'family': { monthly: 494.95, cobra: 1979.78 * 1.02 }
+        'self': { monthly: 245.18, cobra: 891.02 * 1.02 },
+        'self-plus-one': { monthly: 593.97, cobra: 2002.30 * 1.02 },
+        'family': { monthly: 657.82, cobra: 2205.32 * 1.02 }
     },
     'FSBP-standard': {
-        'self': { monthly: 203.64, cobra: 814.56 * 1.02 },
-        'self-plus-one': { monthly: 488.74, cobra: 1954.96 * 1.02 },
-        'family': { monthly: 549.35, cobra: 2197.39 * 1.02 }
-    },
-    'AETNA-direct': {
-        'self': { monthly: 179.01, cobra: 716.04 * 1.02 },
-        'self-plus-one': { monthly: 398.24, cobra: 1592.96 * 1.02 },
-        'family': { monthly: 472.10, cobra: 1888.41 * 1.02 }
+        'self': { monthly: 202.28, cobra: 809.12 * 1.02 },
+        'self-plus-one': { monthly: 544.96, cobra: 1953.29 * 1.02 },
+        'family': { monthly: 500.40, cobra: 2001.59 * 1.02 }
     },
     'GEHA-standard': {
-        'self': { monthly: 71.40, cobra: 285.60 * 1.02 },
-        'self-plus-one': { monthly: 150.83, cobra: 603.31 * 1.02 },
-        'family': { monthly: 172.70, cobra: 690.80 * 1.02 }
+        'self': { monthly: 174.03, cobra: 696.13 * 1.02 },
+        'self-plus-one': { monthly: 374.18, cobra: 1496.73 * 1.02 },
+        'family': { monthly: 464.32, cobra: 1857.29 * 1.02 }
     },
         'GEHA-High Deductible': {
         'self': { monthly: 165.26, cobra: 661.05 * 1.02 },
-        'self-plus-one': { monthly: 436.63, cobra: 1746.51 * 1.02 },
-        'family': { monthly: 355.31, cobra: 1421.25 * 1.02 }
+        'self-plus-one': { monthly: 355.31, cobra: 1421.25 * 1.02 },
+        'family': { monthly: 436.63, cobra: 1746.51 * 1.02 },
     },
     'Compass Rose': {
-        'self': { monthly: 203.64, cobra: 814.56 * 1.02 },
-        'self-plus-one': { monthly: 488.74, cobra: 1954.96 * 1.02 },
-        'family': { monthly: 549.35, cobra: 2197.39 * 1.02 }
+        'self': { monthly: 269.71, cobra: 915.55 * 1.02 },
+        'self-plus-one': { monthly: 605.91, cobra: 2014.24 * 1.02 },
+        'family': { monthly: 649.89, cobra: 2197.39 * 1.02 }
     },
     'NALC-High': {
-        'self': { monthly: 238.29, cobra: 858.15 * 1.02 },
-        'self-plus-one': { monthly: 576.50, cobra: 1916.37 * 1.02 },
-        'family': { monthly: 516.58, cobra: 1974.64 * 1.02 }
+        'self': { monthly: 294.84, cobra: 940.68 * 1.02 },
+        'self-plus-one': { monthly: 690.54, cobra: 2098.87 * 1.02 },
+        'family': { monthly: 615.20, cobra: 2162.70 * 1.02 }
     }
 };
 
@@ -3151,7 +3146,7 @@ static getRetirementTypeDetails(type, minServiceYears, minVeraAge) {
                 <h6>Benefit Calculation</h6>
                 <ul>
                     <li>1.7% × years of service × high-3 average salary</li>
-                    <li>Reduced by 2% per year under 20 years service</li>
+                    <li>Reduced by 1/12 of 1% per month under 20 years service (~ 1% per year)</li>
                     <li>Eligible for Special Retirement Supplement if age requirements met</li>
                 </ul>`,
             policyNotes: `
