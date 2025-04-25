@@ -528,15 +528,27 @@ label {
 }
 
 /* Light & Dark Mode Toggle */
+/* Toggle Center Column: sits between form and results */
+.toggle-center-column {
+  display: flex;
+  align-items: flex-start;     /* Aligns toggle to top of adjacent columns */
+  justify-content: center;
+  min-width: 60px;             /* Enough space for toggle switch */
+  max-width: 80px;             /* Prevent growing into results column */
+  flex-shrink: 0;              /* Prevent collapsing */
+  padding: 1rem 0;
+}
+
+/* Toggle Wrapper: aligns label + switch horizontally */
 .theme-toggle-wrapper {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  height: 34px;
+  justify-content: center;
+  height: 28px;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
 }
 
+/* Label Styling */
 .theme-label {
   font-size: 1rem;
   font-weight: 600;
@@ -544,14 +556,15 @@ label {
   line-height: 1;
   display: flex;
   align-items: center;
-  height: 34px;
+  height: 28px;
 }
 
+/* Switch Container */
 .theme-switch {
   position: relative;
+  display: inline-block;
   width: 60px;
   height: 28px;
-  display: inline-block;
 }
 
 .theme-switch input {
@@ -560,6 +573,7 @@ label {
   height: 0;
 }
 
+/* Toggle Track */
 .slider {
   background-color: #cbd5e0;
   border-radius: 34px;
@@ -574,6 +588,7 @@ label {
   cursor: pointer;
 }
 
+/* Toggle Knob */
 .slider::before {
   content: "";
   position: absolute;
@@ -591,7 +606,9 @@ input:checked + .slider::before {
   transform: translateX(28px);
 }
 
+/* Icon Style (sun/moon) */
 .icon {
+  font-size: 1rem;
   height: 20px;
   width: 20px;
   display: flex;
@@ -600,6 +617,15 @@ input:checked + .slider::before {
   pointer-events: none;
   z-index: 2;
 }
+
+.icon.light {
+  color: #f6e05e;
+}
+
+.icon.dark {
+  color: #4a5568;
+}
+
 
 /* Enhanced Mobile Responsiveness */
 @media (max-width: 1024px) {
