@@ -527,19 +527,25 @@ label {
     display: block;
 }
 
-/* Sticky Toggle */
-.toggle-sticky {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  padding: 1rem;
-  background: var(--background-color, #1a202c);
+.content-wrapper {
+  position: relative; /* enables absolute positioning inside it */
   display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-/* Switch base */
+/* Floating toggle (does not affect layout) */
+.toggle-floating {
+  position: absolute;
+  top: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background-color: var(--background-color, #1a202c);
+  padding: 0.25rem 1rem;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Toggle switch styles */
 .theme-switch {
   position: relative;
   width: 72px;
@@ -547,14 +553,12 @@ label {
   display: inline-block;
 }
 
-/* Hidden checkbox */
 .theme-switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-/* Slider container */
 .slider {
   display: flex;
   align-items: center;
@@ -569,7 +573,6 @@ label {
   position: relative;
 }
 
-/* Slider knob */
 .slider::before {
   content: "";
   position: absolute;
@@ -584,19 +587,18 @@ label {
 }
 
 input:checked + .slider::before {
-  transform: translateX(36px); /* account for 72px width and padding */
+  transform: translateX(36px);
 }
 
-/* Icons inside the toggle */
 .icon {
   font-size: 1rem;
-  width: 20px;
   height: 20px;
-  z-index: 2;
+  width: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  z-index: 2;
 }
 
 /* Enhanced Mobile Responsiveness */
