@@ -528,41 +528,17 @@ label {
 }
 
 /* Light-Dark Toggle */
-.toggle-bar {
-  width: 100%;
-  background: var(--background-color, #f9fafb);
-  padding: 1rem;
+.theme-toggle-inline {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  position: sticky; /* Optional: makes it stay at the top during scroll */
-  top: 0;
-  z-index: 100;
-  border-bottom: 1px solid #e2e8f0;
+  justify-content: flex-end;
+  padding: 0.5rem 1rem 0;
+  background: transparent; /* Matches header */
 }
 
-.theme-toggle-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--background-color, #ffffff);
-  padding: 0.25rem 1rem;
-  border-radius: 999px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Toggle switch styles */
 .theme-switch {
   position: relative;
   width: 72px;
   height: 28px;
-  display: inline-block;
-}
-
-.theme-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
 }
 
 .slider {
