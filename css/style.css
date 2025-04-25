@@ -527,44 +527,49 @@ label {
     display: block;
 }
 
-/* Light & Dark Mode Toggle */
-/* Toggle Center Column: sits between form and results */
-.toggle-center-column {
+.content-wrapper {
   display: flex;
-  align-items: flex-start;     /* Aligns toggle to top of adjacent columns */
-  justify-content: center;
-  min-width: 60px;             /* Enough space for toggle switch */
-  max-width: 80px;             /* Prevent growing into results column */
-  flex-shrink: 0;              /* Prevent collapsing */
-  padding: 1rem 0;
+  align-items: flex-start;
 }
 
-/* Toggle Wrapper: aligns label + switch horizontally */
+/* Toggle wrapper between form and results columns */
+.toggle-center-column {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1rem 0;
+  min-width: 80px;
+  max-width: 80px;
+  flex-shrink: 0;
+  margin-top: 1rem;
+}
+
+/* Toggle layout */
 .theme-toggle-wrapper {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   height: 28px;
   gap: 0.5rem;
 }
 
-/* Label Styling */
+/* Label styling */
 .theme-label {
   font-size: 1rem;
   font-weight: 600;
   margin: 0;
-  line-height: 1;
   display: flex;
   align-items: center;
   height: 28px;
 }
 
-/* Switch Container */
+/* Switch styling */
 .theme-switch {
   position: relative;
-  display: inline-block;
   width: 60px;
   height: 28px;
+  display: inline-block;
 }
 
 .theme-switch input {
@@ -573,7 +578,6 @@ label {
   height: 0;
 }
 
-/* Toggle Track */
 .slider {
   background-color: #cbd5e0;
   border-radius: 34px;
@@ -588,7 +592,6 @@ label {
   cursor: pointer;
 }
 
-/* Toggle Knob */
 .slider::before {
   content: "";
   position: absolute;
@@ -606,7 +609,6 @@ input:checked + .slider::before {
   transform: translateX(28px);
 }
 
-/* Icon Style (sun/moon) */
 .icon {
   font-size: 1rem;
   height: 20px;
@@ -617,15 +619,6 @@ input:checked + .slider::before {
   pointer-events: none;
   z-index: 2;
 }
-
-.icon.light {
-  color: #f6e05e;
-}
-
-.icon.dark {
-  color: #4a5568;
-}
-
 
 /* Enhanced Mobile Responsiveness */
 @media (max-width: 1024px) {
