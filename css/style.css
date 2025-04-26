@@ -1814,13 +1814,15 @@ html, body {
 }
 
 @media print {
-  header, 
-  .footer, 
-  .theme-toggle-wrapper, 
-  .tab-buttons, 
-  .form-column, 
   .print-button-container {
-    display: none !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Keep hiding other UI elements */
+  header, .footer, .theme-toggle-wrapper, .tab-buttons, .form-column {
+    display: none;
   }
 
   .results-column {
