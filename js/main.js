@@ -31,8 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Place this near the top of main.js or in a shared config area
-
 // === Begin object labelMap ===
 const labelMap = {
   immediate: 'Immediate',
@@ -42,7 +40,24 @@ const labelMap = {
   deferred: 'Deferred'
 };
 
-// Function to update step dropdown visibility based on grade
+// --- Reset Toast Message ---
+function showToast(message) {
+  const toast = document.getElementById('toast-message');
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.classList.add('show');
+
+  // Hide after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => {
+      toast.style.display = 'none';
+    }, 400); // Wait for animation to finish
+  }, 3000);
+
+  toast.style.display = 'block';
+}
 
 // --- Begin function updateStepDropdown ---
 function updateStepDropdown(grade) {
@@ -1991,6 +2006,9 @@ document.getElementById('calculator-form').addEventListener('reset', function(e)
 
     // ✅ Clear saved session form data when resetting
     sessionStorage.removeItem('calculatorFormData');
+
+    // ✅ Show a toast that form was reset
+      showToast('Form reset successfully ✅');
 });
 
 // Add input validation
