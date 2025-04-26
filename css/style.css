@@ -1784,12 +1784,13 @@ html, body {
 }
 
 @media print {
-  header, .footer, .theme-toggle-wrapper, .tab-buttons {
-    display: none;
-  }
-
-  .form-column {
-    display: none;
+  header, 
+  .footer, 
+  .theme-toggle-wrapper, 
+  .tab-buttons, 
+  .form-column, 
+  .print-button-container {
+    display: none !important;
   }
 
   .results-column {
@@ -1799,6 +1800,18 @@ html, body {
   body {
     background: white;
     color: black;
+  }
+
+  .comparison-table table, 
+  .comparison-table th, 
+  .comparison-table td {
+    border: 1px solid #000;
+  }
+
+  .comparison-table th, 
+  .comparison-table td {
+    padding: 0.5rem;
+    font-size: 0.9rem;
   }
 }
 
