@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!calculatorForm) {
         console.error('Calculator form not found');
         return;
-    }
-    
+    }    
+
     // Initialize form handlers
     FormManager.init();
 
@@ -27,6 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 document.activeElement.blur();
             }
+        });
+    }
+
+    // Clear saved form data
+    const clearSavedDataButton = document.getElementById('clear-saved-data');
+    if (clearSavedDataButton) {
+      clearSavedDataButton.addEventListener('click', () => {
+        sessionStorage.removeItem('calculatorFormData');
+        showToast('Saved form data cleared 🗑️');
         });
     }
 });
