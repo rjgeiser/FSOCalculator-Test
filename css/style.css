@@ -1985,11 +1985,12 @@ textarea {
   background: transparent !important;
   border: none !important;
   color: inherit !important;
+  box-shadow: none !important;
 }
 
 /* Dark Mode adaptation */
 [data-theme="dark"] .clear-saved-data-btn:hover {
-  color: #feb2b2; /* Softer light red hover in dark mode */
+  color: #feb2b2 !important; /* Softer light red hover in dark mode */
 }
 
 /* Dark mode support for comparison-table */
