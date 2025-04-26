@@ -523,8 +523,13 @@ label {
   padding: 0;
 }
 
+.clear-saved-data-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
 .clear-saved-data-btn:hover {
-  color: #feb2b2; /* Slight red tone on hover */
+  color: #e53e3e; /* Slight red tint for danger */
 }
 
 /* Tabs */
@@ -1977,9 +1982,14 @@ textarea {
 
 /* Dark mode compatibility */
 [data-theme="dark"] .clear-saved-data-btn {
-  background: #1a202c;
+  background: #1a202c !important;
   border: none;
   color: #ffffff !important;
+}
+
+/* Dark Mode adaptation */
+[data-theme="dark"] .clear-saved-data-btn:hover {
+  color: #feb2b2; /* Softer light red hover in dark mode */
 }
 
 /* Dark mode support for comparison-table */
