@@ -2586,7 +2586,12 @@ static setupFormHandlers() {
         if (isExcluded) {
             container.innerHTML = `
                 <div class="form-section">
-                    <h3>Severance Pay Summary</h3>
+                    <h3>Severance Pay Summary 
+                      <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Severance pay estimates are based on eligibility rules and assume no immediate retirement. Involuntary separation is typically required to qualify.</span>
+                      </span>
+                    </h3>
                     <div class="alert alert-info" style="margin: 1rem 0; padding: 1rem; background-color: #f0f9ff; border-left: 3px solid #3b82f6; border-radius: 4px;">
                         <p><strong>Note:</strong> Severance pay is not available for FS-01 and Senior Foreign Service members who are involuntarily separated, as they are eligible for immediate retirement.</p>
                     </div>
@@ -2988,7 +2993,12 @@ static updateRetirementResults(container, retirement, formData, health) {
 
   container.innerHTML = `
     <div class="form-section">
-      <h3>Eligible Retirement</h3>
+      <h3>Eligible Retirement Options 
+          <span class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Projected total benefits assuming eligibility conditions are met for each retirement scenario. Ineligible options are projected for informational comparison only.</span>
+          </span>
+        </h3>
       <div class="comparison-table">
         <table>
           <thead>
