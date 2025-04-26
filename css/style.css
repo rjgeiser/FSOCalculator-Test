@@ -1488,65 +1488,42 @@ html, body {
 }
 
 /* Add styles for citations */
-.citation {
-    font-size: 0.85rem;
-    color: #666;
-    font-style: italic;
-    margin-top: 0.5rem;
-    padding-top: 0.5rem;
-    border-top: 1px dotted #ccc;
-}
-
-/* Add footer styles */
-footer {
-    margin-top: 2rem;
-    padding: 1rem;
-    text-align: center;
-    border-top: 1px solid #e2e8f0;
-    background-color: #f8fafc;
-    font-size: 0.875rem;
-    color: #64748b;
-}
-
-footer a {
-    color: #2563eb;
-    text-decoration: none;
-}
-
-footer a:hover {
-    text-decoration: underline;
-}
-
-/* ... existing code ... */
-
-/* Footer */
-footer {
-    margin-top: 2rem;
-    padding: 1.5rem;
-    text-align: center;
-    border-top: 1px solid var(--border-color);
-    color: var(--secondary-color);
-}
-
-footer a {
-    color: var(--primary-color);
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-footer a:hover {
-    text-decoration: underline;
-}
-
-/* ... existing code ... */
-
-.citation {
     font-size: 0.85rem;
     color: #666;
     font-style: italic;
     margin-top: 15px;
     padding-top: 10px;
     border-top: 1px solid #eee;
+}
+
+/* Add footer styles */
+.footer {
+  margin-top: 2rem;
+  padding: 1rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-color, #4a5568);
+  background-color: var(--background-color, #f9fafb);
+  border-top: 1px solid #e2e8f0;
+}
+
+.footer a {
+  color: #2b6cb0;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+[data-theme="dark"] .footer {
+  background-color: #1a202c;
+  color: #a0aec0;
+  border-top: 1px solid #4a5568;
+}
+
+[data-theme="dark"] .footer a {
+  color: #63b3ed;
 }
 
 /* Mobile device specific styles */
