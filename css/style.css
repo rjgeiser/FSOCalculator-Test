@@ -1994,6 +1994,7 @@ textarea {
 
 /* Dark Mode adaptation */
 [data-theme="dark"] .clear-saved-data-btn:hover {
+  background: transparent !important;
   color: #feb2b2 !important; /* Softer light red hover in dark mode */
 }
 
