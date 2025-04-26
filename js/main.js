@@ -1,3 +1,4 @@
+
 // Global form reference
 let calculatorForm;
 
