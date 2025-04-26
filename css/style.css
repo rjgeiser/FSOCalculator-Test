@@ -529,7 +529,7 @@ label {
 
 /* Dark mode compatibility */
 [data-theme="dark"] .clear-saved-data-btn {
-  background: transparent;
+  background: #1a202c;
   border: none;
   color: #ffffff !important;
 }
