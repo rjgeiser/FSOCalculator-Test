@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize form handlers
     FormManager.init();
+
+    // ✅ Load any saved form data (after form is initialized but before user can interact)
+    FormManager.loadSavedFormData();
     
     // Add iOS-specific form handling
     if (calculatorForm) {
@@ -1985,6 +1988,9 @@ document.getElementById('calculator-form').addEventListener('reset', function(e)
     // Hide TERA requirements section and reset dropdown
     document.querySelector('.tera-requirements').style.display = 'none';
     document.getElementById('tera-eligible').value = 'no';
+
+    // ✅ Clear saved session form data when resetting
+    sessionStorage.removeItem('calculatorFormData');
 });
 
 // Add input validation
@@ -2138,8 +2144,8 @@ if (calculatorForm) {
         e.stopPropagation(); // Stop event from bubbling
         FormManager.handleFormSubmit(e);
         return false; // Ensure the form doesn't reset
-    });
-}
+        });
+    }
 }
 
 // Get form data function
@@ -2232,6 +2238,33 @@ static async handleFormSubmit(e) {
         UIManager.hideLoading();
     }
 } // End of handleFormSubmit method
+
+  // ✅ New: Save Form Data
+  static saveFormData(formData) {
+    try {
+      sessionStorage.setItem('calculatorFormData', JSON.stringify(formData));
+    } catch (error) {
+      console.error('Error saving form data to sessionStorage:', error);
+    }
+  }
+
+  // ✅ New: Load Saved Form Data
+  static loadSavedFormData() {
+    const savedData = sessionStorage.getItem('calculatorFormData');
+    if (!savedData) return;
+
+    try {
+      const formData = JSON.parse(savedData);
+      Object.entries(formData).forEach(([field, value]) => {
+        const input = document.getElementById(field);
+        if (input) {
+          input.value = value;
+        }
+      });
+    } catch (error) {
+      console.error('Error loading saved form data from sessionStorage:', error);
+    }
+  }
 } // End of FormManager class
 
 // Service Duration Validation Functions
@@ -2369,6 +2402,8 @@ static setupFormHandlers() {
 
       const formData = this.getFormData();
       FormValidator.validateFormData(formData);
+        
+      FormManager.saveFormData(formData); // ✅ Save form after validation passes
 
       // Calculate all results first
       const severanceResult = this.calculateSeverance(formData);
@@ -2387,7 +2422,11 @@ static setupFormHandlers() {
       this.updateResults(results);
       UIManager.showResults();
     } catch (error) {
-      ErrorHandler.handleError(error, 'form submission');
+          if (error instanceof ValidationError) {
+            UIManager.showError(error.message); // ✅ Friendly inline form error
+          } else {
+            ErrorHandler.handleError(error, 'form submission'); // ✅ Critical unexpected errors
+          } 
     } finally {
       UIManager.hideLoading();
     }
