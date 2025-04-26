@@ -528,6 +528,11 @@ label {
 }
 
 /* Dark mode compatibility */
+[data-theme="dark"] .clear-saved-data-btn {
+    background-color: #1a202c !important;
+    color: #ffffff !important;
+}
+
 [data-theme="dark"] .clear-saved-data-btn:hover {
   color: #feb2b2; /* Lighter red hover in dark mode */
 }
