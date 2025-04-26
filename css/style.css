@@ -1516,6 +1516,16 @@ html, body {
   text-decoration: underline;
 }
 
+.footer-subtext {
+  font-size: 0.75rem;
+  opacity: 0.75;
+  margin: 0.5rem 0;
+}
+
+[data-theme="dark"] .footer-subtext {
+  opacity: 0.8; /* Slightly brighter in dark mode for better readability */
+}
+
 [data-theme="dark"] .footer {
   background-color: #1a202c;
   color: #a0aec0;
