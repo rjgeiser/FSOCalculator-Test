@@ -527,13 +527,6 @@ label {
   color: #feb2b2; /* Slight red tone on hover */
 }
 
-/* Dark mode compatibility */
-[data-theme="dark"] .clear-saved-data-btn {
-  background: #1a202c;
-  border: none;
-  color: #ffffff !important;
-}
-
 /* Tabs */
 .tabs {
     margin-bottom: 1rem;
@@ -1980,6 +1973,13 @@ textarea {
   background-color: #2b6cb0 !important;
   color: #ffffff !important;
   border-color: #2b6cb0 !important;
+}
+
+/* Dark mode compatibility */
+[data-theme="dark"] .clear-saved-data-btn {
+  background: #1a202c;
+  border: none;
+  color: #ffffff !important;
 }
 
 /* Dark mode support for comparison-table */
