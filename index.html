@@ -555,26 +555,29 @@
     
     <div class="skip-link" tabindex="0">Skip to main content</div>
 
-<!-- Theme toggle script -->
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const themeToggle = document.getElementById("theme-toggle-checkbox");
+        <!-- Theme toggle script -->
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              const themeToggle = document.getElementById("theme-toggle-checkbox");
+            
+              // Load saved theme from localStorage on page load
+              const savedTheme = localStorage.getItem("theme");
+              if (savedTheme) {
+                document.documentElement.setAttribute("data-theme", savedTheme);
+                themeToggle.checked = savedTheme === "dark";
+              }
+            
+              // Listen for user toggle
+              themeToggle.addEventListener("change", () => {
+                const isDark = themeToggle.checked;
+                const theme = isDark ? "dark" : "light";
+                document.documentElement.setAttribute("data-theme", theme);
+                localStorage.setItem("theme", theme);
+              });
+            });
+        </script>
     
-      // Load saved theme from localStorage on page load
-      const savedTheme = localStorage.getItem("theme");
-      if (savedTheme) {
-        document.documentElement.setAttribute("data-theme", savedTheme);
-        themeToggle.checked = savedTheme === "dark";
-      }
-    
-      // Listen for user toggle
-      themeToggle.addEventListener("change", () => {
-        const isDark = themeToggle.checked;
-        const theme = isDark ? "dark" : "light";
-        document.documentElement.setAttribute("data-theme", theme);
-        localStorage.setItem("theme", theme);
-      });
-    });
-</script>
-</body>
+        <div id="toast-message" class="toast-message" style="display:none;"></div>
+
+    </body>
 </html> 
