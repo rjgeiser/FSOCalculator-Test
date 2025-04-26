@@ -2688,7 +2688,11 @@ static setupFormHandlers() {
         } else {
             container.innerHTML = `
                 <div class="form-section">
-                    <h3>Severance Pay Summary</h3>
+                    <h3>Severance Pay Summary 
+                      <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Severance pay estimates are based on eligibility rules and assume no immediate retirement. Involuntary separation is typically required to qualify.</span>
+                      </span>
                     <div class="comparison-table">
                         <table>
                             <tr>
