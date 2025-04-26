@@ -459,6 +459,28 @@ label {
     .calculation-details {
         padding: 1rem;
     }
+
+    .theme-switch {
+    width: 56px; /* slightly smaller toggle for mobile */
+    height: 24px;
+  }
+
+  .slider::before {
+    width: 18px;
+    height: 18px;
+    top: 3px;
+    left: 3px;
+  }
+
+  input:checked + .slider::before {
+    transform: translateX(28px);
+  }
+
+  .icon {
+    font-size: 0.85rem;
+    height: 18px;
+    width: 18px;
+  }
 }
 
 /* Buttons */
@@ -1433,6 +1455,16 @@ input[type="number"]::-webkit-inner-spin-button {
   overflow-y: unset;
 }
 
+/* Light Mode - Default Alert Info */
+.alert.alert-info {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #f0f9ff;
+  border-left: 3px solid #3b82f6;
+  border-radius: 4px;
+  color: #1a202c;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 1024px) {
     .container {
@@ -1675,6 +1707,25 @@ html, body {
     }
 }
 
+@media print {
+  header, .footer, .theme-toggle-wrapper, .tab-buttons {
+    display: none;
+  }
+
+  .form-column {
+    display: none;
+  }
+
+  .results-column {
+    width: 100%;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+}
+
 /* Light mode override (explicit) */
 :root {
   --background-color: #ffffff;
@@ -1745,6 +1796,19 @@ textarea {
 [data-theme="dark"] .tooltip .tooltip-text,
 [data-theme="dark"] .citation {
   color: var(--text-color) !important;
+}
+
+/* Dark Mode - Alert Info */
+[data-theme="dark"] .alert.alert-info {
+  background-color: #2d3748;
+  border-left: 3px solid #63b3ed;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .retirement-summary .alert-info {
+  background-color: #2d3748;  /* match dark mode background */
+  border-color: #63b3ed;      /* lighter blue for dark theme */
+  color: #e2e8f0;             /* light text for readability */
 }
 
 [data-theme="dark"] select,
