@@ -1982,9 +1982,9 @@ textarea {
 
 /* Dark mode compatibility */
 [data-theme="dark"] .clear-saved-data-btn {
-  background: #1a202c !important;
+  background: transparent !important;
   border: none !important;
-  color: #ffffff !important;
+  color: inherit !important;
 }
 
 /* Dark Mode adaptation */
