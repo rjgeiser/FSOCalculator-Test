@@ -524,17 +524,14 @@ label {
 }
 
 .clear-saved-data-btn:hover {
-  color: #e53e3e; /* Slight red tone on hover */
+  color: #feb2b2; /* Slight red tone on hover */
 }
 
 /* Dark mode compatibility */
 [data-theme="dark"] .clear-saved-data-btn {
-    background-color: #1a202c !important;
-    color: #ffffff !important;
-}
-
-[data-theme="dark"] .clear-saved-data-btn:hover {
-  color: #feb2b2; /* Lighter red hover in dark mode */
+  background: transparent;
+  border: none;
+  color: #ffffff !important;
 }
 
 /* Tabs */
