@@ -2993,8 +2993,8 @@ static updateRetirementResults(container, retirement, formData, health) {
         <table>
           <thead>
             <tr>
-              <th>Eligible Options</th>
-              <th>Total Value (to age ${maxAge})</th>
+              <th scope="col">Eligible Options</th>
+              <th scope="col">Total Value (to age ${maxAge})</th>
             </tr>
           </thead>
           <tbody>${tbodyEligible.join('')}</tbody>
@@ -3006,8 +3006,8 @@ static updateRetirementResults(container, retirement, formData, health) {
         <table>
           <thead>
             <tr>
-              <th>Ineligible Options</th>
-              <th>Total Value (to age ${maxAge})</th>
+              <th scope="col">Ineligible Options</th>
+              <th scope="col">Total Value (to age ${maxAge})</th>
             </tr>
           </thead>
           <tbody>${tbodyIneligible.join('')}</tbody>
