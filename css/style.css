@@ -1813,40 +1813,57 @@ html, body {
 }
 
 @media print {
+  /* Hide unwanted UI elements */
+  header,
+  .footer,
+  .theme-toggle-wrapper,
+  .tab-buttons,
+  .form-column,
   .print-button-container {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease;
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  /* Keep hiding other UI elements */
-  header, .footer, .theme-toggle-wrapper, .tab-buttons, .form-column {
-    display: none;
-  }
-
+  /* Reset body and container layout */
+  body, 
+  .container, 
+  .content-wrapper, 
   .results-column {
+    margin: 0;
+    padding: 0;
     width: 100%;
-  }
-
-  table, tr, td, th {
-    page-break-inside: avoid !important;
-  }
-
-  body {
+    height: auto;
     background: white;
     color: black;
+    overflow: visible;
   }
 
+  /* Force results column to print correctly */
+  .results-column {
+    display: block;
+  }
+
+  /* Tables: keep from breaking across pages */
+  table, tr, td, th {
+    page-break-inside: avoid !important;
+    page-break-before: auto;
+    page-break-after: auto;
+  }
+
+  /* Table visuals */
   .comparison-table table, 
   .comparison-table th, 
   .comparison-table td {
-    border: 1px solid #000;
-  }
-
-  .comparison-table th, 
-  .comparison-table td {
+    border: 1px solid black;
     padding: 0.5rem;
     font-size: 0.9rem;
+  }
+
+  /* Optional: Minimize any excessive page margins */
+  @page {
+    margin: 0.5in;
   }
 }
 
