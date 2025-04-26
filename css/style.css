@@ -1828,6 +1828,10 @@ html, body {
     width: 100%;
   }
 
+  table, tr, td, th {
+    page-break-inside: avoid !important;
+  }
+
   body {
     background: white;
     color: black;
