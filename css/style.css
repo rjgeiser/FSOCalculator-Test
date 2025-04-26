@@ -804,13 +804,17 @@ input:checked + .slider::before {
 .tooltip {
     position: relative;
     display: inline-block;
+    margin-left: 0.5rem; /* Optional spacing from headers */
+    cursor: pointer; /* Makes it obvious it's interactive */
 }
 
+/* Tooltip bubble */
 .tooltip .tooltip-text {
     visibility: hidden;
-    width: 200px;
-    color: white;
-    text-align: center;
+    width: 220px; /* Slightly wider for explanatory text */
+    background-color: #4a5568; /* Darker background */
+    color: #ffffff;
+    text-align: left; /* More natural reading alignment */
     padding: 8px;
     border-radius: 6px;
     position: absolute;
@@ -820,13 +824,33 @@ input:checked + .slider::before {
     transform: translateX(-50%);
     opacity: 0;
     transition: opacity 0.3s;
-    font-size: 0.85rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-size: 0.75rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .tooltip:hover .tooltip-text {
     visibility: visible;
     opacity: 1;
+}
+
+/* Optional: style the question mark icon inside the tooltip span */
+.tooltip-icon {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-color: #2b6cb0;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 0.75rem;
+    line-height: 18px;
+    font-weight: bold;
+}
+
+/* Dark mode adaptation */
+[data-theme="dark"] .tooltip .tooltip-text {
+    background-color: #2d3748;
+    color: #e2e8f0;
 }
 
 /* Remove all progress indicator styles */
